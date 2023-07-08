@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid/grid.component';
+import { WindowSizeService } from "./services/window-size.service";
 
 @NgModule({
     declarations: [
@@ -16,7 +17,7 @@ import { GridComponent } from './grid/grid.component';
         HttpClientModule,
         FormsModule
     ],
-    providers: [],
+    providers: [WindowSizeService],
     bootstrap: [AppComponent]
 })
 export class AppModule {
