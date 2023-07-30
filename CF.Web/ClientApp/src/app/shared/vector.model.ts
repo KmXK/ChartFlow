@@ -1,4 +1,4 @@
-﻿import { Point } from "./point";
+﻿import { Point } from "./point.model";
 
 export class Vector {
     from: Point;
@@ -22,12 +22,6 @@ export class Vector {
         const dx = this.to.x - this.from.x;
         const dy = this.to.y - this.from.y;
 
-        console.log(`dx = ${dx}`)
-        console.log(`dy = ${dy}`);
-        console.log(`vector.from = ${vector.from}`);
-        console.log(`new Point(dx * value, dy * value) = ${new Point(dx * value, dy * value)}`);
-        console.log(`vector.from.add(new Point(dx * value, dy * value) = ${vector.from.add(new Point(dx * value, dy * value))}`);
-
         vector.to = vector.from.add(new Point(dx * value, dy * value));
         return vector;
     }
@@ -47,8 +41,6 @@ export class Vector {
     get length(): number {
         const dx = this.to.x - this.from.x;
         const dy = this.to.y - this.from.y;
-
-        console.log(`length: dx = ${dx} dy = ${dy}`)
 
         return Math.sqrt(dx * dx + dy * dy);
     }

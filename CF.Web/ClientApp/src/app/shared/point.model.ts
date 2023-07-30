@@ -1,4 +1,4 @@
-﻿import { Vector } from "./vector";
+﻿import { Vector } from "./vector.model";
 
 export class Point {
     x: number;
@@ -13,7 +13,7 @@ export class Point {
         return new Point(this.x + delta.x, this.y + delta.y);
     }
 
-    move(vector: Vector): Point {
+    translate(vector: Vector): Point {
         const dx = vector.to.x - vector.from.x;
         const dy = vector.to.y - vector.from.y;
         return new Point(this.x + dx, this.y + dy);

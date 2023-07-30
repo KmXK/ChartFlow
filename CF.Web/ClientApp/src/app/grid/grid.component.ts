@@ -1,112 +1,69 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { WindowSizeService } from "../services/window-size.service";
-import { Point } from "../shared/point";
-import { Vector } from "../shared/vector";
+import { Component } from '@angular/core';
+import { CanvasService } from "../services/canvas.service";
+import { combineLatest } from "rxjs";
+import { Size } from "../shared/size.model";
+import { Point } from "../shared/point.model";
 
 @Component({
     selector: 'app-grid',
     templateUrl: './grid.component.html',
     styleUrls: ['./grid.component.scss']
 })
-export class GridComponent implements OnInit, AfterViewInit {
-    private scrollSensitivity = 12;
-
-    @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
-    context!: CanvasRenderingContext2D;
-
-    size = { width: 0, height: 0 };
-    delta = new Point(0, 0);
-    currentDelta = new Point(0, 0);
-    interval = -1;
-
-
-
-    constructor(private readonly windowSizeService: WindowSizeService) {
+export class GridComponent {
+    constructor(private readonly canvasService: CanvasService) {
+        combineLatest([
+            this.canvasService.sizeChanged$,
+            this.canvasService.offsetChanged$,
+            this.canvasService.mouseMoved$
+        ])
+            .subscribe(([size, offset, mousePos]) => {
+                this.canvasService.draw(context => this.drawLines(context, size, offset, mousePos));
+            });
     }
 
-    ngOnInit(): void {
-        this.windowSizeService.$size.subscribe(size => {
-            this.onSizeChanged(size.width, size.height);
-            window.requestAnimationFrame(() => this.drawLines());
-        });
-    }
-
-    ngAfterViewInit(): void {
-        this.context = this.canvas.nativeElement.getContext('2d')!;
-
-        this.onSizeChanged(this.windowSizeService.currentWidth, this.windowSizeService.currentHeight);
-
-        window.requestAnimationFrame(this.drawLines.bind(this));
-    }
-
-    onScroll(event: WheelEvent) {
-        const delta = event.deltaY ? event.deltaY / Math.abs(event.deltaY) * this.scrollSensitivity : 0;
-
-        if (event.shiftKey) {
-            this.move(delta, 0);
-        } else {
-            this.move(0, delta);
+    private drawLines(context: CanvasRenderingContext2D, size: Size, offset: Point, mousePos: Point) {
+        if (!context || !size) {
+            return;
         }
-    }
 
-    private move(dx: number, dy: number) {
-        if (this.interval !== -1) clearInterval(this.interval);
+        context.clearRect(0, 0, size.width, size.height);
 
-        this.delta.x -= dx;
-        this.delta.y -= dy;
+        context.strokeStyle = '#000000';
+        context.fillStyle = '#000000';
+        context.lineWidth = 0.2;
 
-        this.interval = setInterval(() => {
-            console.log(`delta: ${this.delta}, current delta: ${this.currentDelta}`)
-            if (this.delta.x === this.currentDelta.x && this.delta.y === this.currentDelta.y) {
-                clearInterval(this.interval);
-                this.interval = -1;
-                return;
+        for (let x = offset.x % 20; x < size.width; x += 20) {
+            context.save();
+            if (Math.abs(mousePos.x - x) < 5) {
+                context.strokeStyle = 'red';
+                context.lineWidth = 2;
+            } else {
+                context.strokeStyle = '#000000';
             }
 
-            const movementVector = new Vector(this.currentDelta, this.delta);
+            context.beginPath();
+            context.moveTo(x, 0);
+            context.lineTo(x, size.height);
+            context.stroke();
 
-            const direction = movementVector.normalize();
-
-            const distance = movementVector.length < 1
-                ? movementVector.length
-                : movementVector.length / this.scrollSensitivity * 4;
-
-            console.log(`movementVector.normalize(): ${movementVector.normalize()}`);
-
-            this.currentDelta = this.currentDelta.move(direction.multiply(distance));
-
-            window.requestAnimationFrame((() => {
-                this.drawLines();
-            }));
-        }, 10);
-    }
-
-    private drawLines() {
-        this.context.clearRect(0, 0, this.size.width, this.size.height);
-
-        this.context.strokeStyle = '#000000';
-        this.context.fillStyle = '#000000';
-        this.context.lineWidth = 0.2;
-
-        for (let x = this.currentDelta.x % 20; x < this.size.width; x += 20) {
-            this.context.beginPath();
-            this.context.moveTo(x, 0);
-            this.context.lineTo(x, this.size.height);
-            this.context.stroke();
+            context.restore();
         }
 
-        for (let y = this.currentDelta.y % 20; y < this.size.height; y += 20) {
-            this.context.beginPath();
-            this.context.moveTo(0, y);
-            this.context.lineTo(this.size.width, y);
-            this.context.stroke();
+        for (let y = offset.y % 20; y < size.height; y += 20) {
+            context.save();
+            if (Math.abs(mousePos.y - y) < 5) {
+                context.strokeStyle = 'red';
+                context.lineWidth = 2;
+            } else {
+                context.strokeStyle = '#000000';
+            }
+
+            context.beginPath();
+            context.moveTo(0, y);
+            context.lineTo(size.width, y);
+            context.stroke();
+
+            context.restore();
         }
-    }
-
-    private onSizeChanged(width: number, height: number) {
-        this.canvas.nativeElement.width = width;
-        this.canvas.nativeElement.height = height;
-
-        this.size = { width, height };
     }
 }

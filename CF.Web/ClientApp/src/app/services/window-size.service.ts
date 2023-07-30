@@ -1,23 +1,22 @@
-import { Injectable } from '@angular/core';
-import { ReplaySubject, Subject } from "rxjs";
+import { Inject, Injectable } from '@angular/core';
+import { Subject } from "rxjs";
+import { WINDOW } from "../tokens/window.token";
 
 @Injectable()
 export class WindowSizeService {
-    private width = new Subject<number>();
-    private height = new Subject<number>();
-    private size = new Subject<{ width: number, height: number }>();
-
     public currentWidth = 0;
     public currentHeight = 0;
-    public currentSize = {width: 0, height: 0};
+    public currentSize = { width: 0, height: 0 };
+    private width = new Subject<number>();
+    public width$ = this.width.asObservable();
+    private height = new Subject<number>();
+    public height$ = this.height.asObservable();
+    private size = new Subject<{ width: number, height: number }>();
+    public size$ = this.size.asObservable();
 
-    public $width = this.width.asObservable();
-    public $height = this.height.asObservable();
-    public $size = this.size.asObservable();
-
-    constructor() {
-        window.addEventListener('resize', this.onResize.bind(this));
-        this.onSizeChanged(window.innerWidth, window.innerHeight);
+    constructor(@Inject(WINDOW) private windowRef: Window) {
+        windowRef.addEventListener('resize', this.onResize.bind(this));
+        this.onSizeChanged(windowRef.innerWidth, windowRef.innerHeight);
     }
 
     private onResize(event: any) {
@@ -33,6 +32,6 @@ export class WindowSizeService {
 
         this.currentWidth = width;
         this.currentHeight = height;
-        this.currentSize = {width, height};
+        this.currentSize = { width, height };
     }
 }
