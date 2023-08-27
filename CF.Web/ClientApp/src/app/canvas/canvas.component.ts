@@ -1,28 +1,40 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { CanvasService } from "./canvas.service";
 import { WindowSizeService } from "../services/window-size.service";
+import { Size } from "../shared/models/size.model";
 
 @Component({
     selector: 'app-canvas',
     templateUrl: './canvas.component.html',
     styleUrls: ['./canvas.component.scss']
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements AfterViewInit, OnDestroy {
+    private observer: ResizeObserver | null = null;
+
     @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
     constructor(
         private windowSizeService: WindowSizeService,
         private canvasService: CanvasService
     ) {
-        this.windowSizeService.size$.subscribe(size => {
-            this.onSizeChanged(size.width, size.height);
-        });
+    }
+
+    ngOnDestroy(): void {
+        this.observer?.disconnect();
     }
 
     ngAfterViewInit(): void {
-        this.canvasService.context = this.canvas.nativeElement.getContext('2d');
+        this.observer = new ResizeObserver(entries => {
+            const { blockSize: height, inlineSize: width } = entries[0].borderBoxSize[0];
+            
+            this.canvas.nativeElement.width = width;
+            this.canvas.nativeElement.height = height;
+            this.canvasService.setSize(new Size(width, height));
+        });
 
-        this.onSizeChanged(this.windowSizeService.currentWidth, this.windowSizeService.currentHeight);
+        this.observer.observe(this.canvas.nativeElement);
+
+        this.canvasService.context = this.canvas.nativeElement.getContext('2d');
     }
 
     onScroll(event: WheelEvent) {
@@ -37,12 +49,5 @@ export class CanvasComponent implements AfterViewInit {
 
     onMouseMove(event: MouseEvent) {
         this.canvasService.moveMouse(event.offsetX, event.offsetY);
-    }
-
-    private onSizeChanged(width: number, height: number) {
-        this.canvas.nativeElement.width = width;
-        this.canvas.nativeElement.height = height;
-
-        this.canvasService.setSize({ width, height });
     }
 }

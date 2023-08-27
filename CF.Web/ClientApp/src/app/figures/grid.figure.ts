@@ -16,11 +16,11 @@ export class GridFigure implements Figure {
         context.lineWidth = 2;
 
         context.beginPath();
-        context.moveTo(canvasOffset.x % this.gap, mousePos.y);
-        context.lineTo(canvasOffset.x % this.gap + canvasSize.width, mousePos.y);
+        context.moveTo(0, mousePos.y);
+        context.lineTo(canvasSize.width, mousePos.y);
 
-        context.moveTo(mousePos.x, canvasOffset.y % this.gap);
-        context.lineTo(mousePos.x, canvasOffset.y % this.gap + canvasSize.height);
+        context.moveTo(mousePos.x, 0);
+        context.lineTo(mousePos.x, canvasSize.height);
         context.stroke();
         context.restore();
 

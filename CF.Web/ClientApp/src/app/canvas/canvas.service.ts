@@ -27,9 +27,10 @@ export class CanvasService {
             this.size,
             this.mousePos,
             this.currentOffset
-        ]).subscribe(([size, mousePos, currentOffset]) => {
-            window.requestAnimationFrame(() => this.draw(size, mousePos, currentOffset));
-        });
+        ])
+            .subscribe(([size, mousePos, currentOffset]) => {
+                window.requestAnimationFrame(() => this.draw(size, mousePos, currentOffset));
+            });
     }
 
     public setSize(size: Size) {
