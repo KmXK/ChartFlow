@@ -40,9 +40,9 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         const delta = event.deltaY ? event.deltaY / Math.abs(event.deltaY) * this.canvasService.scrollSensitivity : 0;
 
         if (event.shiftKey) {
-            this.canvasService.move(delta, 0);
+            this.canvasService.changeOffset(delta, 0);
         } else {
-            this.canvasService.move(0, delta);
+            this.canvasService.changeOffset(0, delta);
         }
     }
 

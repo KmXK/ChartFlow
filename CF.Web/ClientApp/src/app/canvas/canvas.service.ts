@@ -41,7 +41,7 @@ export class CanvasService {
         this.mousePos.next(new Point(x, y));
     }
 
-    public move(dx: number, dy: number) {
+    public changeOffset(dx: number, dy: number) {
         if (this.interval !== -1) this.window.clearInterval(this.interval);
 
         this.offset.x -= dx;
