@@ -52,11 +52,11 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     }
 
     onMouseMove(event: MouseEvent) {
-        if (this.state === CanvasState.Default) {
-            this.canvasService.moveMouse(event.offsetX, event.offsetY);
-        } else if (this.state === CanvasState.Offsetting) {
+        if (this.state === CanvasState.Offsetting) {
             console.log(event);
             this.canvasService.changeOffset(-event.movementX, -event.movementY);
+        } else {
+            this.canvasService.moveMouse(event.offsetX, event.offsetY);
         }
     }
 

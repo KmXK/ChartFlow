@@ -7,6 +7,7 @@ import { Figure } from "../figures/base/figure.interface";
 import { GridFigure } from "../figures/grid.figure";
 import { DrawingContext } from "../figures/base/drawing-context.model";
 import { WINDOW } from "../tokens/window.token";
+import { MousePointerFigure } from "../figures/mouse-pointer.figure";
 
 @Injectable()
 export class CanvasService {
@@ -20,7 +21,10 @@ export class CanvasService {
     private currentOffset = new BehaviorSubject(new Point(0, 0));
     private interval = -1;
 
-    private figures: Figure[] = [new GridFigure()];
+    private figures: Figure[] = [
+        new GridFigure(),
+        new MousePointerFigure()
+    ];
 
     constructor(@Inject(WINDOW) private window: Window) {
         combineLatest([
@@ -38,7 +42,7 @@ export class CanvasService {
     }
 
     public moveMouse(x: number, y: number) {
-        this.mousePos.next(new Point(x, y));
+        this.mousePos.next(new Point(x, y).subtract(this.currentOffset.value));
     }
 
     public changeOffset(dx: number, dy: number) {
@@ -52,10 +56,12 @@ export class CanvasService {
             return;
         }
 
-        this.interval = this.window.setInterval(() => {
+        const calculateOffset = () => {
             const currentOffset = this.currentOffset.value;
 
-            if (this.offset.x === currentOffset.x && this.offset.y === currentOffset.y) {
+            if (this.offset.x === currentOffset.x &&
+                this.offset.y === currentOffset.y &&
+                this.interval > 0) {
                 clearInterval(this.interval);
                 this.interval = -1;
                 return;
@@ -70,7 +76,12 @@ export class CanvasService {
                 : movementVector.length / this.scrollSensitivity * 4;
 
             this.currentOffset.next(currentOffset.translate(direction.multiply(distance)));
-        }, 10);
+        };
+
+        calculateOffset();
+        if (this.interval > 0) {
+            this.interval = this.window.setInterval(calculateOffset, 10);
+        }
     }
 
     public draw(size: Size, mousePos: Point, currentOffset: Point) {
@@ -84,8 +95,6 @@ export class CanvasService {
 
         this.context.clearRect(0, 0, size.width, size.height);
 
-        mousePos = mousePos.add(currentOffset);
-
         const context = new DrawingContext(
             this.context,
             size,
@@ -93,6 +102,10 @@ export class CanvasService {
             mousePos
         );
 
-        this.figures.forEach(figure => figure.draw(context));
+        this.figures.forEach(figure => {
+            this.context!.save();
+            figure.draw(context);
+            this.context!.restore();
+        });
     }
 }
