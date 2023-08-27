@@ -84,9 +84,6 @@ export class CanvasService {
             mousePos
         );
 
-        console.log(`Mouse: ${context.mousePos}`);
-        console.log(`Offset: ${context.canvasOffset}`);
-
         this.figures.forEach(figure => figure.draw(context));
     }
 }
