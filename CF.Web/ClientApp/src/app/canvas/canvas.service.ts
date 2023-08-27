@@ -73,6 +73,10 @@ export class CanvasService {
             return;
         }
 
+        // TODO: Current logic calls little offset for grid while resizing window
+        this.context.canvas.width = size.width;
+        this.context.canvas.height = size.height;
+
         this.context.clearRect(0, 0, size.width, size.height);
 
         mousePos = mousePos.add(currentOffset);

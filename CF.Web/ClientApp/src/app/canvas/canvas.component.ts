@@ -26,13 +26,12 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         this.observer = new ResizeObserver(entries => {
             const { blockSize: height, inlineSize: width } = entries[0].borderBoxSize[0];
-            
-            this.canvas.nativeElement.width = width;
-            this.canvas.nativeElement.height = height;
+
             this.canvasService.setSize(new Size(width, height));
+            console.log(width, height);
         });
 
-        this.observer.observe(this.canvas.nativeElement);
+        this.observer.observe(this.canvas.nativeElement.parentElement!);
 
         this.canvasService.context = this.canvas.nativeElement.getContext('2d');
     }
