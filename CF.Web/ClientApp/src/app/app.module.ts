@@ -4,23 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { WindowSizeService } from "./services/window-size.service";
-import { CanvasComponent } from './components/canvas/canvas.component';
-import { CanvasService } from "./services/canvas.service";
+import { CanvasModule } from "./canvas/canvas.module";
 
 @NgModule({
     declarations: [
-        AppComponent,
-        CanvasComponent
+        AppComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
         HttpClientModule,
-        FormsModule
-    ],
-    providers: [
-        WindowSizeService,
-        CanvasService
+        FormsModule,
+        CanvasModule
     ],
     bootstrap: [AppComponent]
 })

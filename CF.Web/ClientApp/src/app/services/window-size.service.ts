@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Subject } from "rxjs";
 import { WINDOW } from "../tokens/window.token";
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WindowSizeService {
     public currentWidth = 0;
     public currentHeight = 0;

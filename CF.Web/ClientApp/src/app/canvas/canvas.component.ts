@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { WindowSizeService } from "../../services/window-size.service";
-import { CanvasService } from "../../services/canvas.service";
+import { CanvasService } from "./canvas.service";
+import { WindowSizeService } from "../services/window-size.service";
 
 @Component({
     selector: 'app-canvas',

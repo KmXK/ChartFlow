@@ -8,9 +8,7 @@ import { GridFigure } from "../figures/grid.figure";
 import { DrawingContext } from "../figures/base/drawing-context.model";
 import { WINDOW } from "../tokens/window.token";
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class CanvasService {
     public readonly scrollSensitivity = 12;
     public context: CanvasRenderingContext2D | null = null;
@@ -24,13 +22,13 @@ export class CanvasService {
 
     private figures: Figure[] = [new GridFigure()];
 
-    constructor(@Inject(WINDOW) windowsRef: Window) {
+    constructor(@Inject(WINDOW) private window: Window) {
         combineLatest([
             this.size,
             this.mousePos,
             this.currentOffset
         ]).subscribe(([size, mousePos, currentOffset]) => {
-            windowsRef.requestAnimationFrame(() => this.draw(size, mousePos, currentOffset));
+            window.requestAnimationFrame(() => this.draw(size, mousePos, currentOffset));
         });
     }
 
@@ -43,12 +41,12 @@ export class CanvasService {
     }
 
     public move(dx: number, dy: number) {
-        if (this.interval !== -1) clearInterval(this.interval);
+        if (this.interval !== -1) this.window.clearInterval(this.interval);
 
         this.offset.x -= dx;
         this.offset.y -= dy;
 
-        this.interval = setInterval(() => {
+        this.interval = this.window.setInterval(() => {
             const currentOffset = this.currentOffset.value;
 
             if (this.offset.x === currentOffset.x && this.offset.y === currentOffset.y) {
