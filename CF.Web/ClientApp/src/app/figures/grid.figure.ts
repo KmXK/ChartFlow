@@ -23,4 +23,8 @@ export class GridFigure implements Figure {
             context.stroke();
         }
     }
+
+    clone(): Figure {
+        return new GridFigure();
+    }
 }

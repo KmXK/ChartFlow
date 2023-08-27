@@ -15,4 +15,8 @@ export class MousePointerFigure implements Figure {
         context.lineTo(mousePos.x, canvasSize.height);
         context.stroke();
     }
+
+    clone(): Figure {
+        return new MousePointerFigure();
+    }
 }

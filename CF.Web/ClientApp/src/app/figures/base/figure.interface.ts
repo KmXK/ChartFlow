@@ -2,4 +2,6 @@
 
 export interface Figure {
     draw(context: DrawingContext): void;
+
+    clone(): Figure;
 }

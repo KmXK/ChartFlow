@@ -101,7 +101,8 @@ export class CanvasService {
             this.context,
             size,
             currentOffset,
-            mousePos.subtract(currentOffset)
+            mousePos.subtract(currentOffset),
+            this.figures.map(x => x.clone())
         );
 
         this.figures.forEach(figure => {
