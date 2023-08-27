@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { CanvasService } from "./canvas.service";
 import { WindowSizeService } from "../services/window-size.service";
 import { Size } from "../shared/models/size.model";
+import { CanvasState } from "./canvas-state.enum";
 
 @Component({
     selector: 'app-canvas',
@@ -10,6 +11,7 @@ import { Size } from "../shared/models/size.model";
 })
 export class CanvasComponent implements AfterViewInit, OnDestroy {
     private observer: ResizeObserver | null = null;
+    private state = CanvasState.Default;
 
     @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -28,7 +30,6 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
             const { blockSize: height, inlineSize: width } = entries[0].borderBoxSize[0];
 
             this.canvasService.setSize(new Size(width, height));
-            console.log(width, height);
         });
 
         this.observer.observe(this.canvas.nativeElement.parentElement!);
@@ -37,6 +38,10 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     }
 
     onScroll(event: WheelEvent) {
+        if (this.state !== CanvasState.Default) {
+            return;
+        }
+
         const delta = event.deltaY ? event.deltaY / Math.abs(event.deltaY) * this.canvasService.scrollSensitivity : 0;
 
         if (event.shiftKey) {
@@ -47,6 +52,22 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
     }
 
     onMouseMove(event: MouseEvent) {
-        this.canvasService.moveMouse(event.offsetX, event.offsetY);
+        if (this.state === CanvasState.Default) {
+            this.canvasService.moveMouse(event.offsetX, event.offsetY);
+        } else if (this.state === CanvasState.Offsetting) {
+            console.log(event);
+            this.canvasService.changeOffset(-event.movementX, -event.movementY);
+        }
+    }
+
+    onMouseDown(event: MouseEvent) {
+        // Middle button
+        if (event.button === 1) {
+            this.state = CanvasState.Offsetting;
+        }
+    }
+
+    onMouseUp(event: MouseEvent) {
+        this.state = CanvasState.Default;
     }
 }

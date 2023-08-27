@@ -47,6 +47,11 @@ export class CanvasService {
         this.offset.x -= dx;
         this.offset.y -= dy;
 
+        if (new Vector(this.currentOffset.value, this.offset).length < this.scrollSensitivity) {
+            this.currentOffset.next(this.offset);
+            return;
+        }
+
         this.interval = this.window.setInterval(() => {
             const currentOffset = this.currentOffset.value;
 
