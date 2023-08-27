@@ -8,6 +8,7 @@ import { GridFigure } from "../figures/grid.figure";
 import { DrawingContext } from "../figures/base/drawing-context.model";
 import { WINDOW } from "../tokens/window.token";
 import { MousePointerFigure } from "../figures/mouse-pointer.figure";
+import { RectangleFigure } from "../figures/rectangle.figure";
 
 @Injectable()
 export class CanvasService {
@@ -23,7 +24,8 @@ export class CanvasService {
 
     private figures: Figure[] = [
         new GridFigure(),
-        new MousePointerFigure()
+        new MousePointerFigure(),
+        new RectangleFigure(new Point(0, 0), new Size(100, 100))
     ];
 
     constructor(@Inject(WINDOW) private window: Window) {
@@ -105,10 +107,12 @@ export class CanvasService {
             this.figures.map(x => x.clone())
         );
 
-        this.figures.forEach(figure => {
-            this.context!.save();
-            figure.draw(context);
-            this.context!.restore();
-        });
+        this.figures
+            .sort((f1, f2) => f1.zIndex - f2.zIndex)
+            .forEach(figure => {
+                this.context!.save();
+                figure.draw(context);
+                this.context!.restore();
+            });
     }
 }

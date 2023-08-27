@@ -2,6 +2,8 @@
 import { DrawingContext } from "./base/drawing-context.model";
 
 export class MousePointerFigure implements Figure {
+    zIndex = Number.MAX_VALUE;
+
     draw({ renderingContext: context, mousePos, canvasSize, canvasOffset }: DrawingContext): void {
         mousePos = mousePos.add(canvasOffset);
         context.strokeStyle = 'black';
