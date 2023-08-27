@@ -13,6 +13,10 @@ export class Point {
         return new Point(this.x + delta.x, this.y + delta.y);
     }
 
+    subtract(delta: Point): Point {
+        return new Point(this.x - delta.x, this.y - delta.y);
+    }
+
     translate(vector: Vector): Point {
         const dx = vector.to.x - vector.from.x;
         const dy = vector.to.y - vector.from.y;

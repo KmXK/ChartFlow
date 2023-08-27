@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { WindowSizeService } from "../services/window-size.service";
-import { CanvasService } from "../services/canvas.service";
+import { WindowSizeService } from "../../services/window-size.service";
+import { CanvasService } from "../../services/canvas.service";
 
 @Component({
     selector: 'app-canvas',
@@ -9,7 +9,6 @@ import { CanvasService } from "../services/canvas.service";
 })
 export class CanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
-    context!: CanvasRenderingContext2D;
 
     constructor(
         private windowSizeService: WindowSizeService,
