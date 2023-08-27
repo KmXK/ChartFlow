@@ -42,7 +42,7 @@ export class CanvasService {
     }
 
     public moveMouse(x: number, y: number) {
-        this.mousePos.next(new Point(x, y).subtract(this.currentOffset.value));
+        this.mousePos.next(new Point(x, y));
     }
 
     public changeOffset(dx: number, dy: number) {
@@ -52,9 +52,11 @@ export class CanvasService {
         this.offset.y -= dy;
 
         if (new Vector(this.currentOffset.value, this.offset).length < this.scrollSensitivity) {
-            this.currentOffset.next(this.offset);
+            this.currentOffset.next(this.offset.clone());
             return;
         }
+
+        this.interval = 0;
 
         const calculateOffset = () => {
             const currentOffset = this.currentOffset.value;
@@ -79,8 +81,8 @@ export class CanvasService {
         };
 
         calculateOffset();
-        if (this.interval > 0) {
-            this.interval = this.window.setInterval(calculateOffset, 10);
+        if (this.interval === 0) {
+            this.interval = this.window.setInterval(calculateOffset, 30);
         }
     }
 
@@ -99,7 +101,7 @@ export class CanvasService {
             this.context,
             size,
             currentOffset,
-            mousePos
+            mousePos.subtract(currentOffset)
         );
 
         this.figures.forEach(figure => {
