@@ -17,6 +17,9 @@ export abstract class Figure {
     mouseMove(context: MouseEventContext) {
     }
 
+    mouseOut(context: MouseEventContext) {
+    }
+
     containsPoint(position: Point): boolean {
         return false;
     }

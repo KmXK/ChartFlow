@@ -48,6 +48,20 @@ export class RectangleFigure extends Figure {
         context.requireRedraw();
     }
 
+    mouseMove(context: MouseEventContext) {
+        if (this.color === 'red') {
+            return;
+        }
+        
+        this.color = 'red';
+        context.requireRedraw();
+    }
+
+    mouseOut(context: MouseEventContext) {
+        this.color = 'white';
+        context.requireRedraw();
+    }
+
     containsPoint(position: Point): boolean {
         return position.x >= this.topLeftPoint.x
             && position.y >= this.topLeftPoint.y

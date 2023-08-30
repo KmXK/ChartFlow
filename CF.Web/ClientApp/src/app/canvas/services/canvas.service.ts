@@ -27,6 +27,7 @@ export class CanvasService {
     private currentOffset = new BehaviorSubject(new Point(0, 0));
     private interval = -1;
     private draggingFigure: Figure | null = null;
+    private hoveredFigure: Figure | null = null;
 
     constructor(
         @Inject(WINDOW) private window: Window,
@@ -59,27 +60,9 @@ export class CanvasService {
             return;
         }
 
-        let redrawIsRequested = false;
-
-        const globalPosition = this.pointMappingService.clientToGlobal(new Point(x, y), this.currentOffset.value, 1);
-
-        this.draggingFigure = this.figureDetectorService.getFigureByPoint(globalPosition);
-
-        if (!this.draggingFigure) {
-            return;
-        }
-
-        const context = this.getMouseEventContext();
-
-        context.requireRedraw = () => {
-            redrawIsRequested = true
-        };
-
-        this.draggingFigure.mouseDown(context);
-
-        if (redrawIsRequested) {
-            this.draw();
-        }
+        this.draggingFigure = this.triggerActionForFigureByPoint(
+            new Point(x, y),
+            (figure, context) => figure.mouseDown(context));
     }
 
     public mouseUp(x: number, y: number) {
@@ -87,27 +70,41 @@ export class CanvasService {
             return;
         }
 
-        let redrawIsRequested = false;
-
         if (!this.draggingFigure) {
             return;
         }
 
-        const context = this.getMouseEventContext();
+        this.triggerActionForFigure(
+            this.draggingFigure,
+            (figure, context) => figure.mouseUp(context));
 
-        context.requireRedraw = () => {
-            redrawIsRequested = true
-        };
-
-        this.draggingFigure.mouseUp(context);
-
-        if (redrawIsRequested) {
-            this.draw();
-        }
+        this.draggingFigure = null;
     }
 
     public moveMouse(x: number, y: number) {
         this.clientMousePosition.next(new Point(x, y));
+
+        if (!this.draggingFigure) {
+            const hoveredFigure = this.hoveredFigure;
+
+            this.hoveredFigure = this.triggerActionForFigureByPoint(
+                new Point(x, y),
+                (figure, context) => figure.mouseMove(context));
+
+            if (hoveredFigure && this.hoveredFigure !== hoveredFigure) {
+                this.triggerActionForFigure(
+                    hoveredFigure,
+                    (figure, context) => figure.mouseOut(context));
+            }
+        } else {
+            if (this.hoveredFigure && (this.hoveredFigure !== this.draggingFigure || this.draggingFigure.containsPoint(new Point(x, y)))) {
+                this.triggerActionForFigure(
+                    this.hoveredFigure,
+                    (figure, context) => figure.mouseOut(context));
+
+                this.hoveredFigure = null;
+            }
+        }
     }
 
     public changeOffset(dx: number, dy: number) {
@@ -203,5 +200,33 @@ export class CanvasService {
             () => {
             }
         );
+    }
+
+    private triggerActionForFigureByPoint(point: Point, action: (f: Figure, context: MouseEventContext) => void): Figure | null {
+        const globalPosition = this.pointMappingService.clientToGlobal(point, this.currentOffset.value, 1);
+
+        const figure = this.figureDetectorService.getFigureByPoint(globalPosition);
+
+        if (figure) {
+            this.triggerActionForFigure(figure, action);
+        }
+
+        return figure;
+    }
+
+    private triggerActionForFigure(figure: Figure, action: (f: Figure, context: MouseEventContext) => void): void {
+        let redrawIsRequested = false;
+
+        const context = this.getMouseEventContext();
+
+        context.requireRedraw = () => {
+            redrawIsRequested = true
+        };
+
+        action(figure, context);
+
+        if (redrawIsRequested) {
+            this.draw();
+        }
     }
 }
