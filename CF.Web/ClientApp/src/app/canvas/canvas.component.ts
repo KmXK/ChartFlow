@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from "@angular/core";
 import { WindowSizeService } from "../services/window-size.service";
 import { CanvasService } from "./services/canvas.service";
 import { Size } from "../shared/models/size.model";
@@ -69,6 +69,7 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    @HostListener('window:mouseup', ['$event'])
     onMouseUp(event: MouseEvent) {
         this.state = CanvasState.Default;
 

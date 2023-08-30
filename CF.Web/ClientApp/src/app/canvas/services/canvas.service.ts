@@ -97,13 +97,16 @@ export class CanvasService {
                     (figure, context) => figure.mouseOut(context));
             }
         } else {
-            if (this.hoveredFigure && (this.hoveredFigure !== this.draggingFigure || this.draggingFigure.containsPoint(new Point(x, y)))) {
-                this.triggerActionForFigure(
-                    this.hoveredFigure,
-                    (figure, context) => figure.mouseOut(context));
-
-                this.hoveredFigure = null;
-            }
+            this.triggerActionForFigure(
+                this.draggingFigure,
+                (figure, context) => figure.mouseMove(context));
+            // if (this.hoveredFigure && (this.hoveredFigure !== this.draggingFigure || this.draggingFigure.containsPoint(new Point(x, y)))) {
+            //     this.triggerActionForFigure(
+            //         this.hoveredFigure,
+            //         (figure, context) => figure.mouseOut(context));
+            //
+            //     this.hoveredFigure = null;
+            // }
         }
     }
 
