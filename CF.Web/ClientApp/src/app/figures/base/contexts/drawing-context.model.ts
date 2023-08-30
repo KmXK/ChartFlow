@@ -1,6 +1,6 @@
-﻿import { Size } from "../../shared/models/size.model";
-import { Point } from "../../shared/models/point.model";
-import { Figure } from "./figure.interface";
+﻿import { Size } from "../../../shared/models/size.model";
+import { Point } from "../../../shared/models/point.model";
+import { Figure } from "../figure";
 
 export class DrawingContext {
     constructor(

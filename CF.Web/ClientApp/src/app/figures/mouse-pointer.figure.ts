@@ -1,7 +1,7 @@
-﻿import { Figure } from "./base/figure.interface";
-import { DrawingContext } from "./base/drawing-context.model";
+﻿import { Figure } from "./base/figure";
+import { DrawingContext } from "./base/contexts/drawing-context.model";
 
-export class MousePointerFigure implements Figure {
+export class MousePointerFigure extends Figure {
     zIndex = Number.MAX_VALUE;
 
     draw({ renderingContext: context, mousePos, canvasSize, canvasOffset }: DrawingContext): void {

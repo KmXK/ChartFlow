@@ -3,12 +3,15 @@ import { Vector } from "../shared/models/vector.model";
 import { Point } from "../shared/models/point.model";
 import { Size } from "../shared/models/size.model";
 import { BehaviorSubject, combineLatest } from "rxjs";
-import { Figure } from "../figures/base/figure.interface";
+import { Figure } from "../figures/base/figure";
 import { GridFigure } from "../figures/grid.figure";
-import { DrawingContext } from "../figures/base/drawing-context.model";
+import { DrawingContext } from "../figures/base/contexts/drawing-context.model";
 import { WINDOW } from "../tokens/window.token";
 import { MousePointerFigure } from "../figures/mouse-pointer.figure";
 import { RectangleFigure } from "../figures/rectangle.figure";
+import { MouseEventContext } from "../figures/base/contexts/mouse-event-context.model";
+import { CanvasMousePosition } from "./models/canvas-mouse-position.model";
+import { PointMappingService } from "./point-mapping.service";
 
 @Injectable()
 export class CanvasService {
@@ -18,7 +21,7 @@ export class CanvasService {
     private offset = new Point(0, 0);
 
     private size = new BehaviorSubject(new Size(0, 0));
-    private mousePos = new BehaviorSubject(new Point(0, 0));
+    private clientMousePosition = new BehaviorSubject(new Point(0, 0));
     private currentOffset = new BehaviorSubject(new Point(0, 0));
     private interval = -1;
 
@@ -28,14 +31,16 @@ export class CanvasService {
         new RectangleFigure(new Point(0, 0), new Size(100, 100))
     ];
 
-    constructor(@Inject(WINDOW) private window: Window) {
+    constructor(
+        @Inject(WINDOW) private window: Window,
+        private pointMappingService: PointMappingService) {
         combineLatest([
             this.size,
-            this.mousePos,
+            this.clientMousePosition,
             this.currentOffset
         ])
-            .subscribe(([size, mousePos, currentOffset]) => {
-                window.requestAnimationFrame(() => this.draw(size, mousePos, currentOffset));
+            .subscribe(() => {
+                this.draw();
             });
     }
 
@@ -43,8 +48,42 @@ export class CanvasService {
         this.size.next(new Size(size.width, size.height));
     }
 
+    public mouseDown(x: number, y: number) {
+        if (!this.context) {
+            return;
+        }
+
+        const renderingContext = this.context;
+        let redrawIsRequested = false;
+
+        // TODO: Find figures by coords to simplify logic
+        this.figures.forEach(f => {
+            const globalPosition = this.pointMappingService.clientToGlobal(this.clientMousePosition.value, this.currentOffset.value, 1);
+
+            if (f.containsPoint(globalPosition)) {
+                f.mouseDown(new MouseEventContext(
+                    this,
+                    renderingContext,
+                    this.size.value,
+                    this.currentOffset.value,
+                    new CanvasMousePosition(
+                        this.clientMousePosition.value,
+                        globalPosition
+                    ),
+                    () => {
+                        redrawIsRequested = true;
+                    }
+                ));
+            }
+        });
+
+        if (redrawIsRequested) {
+            this.draw();
+        }
+    }
+
     public moveMouse(x: number, y: number) {
-        this.mousePos.next(new Point(x, y));
+        this.clientMousePosition.next(new Point(x, y));
     }
 
     public changeOffset(dx: number, dy: number) {
@@ -65,7 +104,8 @@ export class CanvasService {
 
             if (this.offset.x === currentOffset.x &&
                 this.offset.y === currentOffset.y &&
-                this.interval > 0) {
+                this.interval > 0
+            ) {
                 clearInterval(this.interval);
                 this.interval = -1;
                 return;
@@ -88,31 +128,37 @@ export class CanvasService {
         }
     }
 
-    public draw(size: Size, mousePos: Point, currentOffset: Point) {
-        if (!this.context) {
-            return;
-        }
+    private draw() {
+        window.requestAnimationFrame(() => {
+            if (!this.context) {
+                return;
+            }
 
-        // TODO: Current logic calls little offset for grid while resizing window
-        this.context.canvas.width = size.width;
-        this.context.canvas.height = size.height;
+            const size = this.size.value;
+            const offset = this.currentOffset.value;
+            const mousePosition = this.pointMappingService.clientToGlobal(this.clientMousePosition.value, offset, 1);
 
-        this.context.clearRect(0, 0, size.width, size.height);
+            // TODO: Current logic calls little offset for grid while resizing window
+            this.context.canvas.width = size.width;
+            this.context.canvas.height = size.height;
 
-        const context = new DrawingContext(
-            this.context,
-            size,
-            currentOffset,
-            mousePos.subtract(currentOffset),
-            this.figures.map(x => x.clone())
-        );
+            this.context.clearRect(0, 0, size.width, size.height);
 
-        this.figures
-            .sort((f1, f2) => f1.zIndex - f2.zIndex)
-            .forEach(figure => {
-                this.context!.save();
-                figure.draw(context);
-                this.context!.restore();
-            });
+            const context = new DrawingContext(
+                this.context,
+                size,
+                offset,
+                mousePosition,
+                this.figures.map(x => x.clone())
+            );
+
+            this.figures
+                .sort((f1, f2) => f1.zIndex - f2.zIndex)
+                .forEach(figure => {
+                    this.context!.save();
+                    figure.draw(context);
+                    this.context!.restore();
+                });
+        });
     }
 }

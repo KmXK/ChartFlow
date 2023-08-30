@@ -64,6 +64,8 @@ export class CanvasComponent implements AfterViewInit, OnDestroy {
         if (event.button === 1) {
             this.state = CanvasState.Offsetting;
         }
+
+        this.canvasService.mouseDown(event.x, event.y);
     }
 
     onMouseUp(event: MouseEvent) {

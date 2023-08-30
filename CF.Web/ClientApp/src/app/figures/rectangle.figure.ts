@@ -1,9 +1,10 @@
-﻿import { Figure } from "./base/figure.interface";
-import { DrawingContext } from "./base/drawing-context.model";
+﻿import { Figure } from "./base/figure";
 import { Point } from "../shared/models/point.model";
 import { Size } from "../shared/models/size.model";
+import { DrawingContext } from "./base/contexts/drawing-context.model";
+import { MouseEventContext } from "./base/contexts/mouse-event-context.model";
 
-export class RectangleFigure implements Figure {
+export class RectangleFigure extends Figure {
 
     zIndex = 0;
 
@@ -11,6 +12,7 @@ export class RectangleFigure implements Figure {
         private topLeftPoint: Point,
         private size: Size
     ) {
+        super();
     }
 
     draw(context: DrawingContext): void {
@@ -33,6 +35,17 @@ export class RectangleFigure implements Figure {
             this.size.height);
 
         context.renderingContext.closePath();
+    }
+
+    mouseDown(context: MouseEventContext) {
+        console.log('Mouse down on rectangle');
+    }
+
+    containsPoint(position: Point): boolean {
+        return position.x >= this.topLeftPoint.x
+            && position.y >= this.topLeftPoint.y
+            && position.x <= this.topLeftPoint.x + this.size.width
+            && position.y <= this.topLeftPoint.y + this.size.height;
     }
 
     clone(): Figure {

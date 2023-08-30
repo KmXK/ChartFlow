@@ -1,7 +1,7 @@
-﻿import { Figure } from "./base/figure.interface";
-import { DrawingContext } from "./base/drawing-context.model";
+﻿import { Figure } from "./base/figure";
+import { DrawingContext } from "./base/contexts/drawing-context.model";
 
-export class GridFigure implements Figure {
+export class GridFigure extends Figure {
     private readonly gap = 20;
 
     zIndex = -1;
