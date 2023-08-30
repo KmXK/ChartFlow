@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { CanvasService } from "./canvas.service";
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
 import { WindowSizeService } from "../services/window-size.service";
+import { CanvasService } from "./services/canvas.service";
 import { Size } from "../shared/models/size.model";
-import { CanvasState } from "./canvas-state.enum";
+import { CanvasState } from "./enums/canvas-state.enum";
 
 @Component({
     selector: 'app-canvas',
@@ -10,10 +10,9 @@ import { CanvasState } from "./canvas-state.enum";
     styleUrls: ['./canvas.component.scss']
 })
 export class CanvasComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
     private observer: ResizeObserver | null = null;
     private state = CanvasState.Default;
-
-    @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
     constructor(
         private windowSizeService: WindowSizeService,

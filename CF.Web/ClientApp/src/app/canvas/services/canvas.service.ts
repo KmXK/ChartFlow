@@ -1,17 +1,17 @@
-import { Inject, Injectable } from '@angular/core';
-import { Vector } from "../shared/models/vector.model";
-import { Point } from "../shared/models/point.model";
-import { Size } from "../shared/models/size.model";
+import { Inject, Injectable } from "@angular/core";
+import { DrawingContext } from "../../figures/base/contexts/drawing-context.model";
 import { BehaviorSubject, combineLatest } from "rxjs";
-import { Figure } from "../figures/base/figure";
-import { GridFigure } from "../figures/grid.figure";
-import { DrawingContext } from "../figures/base/contexts/drawing-context.model";
-import { WINDOW } from "../tokens/window.token";
-import { MousePointerFigure } from "../figures/mouse-pointer.figure";
-import { RectangleFigure } from "../figures/rectangle.figure";
-import { MouseEventContext } from "../figures/base/contexts/mouse-event-context.model";
-import { CanvasMousePosition } from "./models/canvas-mouse-position.model";
+import { RectangleFigure } from "../../figures/rectangle.figure";
+import { Size } from "../../shared/models/size.model";
+import { GridFigure } from "../../figures/grid.figure";
+import { CanvasMousePosition } from "../models/canvas-mouse-position.model";
+import { Point } from "../../shared/models/point.model";
+import { MouseEventContext } from "../../figures/base/contexts/mouse-event-context.model";
+import { WINDOW } from "../../tokens/window.token";
+import { Figure } from "../../figures/base/figure";
 import { PointMappingService } from "./point-mapping.service";
+import { Vector } from "../../shared/models/vector.model";
+import { MousePointerFigure } from "../../figures/mouse-pointer.figure";
 
 @Injectable()
 export class CanvasService {

@@ -1,5 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
-import { Point } from "../shared/models/point.model";
+import { Point } from "../../shared/models/point.model";
 
 @Injectable()
 export class PointMappingService {
