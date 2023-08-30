@@ -8,10 +8,11 @@ import { CanvasMousePosition } from "../models/canvas-mouse-position.model";
 import { Point } from "../../shared/models/point.model";
 import { MouseEventContext } from "../../figures/base/contexts/mouse-event-context.model";
 import { WINDOW } from "../../tokens/window.token";
-import { Figure } from "../../figures/base/figure";
 import { PointMappingService } from "./point-mapping.service";
 import { Vector } from "../../shared/models/vector.model";
 import { MousePointerFigure } from "../../figures/mouse-pointer.figure";
+import { FigureService } from "./figure.service";
+import { FigureDetectorService } from "./figure-detector.service";
 
 @Injectable()
 export class CanvasService {
@@ -25,15 +26,12 @@ export class CanvasService {
     private currentOffset = new BehaviorSubject(new Point(0, 0));
     private interval = -1;
 
-    private figures: Figure[] = [
-        new GridFigure(),
-        new MousePointerFigure(),
-        new RectangleFigure(new Point(0, 0), new Size(100, 100))
-    ];
-
     constructor(
         @Inject(WINDOW) private window: Window,
-        private pointMappingService: PointMappingService) {
+        private pointMappingService: PointMappingService,
+        private figureService: FigureService,
+        private figureDetectorService: FigureDetectorService
+    ) {
         combineLatest([
             this.size,
             this.clientMousePosition,
@@ -42,6 +40,12 @@ export class CanvasService {
             .subscribe(() => {
                 this.draw();
             });
+
+        figureService.addFigures([
+            new GridFigure(),
+            new MousePointerFigure(),
+            new RectangleFigure(new Point(0, 0), new Size(100, 100))
+        ]);
     }
 
     public setSize(size: Size) {
@@ -53,28 +57,18 @@ export class CanvasService {
             return;
         }
 
-        const renderingContext = this.context;
         let redrawIsRequested = false;
 
-        // TODO: Find figures by coords to simplify logic
-        this.figures.forEach(f => {
-            const globalPosition = this.pointMappingService.clientToGlobal(this.clientMousePosition.value, this.currentOffset.value, 1);
+        const globalPosition = this.pointMappingService.clientToGlobal(new Point(x, y), this.currentOffset.value, 1);
 
-            if (f.containsPoint(globalPosition)) {
-                f.mouseDown(new MouseEventContext(
-                    this,
-                    renderingContext,
-                    this.size.value,
-                    this.currentOffset.value,
-                    new CanvasMousePosition(
-                        this.clientMousePosition.value,
-                        globalPosition
-                    ),
-                    () => {
-                        redrawIsRequested = true;
-                    }
-                ));
-            }
+        this.figureDetectorService.getFiguresByPoint(globalPosition).forEach(f => {
+            const context = this.getMouseEventContext();
+
+            context.requireRedraw = () => {
+                redrawIsRequested = true
+            };
+
+            f.mouseDown(context);
         });
 
         if (redrawIsRequested) {
@@ -89,8 +83,7 @@ export class CanvasService {
     public changeOffset(dx: number, dy: number) {
         if (this.interval !== -1) this.window.clearInterval(this.interval);
 
-        this.offset.x -= dx;
-        this.offset.y -= dy;
+        this.offset = this.offset.subtract(new Point(dx, dy));
 
         if (new Vector(this.currentOffset.value, this.offset).length < this.scrollSensitivity) {
             this.currentOffset.next(this.offset.clone());
@@ -144,15 +137,17 @@ export class CanvasService {
 
             this.context.clearRect(0, 0, size.width, size.height);
 
+            const figures = this.figureService.getFigures();
+
             const context = new DrawingContext(
                 this.context,
                 size,
                 offset,
                 mousePosition,
-                this.figures.map(x => x.clone())
+                figures.map(x => x.clone())
             );
 
-            this.figures
+            figures
                 .sort((f1, f2) => f1.zIndex - f2.zIndex)
                 .forEach(figure => {
                     this.context!.save();
@@ -160,5 +155,23 @@ export class CanvasService {
                     this.context!.restore();
                 });
         });
+    }
+
+    private getMouseEventContext(): MouseEventContext {
+        if (!this.context) {
+            throw new Error('Context is not initialized');
+        }
+
+        return new MouseEventContext(
+            this,
+            this.context,
+            this.size.value,
+            this.currentOffset.value,
+            new CanvasMousePosition(
+                this.clientMousePosition.value,
+                this.pointMappingService.clientToGlobal(this.clientMousePosition.value, this.currentOffset.value, 1)),
+            () => {
+            }
+        );
     }
 }

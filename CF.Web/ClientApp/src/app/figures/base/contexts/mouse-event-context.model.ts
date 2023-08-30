@@ -1,7 +1,7 @@
 ﻿import { Point } from "../../../shared/models/point.model";
 import { Size } from "../../../shared/models/size.model";
-import { CanvasService } from "../../../canvas/canvas.service";
 import { CanvasMousePosition } from "../../../canvas/models/canvas-mouse-position.model";
+import { CanvasService } from "../../../canvas/services/canvas.service";
 
 export class MouseEventContext {
     constructor(
