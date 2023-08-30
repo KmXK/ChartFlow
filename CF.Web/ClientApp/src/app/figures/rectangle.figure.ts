@@ -5,6 +5,7 @@ import { DrawingContext } from "./base/contexts/drawing-context.model";
 import { MouseEventContext } from "./base/contexts/mouse-event-context.model";
 
 export class RectangleFigure extends Figure {
+    private color = 'white';
 
     zIndex = 0;
 
@@ -16,7 +17,7 @@ export class RectangleFigure extends Figure {
     }
 
     draw(context: DrawingContext): void {
-        context.renderingContext.fillStyle = 'white';
+        context.renderingContext.fillStyle = this.color;
         context.renderingContext.strokeStyle = 'black';
         context.renderingContext.lineWidth = 2;
 
@@ -38,7 +39,13 @@ export class RectangleFigure extends Figure {
     }
 
     mouseDown(context: MouseEventContext) {
-        console.log('Mouse down on rectangle');
+        this.color = 'yellow';
+        context.requireRedraw();
+    }
+
+    mouseUp(context: MouseEventContext) {
+        this.color = 'white';
+        context.requireRedraw();
     }
 
     containsPoint(position: Point): boolean {

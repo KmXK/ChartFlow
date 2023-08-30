@@ -13,6 +13,7 @@ import { Vector } from "../../shared/models/vector.model";
 import { MousePointerFigure } from "../../figures/mouse-pointer.figure";
 import { FigureService } from "./figure.service";
 import { FigureDetectorService } from "./figure-detector.service";
+import { Figure } from "../../figures/base/figure";
 
 @Injectable()
 export class CanvasService {
@@ -25,6 +26,7 @@ export class CanvasService {
     private clientMousePosition = new BehaviorSubject(new Point(0, 0));
     private currentOffset = new BehaviorSubject(new Point(0, 0));
     private interval = -1;
+    private draggingFigure: Figure | null = null;
 
     constructor(
         @Inject(WINDOW) private window: Window,
@@ -61,15 +63,43 @@ export class CanvasService {
 
         const globalPosition = this.pointMappingService.clientToGlobal(new Point(x, y), this.currentOffset.value, 1);
 
-        this.figureDetectorService.getFiguresByPoint(globalPosition).forEach(f => {
-            const context = this.getMouseEventContext();
+        this.draggingFigure = this.figureDetectorService.getFigureByPoint(globalPosition);
 
-            context.requireRedraw = () => {
-                redrawIsRequested = true
-            };
+        if (!this.draggingFigure) {
+            return;
+        }
 
-            f.mouseDown(context);
-        });
+        const context = this.getMouseEventContext();
+
+        context.requireRedraw = () => {
+            redrawIsRequested = true
+        };
+
+        this.draggingFigure.mouseDown(context);
+
+        if (redrawIsRequested) {
+            this.draw();
+        }
+    }
+
+    public mouseUp(x: number, y: number) {
+        if (!this.context) {
+            return;
+        }
+
+        let redrawIsRequested = false;
+
+        if (!this.draggingFigure) {
+            return;
+        }
+
+        const context = this.getMouseEventContext();
+
+        context.requireRedraw = () => {
+            redrawIsRequested = true
+        };
+
+        this.draggingFigure.mouseUp(context);
 
         if (redrawIsRequested) {
             this.draw();

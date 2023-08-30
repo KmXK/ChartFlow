@@ -10,7 +10,16 @@ export class FigureDetectorService {
     ) {
     }
 
-    public getFiguresByPoint(point: Point): Figure[] {
-        return this.figureService.getFigures().filter(figure => figure.containsPoint(point));
+    public getFigureByPoint(point: Point): Figure | null {
+        const figures = this.figureService
+            .getFigures()
+            .filter(figure => figure.containsPoint(point))
+            .sort((f1, f2) => f1.zIndex - f2.zIndex);
+
+        if (figures) {
+            return figures[0];
+        }
+
+        return null;
     }
 }
