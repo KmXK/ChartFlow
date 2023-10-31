@@ -10,7 +10,7 @@ export abstract class BehaviorFigure extends Figure {
         protected topLeftPoint: Point,
         protected size: Size
     ) {
-        super();
+        super(topLeftPoint);
     }
 
     mouseDown(context: MouseEventContext) {
@@ -26,6 +26,7 @@ export abstract class BehaviorFigure extends Figure {
             const delta = context.mousePosition.global.subtract(this.previousPoint);
             this.previousPoint = context.mousePosition.global;
             this.topLeftPoint = this.topLeftPoint.add(delta);
+            
             context.requireRedraw();
         }
     }

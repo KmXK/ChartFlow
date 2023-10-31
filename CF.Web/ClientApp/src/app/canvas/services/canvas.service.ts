@@ -17,7 +17,7 @@ import { Figure } from "../../figures/base/figure";
 
 @Injectable()
 export class CanvasService {
-    public readonly scrollSensitivity = 12;
+    public readonly scrollSensitivity = 30;
     public context: CanvasRenderingContext2D | null = null;
 
     private offset = new Point(0, 0);
@@ -100,13 +100,6 @@ export class CanvasService {
             this.triggerActionForFigure(
                 this.draggingFigure,
                 (figure, context) => figure.mouseMove(context));
-            // if (this.hoveredFigure && (this.hoveredFigure !== this.draggingFigure || this.draggingFigure.containsPoint(new Point(x, y)))) {
-            //     this.triggerActionForFigure(
-            //         this.hoveredFigure,
-            //         (figure, context) => figure.mouseOut(context));
-            //
-            //     this.hoveredFigure = null;
-            // }
         }
     }
 
@@ -147,7 +140,7 @@ export class CanvasService {
 
         calculateOffset();
         if (this.interval === 0) {
-            this.interval = this.window.setInterval(calculateOffset, 30);
+            this.interval = this.window.setInterval(calculateOffset, 10);
         }
     }
 
@@ -169,21 +162,45 @@ export class CanvasService {
 
             const figures = this.figureService.getFigures();
 
-            const context = new DrawingContext(
-                this.context,
-                size,
-                offset,
-                mousePosition,
-                figures.map(x => x.clone())
-            );
+            const clonedFigures = figures.map(x => x.clone());
 
-            figures
-                .sort((f1, f2) => f1.zIndex - f2.zIndex)
-                .forEach(figure => {
-                    this.context!.save();
-                    figure.draw(context);
-                    this.context!.restore();
-                });
+            const drawFigure = (figure: Figure, parent: Figure | null = null, figureOffset: Point) => {
+                const context = new DrawingContext(
+                    this.context!,
+                    size,
+                    offset,
+                    mousePosition,
+                    clonedFigures,
+                    parent
+                );
+
+                this.context!.save();
+                const position = figure.position;
+
+                if (figure.position) {
+                    figure.position = figure.position.add(offset.add(figureOffset));
+                }
+
+                figure.draw(context);
+
+                if (position) {
+                    figure.position = position;
+                    
+                    figureOffset = figureOffset.add(position);
+                }
+
+                this.context!.restore();
+
+                drawFigures(figure.figures, figure, figureOffset);
+            };
+
+            const drawFigures = (figures: Figure[], parent: Figure | null = null, figureOffset: Point) => {
+                figures
+                    .sort((f1, f2) => f1.zIndex - f2.zIndex)
+                    .forEach(f => drawFigure(f, parent, figureOffset));
+            };
+
+            drawFigures(figures, null, new Point(0, 0));
         });
     }
 

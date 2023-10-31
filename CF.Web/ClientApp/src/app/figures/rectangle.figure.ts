@@ -3,6 +3,7 @@ import { Size } from "../shared/models/size.model";
 import { DrawingContext } from "./base/contexts/drawing-context.model";
 import { MouseEventContext } from "./base/contexts/mouse-event-context.model";
 import { BehaviorFigure } from "./base/behavior.figure";
+import { BasePointFigure } from "./base-point.figure";
 
 export class RectangleFigure extends BehaviorFigure {
     private color = 'white';
@@ -38,6 +39,13 @@ export class RectangleFigure extends BehaviorFigure {
 
     mouseDown(context: MouseEventContext) {
         super.mouseDown(context);
+
+        this.figures = [
+            new BasePointFigure(new Point(0, 0)),
+            new BasePointFigure(new Point(this.size.width, 0)),
+            new BasePointFigure(new Point(0, this.size.height)),
+            new BasePointFigure(new Point(this.size.width, this.size.height))
+        ];
 
         this.color = 'yellow';
         context.requireRedraw();

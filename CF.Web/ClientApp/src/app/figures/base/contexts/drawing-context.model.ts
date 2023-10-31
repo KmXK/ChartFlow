@@ -8,7 +8,16 @@ export class DrawingContext {
         public canvasSize: Size,
         public canvasOffset: Point,
         public mousePos: Point,
-        public figures: Figure[]
+        public figures: Figure[],
+        private baseFigure: Figure | null
     ) {
+    }
+
+    public getGlobalPoint(point: Point): Point {
+        if (this.baseFigure?.position) {
+            return point.add(this.baseFigure.position);
+        } else {
+            return point;
+        }
     }
 }

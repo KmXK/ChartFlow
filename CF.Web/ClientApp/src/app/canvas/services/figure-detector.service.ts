@@ -11,10 +11,18 @@ export class FigureDetectorService {
     }
 
     public getFigureByPoint(point: Point): Figure | null {
-        const figures = this.figureService
-            .getFigures()
+        let figures = this.figureService.getFigures();
+
+        for (let i = 0; i < figures.length; i++) {
+            if (figures[i].figures) {
+                figures[i].figures.forEach(f => f.zIndex = figures[i].zIndex + 0.000001);
+                figures.push(...figures[i].figures);
+            }
+        }
+
+        figures = figures
             .filter(figure => figure.containsPoint(point))
-            .sort((f1, f2) => f1.zIndex - f2.zIndex);
+            .sort((f1, f2) => f2.zIndex - f1.zIndex);
 
         if (figures) {
             return figures[0];
