@@ -185,7 +185,7 @@ export class CanvasService {
 
                 if (position) {
                     figure.position = position;
-                    
+
                     figureOffset = figureOffset.add(position);
                 }
 

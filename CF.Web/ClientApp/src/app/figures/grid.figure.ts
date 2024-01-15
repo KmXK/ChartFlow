@@ -2,9 +2,8 @@
 import { DrawingContext } from "./base/contexts/drawing-context.model";
 
 export class GridFigure extends Figure {
-    private readonly gap = 20;
-
     zIndex = -1;
+    private readonly gap = 20;
 
     draw({ renderingContext: context, canvasOffset, mousePos, canvasSize }: DrawingContext): void {
         context.strokeStyle = '#000000';

@@ -1,12 +1,9 @@
 ﻿import { Vector } from "./vector.model";
 
 export class Point {
-    private readonly _x: number;
-    private readonly _y: number;
-
-    constructor(x: number, y: number) {
-        this._x = x;
-        this._y = y;
+    constructor(
+        private readonly _x: number,
+        private readonly _y: number) {
     }
 
     get x(): number {

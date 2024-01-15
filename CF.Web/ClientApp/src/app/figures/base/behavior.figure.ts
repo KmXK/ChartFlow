@@ -26,7 +26,7 @@ export abstract class BehaviorFigure extends Figure {
             const delta = context.mousePosition.global.subtract(this.previousPoint);
             this.previousPoint = context.mousePosition.global;
             this.topLeftPoint = this.topLeftPoint.add(delta);
-            
+
             context.requireRedraw();
         }
     }
