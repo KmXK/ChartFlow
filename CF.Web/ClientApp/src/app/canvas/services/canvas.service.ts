@@ -1,252 +1,73 @@
-import { Inject, Injectable } from "@angular/core";
-import { DrawingContext } from "../../figures/base/contexts/drawing-context.model";
-import { BehaviorSubject, combineLatest } from "rxjs";
-import { RectangleFigure } from "../../figures/rectangle.figure";
-import { Size } from "../../shared/models/size.model";
-import { GridFigure } from "../../figures/grid.figure";
-import { CanvasMousePosition } from "../models/canvas-mouse-position.model";
-import { Point } from "../../shared/models/point.model";
-import { MouseEventContext } from "../../figures/base/contexts/mouse-event-context.model";
-import { WINDOW } from "../../tokens/window.token";
-import { PointMappingService } from "./point-mapping.service";
-import { Vector } from "../../shared/models/vector.model";
-import { MousePointerFigure } from "../../figures/mouse-pointer.figure";
-import { FigureService } from "./figure.service";
-import { FigureDetectorService } from "./figure-detector.service";
-import { Figure } from "../../figures/base/figure";
+import { inject, Injectable } from '@angular/core';
+import * as paper from 'paper';
+import { selectMouseHandlerByButton } from '../../shared/helpers/mouse-handler.helper';
+import { CanvasZoomService } from './canvas-zoom.service';
 
 @Injectable()
 export class CanvasService {
-    public readonly scrollSensitivity = 30;
-    public context: CanvasRenderingContext2D | null = null;
+    private scope = new paper.PaperScope();
+    private project!: paper.Project;
 
-    private offset = new Point(0, 0);
+    private canvasZoomService = inject(CanvasZoomService);
 
-    private size = new BehaviorSubject(new Size(0, 0));
-    private clientMousePosition = new BehaviorSubject(new Point(0, 0));
-    private currentOffset = new BehaviorSubject(new Point(0, 0));
-    private interval = -1;
-    private draggingFigure: Figure | null = null;
-    private hoveredFigure: Figure | null = null;
-
-    constructor(
-        @Inject(WINDOW) private window: Window,
-        private pointMappingService: PointMappingService,
-        private figureService: FigureService,
-        private figureDetectorService: FigureDetectorService
-    ) {
-        combineLatest([
-            this.size,
-            this.clientMousePosition,
-            this.currentOffset
-        ])
-            .subscribe(() => {
-                this.draw();
-            });
-
-        figureService.addFigures([
-            new GridFigure(),
-            new MousePointerFigure(),
-            new RectangleFigure(new Point(0, 0), new Size(100, 100))
-        ]);
+    public setCanvas(canvasElement: HTMLCanvasElement) {
+        this.project = new paper.Project(canvasElement);
+        this.init(canvasElement);
     }
 
-    public setSize(size: Size) {
-        this.size.next(new Size(size.width, size.height));
-    }
+    private init(canvasElement: HTMLCanvasElement) {
+        canvasElement.onwheel = this.mouseWheelHandler.bind(this);
 
-    public mouseDown(x: number, y: number) {
-        if (!this.context) {
-            return;
-        }
-
-        this.draggingFigure = this.triggerActionForFigureByPoint(
-            new Point(x, y),
-            (figure, context) => figure.mouseDown(context));
-    }
-
-    public mouseUp(x: number, y: number) {
-        if (!this.context) {
-            return;
-        }
-
-        if (!this.draggingFigure) {
-            return;
-        }
-
-        this.triggerActionForFigure(
-            this.draggingFigure,
-            (figure, context) => figure.mouseUp(context));
-
-        this.draggingFigure = null;
-    }
-
-    public moveMouse(x: number, y: number) {
-        this.clientMousePosition.next(new Point(x, y));
-
-        if (!this.draggingFigure) {
-            const hoveredFigure = this.hoveredFigure;
-
-            this.hoveredFigure = this.triggerActionForFigureByPoint(
-                new Point(x, y),
-                (figure, context) => figure.mouseMove(context));
-
-            if (hoveredFigure && this.hoveredFigure !== hoveredFigure) {
-                this.triggerActionForFigure(
-                    hoveredFigure,
-                    (figure, context) => figure.mouseOut(context));
-            }
-        } else {
-            this.triggerActionForFigure(
-                this.draggingFigure,
-                (figure, context) => figure.mouseMove(context));
-        }
-    }
-
-    public changeOffset(dx: number, dy: number) {
-        if (this.interval !== -1) this.window.clearInterval(this.interval);
-
-        this.offset = this.offset.subtract(new Point(dx, dy));
-
-        if (new Vector(this.currentOffset.value, this.offset).length < this.scrollSensitivity) {
-            this.currentOffset.next(this.offset.clone());
-            return;
-        }
-
-        this.interval = 0;
-
-        const calculateOffset = () => {
-            const currentOffset = this.currentOffset.value;
-
-            if (this.offset.x === currentOffset.x &&
-                this.offset.y === currentOffset.y &&
-                this.interval > 0
-            ) {
-                clearInterval(this.interval);
-                this.interval = -1;
-                return;
-            }
-
-            const movementVector = new Vector(currentOffset, this.offset);
-
-            const direction = movementVector.normalize();
-
-            const distance = movementVector.length < 1
-                ? movementVector.length
-                : movementVector.length / this.scrollSensitivity * 4;
-
-            this.currentOffset.next(currentOffset.translate(direction.multiply(distance)));
-        };
-
-        calculateOffset();
-        if (this.interval === 0) {
-            this.interval = this.window.setInterval(calculateOffset, 10);
-        }
-    }
-
-    private draw() {
-        window.requestAnimationFrame(() => {
-            if (!this.context) {
-                return;
-            }
-
-            const size = this.size.value;
-            const offset = this.currentOffset.value;
-            const mousePosition = this.pointMappingService.clientToGlobal(this.clientMousePosition.value, offset, 1);
-
-            // TODO: Current logic calls little offset for grid while resizing window
-            this.context.canvas.width = size.width;
-            this.context.canvas.height = size.height;
-
-            this.context.clearRect(0, 0, size.width, size.height);
-
-            const figures = this.figureService.getFigures();
-
-            const clonedFigures = figures.map(x => x.clone());
-
-            const drawFigure = (figure: Figure, parent: Figure | null = null, figureOffset: Point) => {
-                const context = new DrawingContext(
-                    this.context!,
-                    size,
-                    offset,
-                    mousePosition,
-                    clonedFigures,
-                    parent
-                );
-
-                this.context!.save();
-                const position = figure.position;
-
-                if (figure.position) {
-                    figure.position = figure.position.add(offset.add(figureOffset));
-                }
-
-                figure.draw(context);
-
-                if (position) {
-                    figure.position = position;
-
-                    figureOffset = figureOffset.add(position);
-                }
-
-                this.context!.restore();
-
-                drawFigures(figure.figures, figure, figureOffset);
-            };
-
-            const drawFigures = (figures: Figure[], parent: Figure | null = null, figureOffset: Point) => {
-                figures
-                    .sort((f1, f2) => f1.zIndex - f2.zIndex)
-                    .forEach(f => drawFigure(f, parent, figureOffset));
-            };
-
-            drawFigures(figures, null, new Point(0, 0));
+        this.project.view.on({
+            mousedown: selectMouseHandlerByButton({}),
+            mouseup: selectMouseHandlerByButton({
+                leftButtonHandler: event => this.leftMouseButtonUpHandler(event),
+                rightButtonHandler: () => console.log('RIGHT'),
+                middleButtonHandler: event => console.log(event)
+            }),
+            click: selectMouseHandlerByButton({
+                leftButtonHandler: event => this.leftMouseButtonClickHandler(event)
+            })
         });
     }
 
-    private getMouseEventContext(): MouseEventContext {
-        if (!this.context) {
-            throw new Error('Context is not initialized');
-        }
+    private leftMouseButtonClickHandler(event: paper.MouseEvent) {
+        const rect = new paper.Path.Rectangle(event.point.add(-25), [50, 50]);
+        rect.strokeColor = new paper.Color(0, 1);
+        rect.fillColor = new paper.Color('red');
 
-        return new MouseEventContext(
-            this,
-            this.context,
-            this.size.value,
-            this.currentOffset.value,
-            new CanvasMousePosition(
-                this.clientMousePosition.value,
-                this.pointMappingService.clientToGlobal(this.clientMousePosition.value, this.currentOffset.value, 1)),
-            () => {
-            }
-        );
-    }
-
-    private triggerActionForFigureByPoint(point: Point, action: (f: Figure, context: MouseEventContext) => void): Figure | null {
-        const globalPosition = this.pointMappingService.clientToGlobal(point, this.currentOffset.value, 1);
-
-        const figure = this.figureDetectorService.getFigureByPoint(globalPosition);
-
-        if (figure) {
-            this.triggerActionForFigure(figure, action);
-        }
-
-        return figure;
-    }
-
-    private triggerActionForFigure(figure: Figure, action: (f: Figure, context: MouseEventContext) => void): void {
-        let redrawIsRequested = false;
-
-        const context = this.getMouseEventContext();
-
-        context.requireRedraw = () => {
-            redrawIsRequested = true
+        rect.onFrame = () => {
+            rect.rotate(1);
+            rect.fillColor!.hue += 1;
         };
 
-        action(figure, context);
+        this.project.activeLayer.addChild(rect);
+    }
 
-        if (redrawIsRequested) {
-            this.draw();
+    private leftMouseButtonUpHandler(event: paper.MouseEvent) {
+    }
+
+    private mouseWheelHandler(event: WheelEvent) {
+        if (event.ctrlKey) {
+            const zoomSign = -Math.sign(event.deltaY);
+            this.setZoom(zoomSign, [event.clientX, event.clientY]);
+            event.preventDefault();
         }
+    }
+
+    private setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
+        const currentZoom = this.project.view.zoom;
+        const newZoom = (zoomSign > 0
+            ? this.canvasZoomService.getIncreased()
+            : this.canvasZoomService.getDecreased()) / 100;
+
+        const projectMousePosition = this.project.view.viewToProject(viewMousePosition);
+
+        const currentDistance = projectMousePosition.subtract(this.project.view.center);
+        const newDistance = currentDistance.divide(newZoom).multiply(currentZoom);
+
+        this.project.view.center = projectMousePosition.subtract(newDistance);
+
+        this.project.view.zoom = newZoom;
     }
 }

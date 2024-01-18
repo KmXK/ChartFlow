@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import * as paper from 'paper';
+import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { CanvasService } from './services/canvas.service';
 
 @Component({
@@ -14,9 +13,9 @@ import { CanvasService } from './services/canvas.service';
 export class CanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
 
-    private project!: paper.Project;
+    private readonly canvasService = inject(CanvasService);
 
     public ngAfterViewInit() {
-        this.project = new paper.Project(this.canvas.nativeElement);
+        this.canvasService.setCanvas(this.canvas.nativeElement);
     }
 }
