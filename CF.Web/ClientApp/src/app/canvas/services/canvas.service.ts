@@ -1,22 +1,33 @@
 import { inject, Injectable } from '@angular/core';
 import * as paper from 'paper';
 import { selectMouseHandlerByButton } from '../../shared/helpers/mouse-handler.helper';
+import { CanvasOffsetService } from './canvas-offset.service';
 import { CanvasZoomService } from './canvas-zoom.service';
 
 @Injectable()
 export class CanvasService {
+    private canvasElement!: HTMLCanvasElement;
+
     private scope = new paper.PaperScope();
     private project!: paper.Project;
 
     private canvasZoomService = inject(CanvasZoomService);
+    private canvasOffsetService = inject(CanvasOffsetService);
 
     public setCanvas(canvasElement: HTMLCanvasElement) {
+        this.canvasElement = canvasElement;
         this.project = new paper.Project(canvasElement);
-        this.init(canvasElement);
+        this.init();
+
+        this.canvasOffsetService.setView(this.project.view);
     }
 
-    private init(canvasElement: HTMLCanvasElement) {
-        canvasElement.onwheel = this.mouseWheelHandler.bind(this);
+    private init() {
+        this.registerEventHandlers();
+    }
+
+    private registerEventHandlers() {
+        this.canvasElement.onwheel = this.mouseWheelHandler.bind(this);
 
         this.project.view.on({
             mousedown: selectMouseHandlerByButton({}),
@@ -29,6 +40,10 @@ export class CanvasService {
                 leftButtonHandler: event => this.leftMouseButtonClickHandler(event)
             })
         });
+
+        this.project.view.onFrame = (event: { delta: number }) => {
+            this.canvasOffsetService.updateOffset(event.delta);
+        }
     }
 
     private leftMouseButtonClickHandler(event: paper.MouseEvent) {
@@ -51,23 +66,21 @@ export class CanvasService {
         const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
 
         // up - negative, down - positive
-        const scrollSign = -Math.sign(event.deltaY);
-        const deltaOffset = 30 / this.project.view.zoom;
+        const scrollSign = Math.sign(event.deltaY);
+        const deltaOffset = scrollSign * 30 / this.project.view.zoom;
 
         if (modifierCount === 0) {
-            this.offsetCanvas(new paper.Point(0, deltaOffset).multiply(scrollSign));
+            this.canvasOffsetService.changeOffset([0, deltaOffset]);
+            event.preventDefault();
+        } else if (event.ctrlKey) {
+            this.setZoom(-scrollSign, [event.clientX, event.clientY]);
+            event.preventDefault();
         } else if (modifierCount === 1) {
-            if (event.ctrlKey) {
-                this.setZoom(scrollSign, [event.clientX, event.clientY]);
+            if (event.shiftKey) {
+                this.canvasOffsetService.changeOffset([deltaOffset, 0]);
                 event.preventDefault();
-            } else if (event.shiftKey) {
-                this.offsetCanvas(new paper.Point(deltaOffset, 0).multiply(scrollSign));
             }
         }
-    }
-
-    private offsetCanvas(offset: paper.PointLike) {
-        this.project.view.translate(offset);
     }
 
     private setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {

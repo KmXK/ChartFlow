@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { CanvasOffsetService } from './services/canvas-offset.service';
+import { CanvasZoomService } from './services/canvas-zoom.service';
 import { CanvasService } from './services/canvas.service';
 
 @Component({
@@ -7,7 +9,9 @@ import { CanvasService } from './services/canvas.service';
     styleUrl: './canvas.component.scss',
     standalone: true,
     providers: [
-        CanvasService
+        CanvasService,
+        CanvasZoomService,
+        CanvasOffsetService
     ]
 })
 export class CanvasComponent implements AfterViewInit {
