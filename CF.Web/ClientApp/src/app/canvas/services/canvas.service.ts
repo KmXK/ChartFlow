@@ -48,11 +48,26 @@ export class CanvasService {
     }
 
     private mouseWheelHandler(event: WheelEvent) {
-        if (event.ctrlKey) {
-            const zoomSign = -Math.sign(event.deltaY);
-            this.setZoom(zoomSign, [event.clientX, event.clientY]);
-            event.preventDefault();
+        const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
+
+        // up - negative, down - positive
+        const scrollSign = -Math.sign(event.deltaY);
+        const deltaOffset = 30 / this.project.view.zoom;
+
+        if (modifierCount === 0) {
+            this.offsetCanvas(new paper.Point(0, deltaOffset).multiply(scrollSign));
+        } else if (modifierCount === 1) {
+            if (event.ctrlKey) {
+                this.setZoom(scrollSign, [event.clientX, event.clientY]);
+                event.preventDefault();
+            } else if (event.shiftKey) {
+                this.offsetCanvas(new paper.Point(deltaOffset, 0).multiply(scrollSign));
+            }
         }
+    }
+
+    private offsetCanvas(offset: paper.PointLike) {
+        this.project.view.translate(offset);
     }
 
     private setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
