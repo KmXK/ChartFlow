@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import * as paper from 'paper';
+import { SquareFigure } from '../../figures/square.figure';
 import { selectMouseHandlerByButton } from '../../shared/helpers/mouse-handler.helper';
 import { CanvasOffsetService } from './canvas-offset.service';
 import { CanvasZoomService } from './canvas-zoom.service';
@@ -47,16 +48,10 @@ export class CanvasService {
     }
 
     private leftMouseButtonClickHandler(event: paper.MouseEvent) {
-        const rect = new paper.Path.Rectangle(event.point.add(-25), [50, 50]);
-        rect.strokeColor = new paper.Color(0, 1);
-        rect.fillColor = new paper.Color('red');
-
-        rect.onFrame = () => {
-            rect.rotate(1);
-            rect.fillColor!.hue += 1;
-        };
-
-        this.project.activeLayer.addChild(rect);
+        this.project.activeLayer.addChild(new SquareFigure({
+            leftTopCornerPosition: event.point.add(-25),
+            size: [50, 50]
+        }).getItem());
     }
 
     private leftMouseButtonUpHandler(event: paper.MouseEvent) {
