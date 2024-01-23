@@ -1,21 +1,23 @@
-import { Controller, ControllerOptions } from './controller.interface';
+import { FrameEvent } from '../../shared/events/frame.event';
+import { Injector } from '../injector/injector';
+import { Controller } from './base/controller.interface';
 
 export class ZoomController implements Controller {
+    private readonly view: paper.View;
     private prevZoom = 85;
     private currentZoom = 100;
 
-    constructor(
-        private readonly view: paper.View) {
+    constructor(private readonly injector: Injector) {
+        this.view = injector.view;
     }
 
-    onWheel(event: WheelEvent, options: ControllerOptions) {
-        if (event.ctrlKey) {
-            this.setZoom(-Math.sign(event.deltaY), [event.clientX, event.clientY]);
-            event.preventDefault();
-        }
+    init() {
     }
 
-    private setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
+    onFrame(event: FrameEvent) {
+    }
+
+    public setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
         const currentZoom = this.view.zoom;
         const newZoom = (zoomSign > 0
             ? this.getIncreased()

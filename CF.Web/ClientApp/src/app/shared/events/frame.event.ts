@@ -3,3 +3,7 @@ export type FrameEvent = {
     time: number,
     delta: number
 };
+
+export function mapFrameEvent(event: any): FrameEvent {
+    return event;
+}

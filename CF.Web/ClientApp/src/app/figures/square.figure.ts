@@ -43,6 +43,7 @@ export class SquareFigure implements Figure {
     }
 
     private onMouseDrag(event: paper.MouseEvent): void {
+        console.log(event)
         this.rect.project.deselectAll();
         this.rect.selected = true;
         this.rect.position = this.rect.position.add(event.delta);

@@ -1,37 +1,36 @@
+import * as paper from 'paper';
 import { FrameEvent } from '../../shared/events/frame.event';
-import { Controller, ControllerOptions } from './controller.interface';
+import { Injector } from '../injector/injector';
+import { Controller } from './base/controller.interface';
 
 export class OffsetController implements Controller {
+    private view!: paper.View;
     private requiredOffset = new paper.Point(0, 0);
     private smoothTime = 1;
 
-    constructor(private readonly view: paper.View) {
+    constructor(private readonly injector: Injector) {
     }
 
-    onFrame(event: FrameEvent, option: ControllerOptions) {
+    init() {
+        this.view = this.injector.view;
+    }
+
+    public onFrame(event: FrameEvent) {
         this.updateOffset(event.delta);
     }
 
-    onWheel(event: WheelEvent, options: ControllerOptions) {
-        const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
-        const deltaOffset = Math.sign(event.deltaY) * 30 / this.view.zoom;
-
-        if (modifierCount == 0) {
-            this.changeOffset([0, deltaOffset]);
-            event.preventDefault();
-        } else if (modifierCount === 1 && event.shiftKey) {
-            this.changeOffset([deltaOffset, 0]);
-            event.preventDefault();
-        }
-    }
-
-    private changeOffset(deltaOffset: paper.PointLike) {
+    public changeOffset(deltaOffset: paper.PointLike) {
         if (this.smoothTime > 0) {
             this.requiredOffset = this.requiredOffset.subtract(this.requiredOffset.multiply(this.smoothTime));
         }
 
         this.requiredOffset = this.requiredOffset.add(deltaOffset);
         this.smoothTime = 0;
+    }
+
+    public setOffset(offset: paper.PointLike) {
+        this.view.center = this.view.center.add(offset);
+        this.smoothTime = 1;
     }
 
     private updateOffset(deltaTime: number) {
