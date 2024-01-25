@@ -6,9 +6,9 @@ import { Controller } from './base/controller.interface';
 export class PlaceController implements Controller {
     constructor(private readonly injector: Injector) {}
 
-    init() {}
+    public init(): void {}
 
-    onFrame(event: FrameEvent) {}
+    public onFrame(event: FrameEvent): void {}
 
     public placeSquare(position: paper.PointLike, size: paper.SizeLike): void {
         this.injector.project.activeLayer.addChild(

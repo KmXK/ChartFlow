@@ -15,11 +15,11 @@ import { CanvasService } from './services/canvas.service';
     providers: [CanvasService]
 })
 export class CanvasComponent implements AfterViewInit {
-    @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild('canvas') private canvas!: ElementRef<HTMLCanvasElement>;
 
     private readonly canvasService = inject(CanvasService);
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         this.canvasService.setCanvas(this.canvas.nativeElement);
     }
 }

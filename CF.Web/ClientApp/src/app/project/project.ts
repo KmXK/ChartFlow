@@ -52,15 +52,15 @@ export class Project implements IProject {
         });
     }
 
-    setSelectionTo(...figures: Figure[]): void {
+    public setSelectionTo(...figures: Figure[]): void {
         throw new Error('Method not implemented.');
     }
 
-    addToSelection(...figures: Figure[]): void {
+    public addToSelection(...figures: Figure[]): void {
         throw new Error('Method not implemented.');
     }
 
-    delete(...figures: Figure[]): void {
+    public delete(...figures: Figure[]): void {
         throw new Error('Method not implemented.');
     }
 
@@ -80,7 +80,7 @@ export class Project implements IProject {
                 if (propagationStopped) break;
 
                 callback(eventHandler)?.apply(eventHandler, [
-                    mapFunction?.(event) ?? (event as any as TMappedEvent),
+                    mapFunction?.(event) ?? (event as unknown as TMappedEvent),
                     options
                 ]);
             }

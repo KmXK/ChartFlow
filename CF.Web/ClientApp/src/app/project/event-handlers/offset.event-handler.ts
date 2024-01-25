@@ -10,7 +10,7 @@ export class OffsetEventHandler implements EventHandler {
 
     constructor(private readonly injector: Injector) {}
 
-    onMouseDown(event: MouseEvent, options: EventHandlerOptions) {
+    public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.button === MouseButton.Middle) {
             // TODO: Make cursor controller
             this.injector.view.element.style.cursor = 'move';
@@ -20,12 +20,12 @@ export class OffsetEventHandler implements EventHandler {
         }
     }
 
-    onMouseUp(event: MouseEvent, options: EventHandlerOptions) {
+    public onMouseUp(event: MouseEvent, options: EventHandlerOptions): void {
         // TODO: Make cursor controller
         this.injector.view.element.style.cursor = 'default';
     }
 
-    onDrag(event: MouseEvent, option: EventHandlerOptions) {
+    public onDrag(event: MouseEvent, option: EventHandlerOptions): void {
         if (event.button === MouseButton.Middle) {
             this.offsetController.setOffset(this.start.subtract(event.point));
             event.preventDefault();
@@ -33,7 +33,7 @@ export class OffsetEventHandler implements EventHandler {
         }
     }
 
-    onWheel(event: WheelEvent, options: EventHandlerOptions) {
+    public onWheel(event: WheelEvent, options: EventHandlerOptions): void {
         const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
         const deltaOffset =
             (Math.sign(event.deltaY) * 30) / this.injector.view.zoom;

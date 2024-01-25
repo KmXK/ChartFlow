@@ -34,8 +34,21 @@
                 ],
                 "sort-imports": "off",
                 "array-element-newline": "off",
-                "@typescript-eslint/explicit-member-accessibility": "error",
-                "@typescript-eslint/explicit-function-return-type": "error",
+                "@typescript-eslint/explicit-member-accessibility": [
+                    "error",
+                    {
+                        "accessibility": "explicit",
+                        "overrides": {
+                            "accessors": "no-public",
+                            "constructors": "no-public"
+                        }
+                    }
+                ],
+                "@typescript-eslint/explicit-function-return-type": [
+                    "error", {
+                        "allowExpressions": true
+                    }
+                ],
                 "@typescript-eslint/no-unused-vars": "warn"
             }
         },

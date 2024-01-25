@@ -10,15 +10,15 @@ export class OffsetController implements Controller {
 
     constructor(private readonly injector: Injector) {}
 
-    init() {
+    public init(): void {
         this.view = this.injector.view;
     }
 
-    public onFrame(event: FrameEvent) {
+    public onFrame(event: FrameEvent): void {
         this.updateOffset(event.delta);
     }
 
-    public changeOffset(deltaOffset: paper.PointLike) {
+    public changeOffset(deltaOffset: paper.PointLike): void {
         if (this.smoothTime > 0) {
             this.requiredOffset = this.requiredOffset.subtract(
                 this.requiredOffset.multiply(this.smoothTime)
@@ -29,19 +29,19 @@ export class OffsetController implements Controller {
         this.smoothTime = 0;
     }
 
-    public setOffset(offset: paper.PointLike) {
+    public setOffset(offset: paper.PointLike): void {
         this.view.center = this.view.center.add(offset);
         this.smoothTime = 1;
     }
 
-    private updateOffset(deltaTime: number) {
+    private updateOffset(deltaTime: number): void {
         if (this.smoothTime >= 1) return;
 
         // можно отключить анимацию скроллинга
         this.smoothUpdateOffset(deltaTime);
     }
 
-    private smoothUpdateOffset(deltaTime: number) {
+    private smoothUpdateOffset(deltaTime: number): void {
         const prevSmoothTime = this.smoothTime;
 
         this.smoothTime += deltaTime / 0.1;

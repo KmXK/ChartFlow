@@ -24,7 +24,7 @@ export class SquareFigure implements Figure {
         rect.onClick = this.onClick.bind(this);
     }
 
-    getItem(): paper.Item {
+    public getItem(): paper.Item {
         return this.rect;
     }
 

@@ -10,11 +10,11 @@ export class ProjectInjector implements Injector {
 
     constructor(private readonly _project: paper.Project) {}
 
-    public get view(): paper.View {
+    get view(): paper.View {
         return this.project.view;
     }
 
-    public get project(): paper.Project {
+    get project(): paper.Project {
         return this._project;
     }
 

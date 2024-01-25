@@ -11,11 +11,11 @@ export class ZoomController implements Controller {
         this.view = injector.view;
     }
 
-    init() {}
+    public init(): void {}
 
-    onFrame(event: FrameEvent) {}
+    public onFrame(event: FrameEvent): void {}
 
-    public setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
+    public setZoom(zoomSign: number, viewMousePosition: paper.PointLike): void {
         const currentZoom = this.view.zoom;
         const newZoom =
             (zoomSign > 0 ? this.getIncreased() : this.getDecreased()) / 100;

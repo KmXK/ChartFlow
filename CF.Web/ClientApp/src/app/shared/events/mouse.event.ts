@@ -12,11 +12,17 @@ export interface MouseEvent extends paper.MouseEvent {
 
 export function mapMouseEvent(event: paper.MouseEvent): MouseEvent {
     const e = event as MouseEvent;
-    e.button = getMouseButton((event as any).event);
+    e.button = getMouseButton(
+        (event as unknown as { event: { which?: number; button: number } })
+            .event
+    );
     return e;
 }
 
-function getMouseButton(event: any): MouseButton {
+function getMouseButton(event: {
+    which?: number;
+    button: number;
+}): MouseButton {
     return event.which
         ? event.which
         : event.button === 1

@@ -24,7 +24,7 @@ export function selectMouseHandlerByButton(
     };
 
     return event => {
-        const baseEvent = (event as any).event as MouseEvent;
+        const baseEvent = (event as unknown as { event: MouseEvent }).event;
         const button = baseEvent.button as number;
         const handler = handlersMap[button];
 

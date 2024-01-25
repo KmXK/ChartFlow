@@ -8,7 +8,7 @@ export class ZoomEventHandler implements EventHandler {
 
     constructor(private readonly injector: Injector) {}
 
-    onWheel(event: WheelEvent, options: EventHandlerOptions) {
+    public onWheel(event: WheelEvent, options: EventHandlerOptions): void {
         if (event.ctrlKey) {
             this.zoomController.setZoom(-Math.sign(event.deltaY), [
                 event.clientX,
