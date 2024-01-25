@@ -2,19 +2,21 @@ type TEvent = paper.MouseEvent;
 
 // `stopPropagation` is `true` by default
 export type MouseHandler =
-    ((event: TEvent) => void) |
-    {
-        handler: (event: TEvent) => void,
-        stopPropagation?: boolean
-    };
+    | ((event: TEvent) => void)
+    | {
+          handler: (event: TEvent) => void;
+          stopPropagation?: boolean;
+      };
 
 export type MouseHandlers = {
-    leftButtonHandler?: MouseHandler,
-    rightButtonHandler?: MouseHandler,
-    middleButtonHandler?: MouseHandler
+    leftButtonHandler?: MouseHandler;
+    rightButtonHandler?: MouseHandler;
+    middleButtonHandler?: MouseHandler;
 };
 
-export function selectMouseHandlerByButton(handlers: MouseHandlers): (event: TEvent) => void {
+export function selectMouseHandlerByButton(
+    handlers: MouseHandlers
+): (event: TEvent) => void {
     const handlersMap: Record<number, MouseHandler | undefined> = {
         0: handlers.leftButtonHandler,
         2: handlers.rightButtonHandler,
@@ -38,5 +40,5 @@ export function selectMouseHandlerByButton(handlers: MouseHandlers): (event: TEv
                 event.stopPropagation();
             }
         }
-    }
+    };
 }

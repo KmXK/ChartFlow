@@ -4,11 +4,11 @@ import { Injector } from '../injector/injector';
 import { EventHandler, EventHandlerOptions } from './event-handler';
 
 export class OffsetEventHandler implements EventHandler {
-    private readonly offsetController = this.injector.getController(OffsetController);
+    private readonly offsetController =
+        this.injector.getController(OffsetController);
     private start!: paper.Point;
 
-    constructor(private readonly injector: Injector) {
-    }
+    constructor(private readonly injector: Injector) {}
 
     onMouseDown(event: MouseEvent, options: EventHandlerOptions) {
         if (event.button === MouseButton.Middle) {
@@ -35,7 +35,8 @@ export class OffsetEventHandler implements EventHandler {
 
     onWheel(event: WheelEvent, options: EventHandlerOptions) {
         const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
-        const deltaOffset = Math.sign(event.deltaY) * 30 / this.injector.view.zoom;
+        const deltaOffset =
+            (Math.sign(event.deltaY) * 30) / this.injector.view.zoom;
 
         if (modifierCount == 0) {
             this.offsetController.changeOffset([0, deltaOffset]);

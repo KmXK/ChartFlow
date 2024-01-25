@@ -5,12 +5,10 @@ import { Controller } from '../controllers/base/controller.interface';
 import { Injector } from './injector';
 
 export class ProjectInjector implements Injector {
-    private readonly _controllerMap: Map<Class<Controller>, Controller> = new Map<Class<Controller>, Controller>();
+    private readonly _controllerMap: Map<Class<Controller>, Controller> =
+        new Map<Class<Controller>, Controller>();
 
-    constructor(
-        private readonly _project: paper.Project
-    ) {
-    }
+    constructor(private readonly _project: paper.Project) {}
 
     public get view(): paper.View {
         return this.project.view;
@@ -21,16 +19,21 @@ export class ProjectInjector implements Injector {
     }
 
     public setControllers(controllers: Controller[]): void {
-        for (let controller of controllers) {
-            this._controllerMap.set(Object.getPrototypeOf(controller) as Class<Controller>, controller);
+        for (const controller of controllers) {
+            this._controllerMap.set(
+                Object.getPrototypeOf(controller) as Class<Controller>,
+                controller
+            );
         }
 
-        for (let controller of controllers) {
+        for (const controller of controllers) {
             controller.init();
         }
     }
 
-    public getController<TController extends Controller>(type: Class<TController>): TController {
+    public getController<TController extends Controller>(
+        type: Class<TController>
+    ): TController {
         const controller = this._controllerMap.get(type.prototype);
 
         if (!controller) {

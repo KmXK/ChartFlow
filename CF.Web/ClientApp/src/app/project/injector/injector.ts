@@ -7,5 +7,7 @@ export interface Injector {
 
     get project(): paper.Project;
 
-    getController<TController extends Controller>(type: Class<TController>): TController;
+    getController<TController extends Controller>(
+        type: Class<TController>
+    ): TController;
 }

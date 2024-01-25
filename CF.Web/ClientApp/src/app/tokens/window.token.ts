@@ -1,5 +1,5 @@
-﻿import { inject, InjectionToken } from "@angular/core";
-import { DOCUMENT } from "@angular/common";
+﻿import { DOCUMENT } from '@angular/common';
+import { inject, InjectionToken } from '@angular/core';
 
 export const WINDOW = new InjectionToken<Window>(
     'An abstraction over global Window object',
@@ -14,4 +14,4 @@ export const WINDOW = new InjectionToken<Window>(
             return defaultView;
         }
     }
-)
+);

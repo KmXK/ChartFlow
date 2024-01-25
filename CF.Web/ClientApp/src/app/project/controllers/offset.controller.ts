@@ -8,8 +8,7 @@ export class OffsetController implements Controller {
     private requiredOffset = new paper.Point(0, 0);
     private smoothTime = 1;
 
-    constructor(private readonly injector: Injector) {
-    }
+    constructor(private readonly injector: Injector) {}
 
     init() {
         this.view = this.injector.view;
@@ -21,7 +20,9 @@ export class OffsetController implements Controller {
 
     public changeOffset(deltaOffset: paper.PointLike) {
         if (this.smoothTime > 0) {
-            this.requiredOffset = this.requiredOffset.subtract(this.requiredOffset.multiply(this.smoothTime));
+            this.requiredOffset = this.requiredOffset.subtract(
+                this.requiredOffset.multiply(this.smoothTime)
+            );
         }
 
         this.requiredOffset = this.requiredOffset.add(deltaOffset);
@@ -47,7 +48,9 @@ export class OffsetController implements Controller {
 
         if (this.smoothTime > 1) this.smoothTime = 1;
 
-        const distance = this.requiredOffset.multiply(this.smoothTime - prevSmoothTime);
+        const distance = this.requiredOffset.multiply(
+            this.smoothTime - prevSmoothTime
+        );
 
         this.view.center = this.view.center.add(distance);
     }

@@ -2,12 +2,15 @@ import { FrameEvent } from '../../shared/events/frame.event';
 import { MouseEvent } from '../../shared/events/mouse.event';
 
 export type EventHandlerOptions = {
-    stopPropagation(): void
+    stopPropagation(): void;
 };
 
-export type EventHandlerMethod<TEvent> = ((event: TEvent, options: EventHandlerOptions) => void) | undefined;
-export type EventHandlerMethodPicker<TEvent> = (eventHandler: EventHandler) => EventHandlerMethod<TEvent>;
-
+export type EventHandlerMethod<TEvent> =
+    | ((event: TEvent, options: EventHandlerOptions) => void)
+    | undefined;
+export type EventHandlerMethodPicker<TEvent> = (
+    eventHandler: EventHandler
+) => EventHandlerMethod<TEvent>;
 
 export interface EventHandler {
     onMouseDown?(event: MouseEvent, options: EventHandlerOptions): void;

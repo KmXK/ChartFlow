@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    inject,
+    ViewChild
+} from '@angular/core';
 import { CanvasService } from './services/canvas.service';
 
 @Component({
@@ -6,9 +12,7 @@ import { CanvasService } from './services/canvas.service';
     templateUrl: './canvas.component.html',
     styleUrl: './canvas.component.scss',
     standalone: true,
-    providers: [
-        CanvasService
-    ]
+    providers: [CanvasService]
 })
 export class CanvasComponent implements AfterViewInit {
     @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;

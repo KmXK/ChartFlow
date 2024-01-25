@@ -11,11 +11,6 @@ if (environment.production) {
     enableProdMode();
 }
 
-bootstrapApplication(
-    AppComponent,
-    {
-        providers: [
-            { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
-        ]
-    })
-    .catch(e => console.error(e));
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }]
+}).catch(e => console.error(e));

@@ -7,7 +7,7 @@ export enum MouseButton {
 }
 
 export interface MouseEvent extends paper.MouseEvent {
-    button: MouseButton
+    button: MouseButton;
 }
 
 export function mapMouseEvent(event: paper.MouseEvent): MouseEvent {
@@ -20,12 +20,10 @@ function getMouseButton(event: any): MouseButton {
     return event.which
         ? event.which
         : event.button === 1
-            ? 1
-            : event.button === 2
-                ? 3
-                : event.button === 4
-                    ? 2
-                    : 1;
+          ? 1
+          : event.button === 2
+            ? 3
+            : event.button === 4
+              ? 2
+              : 1;
 }
-
-

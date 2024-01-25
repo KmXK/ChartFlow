@@ -5,9 +5,6 @@ import { CanvasComponent } from './canvas/canvas.component';
     selector: 'app-root',
     templateUrl: './app.component.html',
     standalone: true,
-    imports: [
-        CanvasComponent
-    ]
+    imports: [CanvasComponent]
 })
-export class AppComponent {
-}
+export class AppComponent {}

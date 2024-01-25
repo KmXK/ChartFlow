@@ -11,22 +11,21 @@ export class ZoomController implements Controller {
         this.view = injector.view;
     }
 
-    init() {
-    }
+    init() {}
 
-    onFrame(event: FrameEvent) {
-    }
+    onFrame(event: FrameEvent) {}
 
     public setZoom(zoomSign: number, viewMousePosition: paper.PointLike) {
         const currentZoom = this.view.zoom;
-        const newZoom = (zoomSign > 0
-            ? this.getIncreased()
-            : this.getDecreased()) / 100;
+        const newZoom =
+            (zoomSign > 0 ? this.getIncreased() : this.getDecreased()) / 100;
 
         const projectMousePosition = this.view.viewToProject(viewMousePosition);
 
         const currentDistance = projectMousePosition.subtract(this.view.center);
-        const newDistance = currentDistance.divide(newZoom).multiply(currentZoom);
+        const newDistance = currentDistance
+            .divide(newZoom)
+            .multiply(currentZoom);
 
         this.view.center = projectMousePosition.subtract(newDistance);
 
@@ -44,7 +43,7 @@ export class ZoomController implements Controller {
             newValue += 15;
         } else if (this.prevZoom < this.currentZoom) {
             const delta = this.currentZoom - this.prevZoom;
-            newValue += (delta + 5);
+            newValue += delta + 5;
         } else {
             newValue = this.prevZoom;
         }
@@ -63,7 +62,7 @@ export class ZoomController implements Controller {
             newValue -= 15;
         } else if (this.prevZoom > this.currentZoom) {
             const delta = this.prevZoom - this.currentZoom;
-            newValue -= (delta - 5);
+            newValue -= delta - 5;
         } else {
             newValue = this.prevZoom;
         }

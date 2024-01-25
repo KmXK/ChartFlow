@@ -5,7 +5,11 @@ import { Controller } from './controllers/base/controller.interface';
 import { OffsetController } from './controllers/offset.controller';
 import { PlaceController } from './controllers/place.controller';
 import { ZoomController } from './controllers/zoom.controller';
-import { EventHandler, EventHandlerMethodPicker, EventHandlerOptions } from './event-handlers/event-handler';
+import {
+    EventHandler,
+    EventHandlerMethodPicker,
+    EventHandlerOptions
+} from './event-handlers/event-handler';
 import { OffsetEventHandler } from './event-handlers/offset.event-handler';
 import { PlaceEventHandler } from './event-handlers/place.event-handler';
 import { ZoomEventHandler } from './event-handlers/zoom.event-handler';
@@ -32,10 +36,15 @@ export class Project implements IProject {
             new PlaceEventHandler(injector)
         ];
 
-        this.project.view.element.onwheel = this.eventHandlerCallback(c => c.onWheel);
+        this.project.view.element.onwheel = this.eventHandlerCallback(
+            c => c.onWheel
+        );
 
         this.project.view.on({
-            mousedown: this.eventHandlerCallback(c => c.onMouseDown, mapMouseEvent),
+            mousedown: this.eventHandlerCallback(
+                c => c.onMouseDown,
+                mapMouseEvent
+            ),
             mouseup: this.eventHandlerCallback(c => c.onMouseUp, mapMouseEvent),
             click: this.eventHandlerCallback(c => c.onClick, mapMouseEvent),
             frame: this.eventHandlerCallback(c => c.onFrame, mapFrameEvent),
@@ -58,7 +67,7 @@ export class Project implements IProject {
     private eventHandlerCallback<TEvent, TMappedEvent>(
         callback: EventHandlerMethodPicker<TMappedEvent>,
         mapFunction?: (event: TEvent) => TMappedEvent
-    ): ((event: TEvent) => void) {
+    ): (event: TEvent) => void {
         return event => {
             let propagationStopped = false;
             const options: EventHandlerOptions = {
@@ -70,7 +79,10 @@ export class Project implements IProject {
             for (const eventHandler of this.eventHandlers) {
                 if (propagationStopped) break;
 
-                callback(eventHandler)?.apply(eventHandler, [mapFunction?.(event) ?? (event as any as TMappedEvent), options]);
+                callback(eventHandler)?.apply(eventHandler, [
+                    mapFunction?.(event) ?? (event as any as TMappedEvent),
+                    options
+                ]);
             }
         };
     }
