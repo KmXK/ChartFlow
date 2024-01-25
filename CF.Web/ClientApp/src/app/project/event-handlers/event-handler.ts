@@ -1,5 +1,7 @@
+import { Figure } from '../../figures/base/figure';
 import { FrameEvent } from '../../shared/events/frame.event';
 import { MouseEvent } from '../../shared/events/mouse.event';
+import { Injector } from '../injector/injector';
 
 export type EventHandlerOptions = {
     stopPropagation(): void;
@@ -8,6 +10,7 @@ export type EventHandlerOptions = {
 export type EventHandlerMethod<TEvent> =
     | ((event: TEvent, options: EventHandlerOptions) => void)
     | undefined;
+
 export type EventHandlerMethodPicker<TEvent> = (
     eventHandler: EventHandler
 ) => EventHandlerMethod<TEvent>;
@@ -24,4 +27,8 @@ export interface EventHandler {
     onFrame?(event: FrameEvent, option: EventHandlerOptions): void;
 
     onDrag?(event: MouseEvent, option: EventHandlerOptions): void;
+}
+
+export interface FigureEventHandlerCreator {
+    new (injector: Injector, figure: Figure): EventHandler;
 }

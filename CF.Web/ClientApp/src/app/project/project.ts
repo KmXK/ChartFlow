@@ -1,9 +1,10 @@
-import { Figure } from '../figures/base/figure';
 import { mapFrameEvent } from '../shared/events/frame.event';
 import { mapMouseEvent } from '../shared/events/mouse.event';
 import { Controller } from './controllers/base/controller.interface';
+import { FigureEventHandlerRegistrationController } from './controllers/figure-event-handler-registration.controller';
 import { OffsetController } from './controllers/offset.controller';
 import { PlaceController } from './controllers/place.controller';
+import { SelectionController } from './controllers/selection.controller';
 import { ZoomController } from './controllers/zoom.controller';
 import {
     EventHandler,
@@ -14,9 +15,8 @@ import { OffsetEventHandler } from './event-handlers/offset.event-handler';
 import { PlaceEventHandler } from './event-handlers/place.event-handler';
 import { ZoomEventHandler } from './event-handlers/zoom.event-handler';
 import { ProjectInjector } from './injector/project-injector';
-import { Project as IProject } from './project.interface';
 
-export class Project implements IProject {
+export class Project {
     private readonly eventHandlers: EventHandler[];
 
     constructor(private readonly project: paper.Project) {
@@ -25,7 +25,9 @@ export class Project implements IProject {
         const controllers: Controller[] = [
             new ZoomController(injector),
             new PlaceController(injector),
-            new OffsetController(injector)
+            new OffsetController(injector),
+            new SelectionController(injector),
+            new FigureEventHandlerRegistrationController(injector)
         ];
 
         injector.setControllers(controllers);
@@ -50,18 +52,6 @@ export class Project implements IProject {
             frame: this.eventHandlerCallback(c => c.onFrame, mapFrameEvent),
             mousedrag: this.eventHandlerCallback(c => c.onDrag, mapMouseEvent)
         });
-    }
-
-    public setSelectionTo(...figures: Figure[]): void {
-        throw new Error('Method not implemented.');
-    }
-
-    public addToSelection(...figures: Figure[]): void {
-        throw new Error('Method not implemented.');
-    }
-
-    public delete(...figures: Figure[]): void {
-        throw new Error('Method not implemented.');
     }
 
     private eventHandlerCallback<TEvent, TMappedEvent>(
