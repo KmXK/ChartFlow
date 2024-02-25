@@ -2,10 +2,8 @@
   "name": "cf",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "serve": "ng serve",
     "build": "ng build",
-    "build:ssr": "ng run cf:server:dev",
-    "watch": "ng build --watch --configuration development",
     "lint": "ng lint"
   },
   "private": true,
