@@ -8,11 +8,6 @@ services:
 
     volumes:
       - ..:/app:cached
-      - /app/frontend/node_modules
-      - /app/frontend/.angular
-      - /app/backend/CF.Web/bin
-      - /app/backend/CF.Web/obj
-      - /app/.git
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
