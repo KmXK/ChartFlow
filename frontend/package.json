@@ -1,14 +1,10 @@
 {
-  "name": "cf.web",
+  "name": "cf",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "prestart": "node aspnetcore-https",
-    "start": "run-script-os",
-    "start:windows": "ng serve --port 44478 --ssl --ssl-cert \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem\" --ssl-key \"%APPDATA%\\ASP.NET\\https\\%npm_package_name%.key\"",
-    "start:default": "ng serve --port 44478 --ssl --ssl-cert \"$HOME/.aspnet/https/${npm_package_name}.pem\" --ssl-key \"$HOME/.aspnet/https/${npm_package_name}.key\"",
     "build": "ng build",
-    "build:ssr": "ng run CF.Web:server:dev",
+    "build:ssr": "ng run cf:server:dev",
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint"
   },
@@ -24,8 +20,6 @@
     "@angular/platform-server": "^17.0.9",
     "@angular/router": "^17.0.9",
     "paper": "^0.12.17",
-    "popper.js": "^1.16.0",
-    "run-script-os": "^1.1.6",
     "rxjs": "~7.8.0"
   },
   "devDependencies": {
