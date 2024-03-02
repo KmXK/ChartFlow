@@ -28,11 +28,14 @@ export class EventHandlerContainer {
                 propagationStopped = true;
             };
 
+            const mappedEvent =
+                mapFunction?.(event) ?? (event as unknown as TMappedEvent);
+
             for (const eventHandler of this.handlers) {
                 if (propagationStopped) break;
 
                 callback(eventHandler)?.apply(eventHandler, [
-                    mapFunction?.(event) ?? (event as unknown as TMappedEvent),
+                    mappedEvent,
                     options as EventHandlerOptions
                 ]);
             }

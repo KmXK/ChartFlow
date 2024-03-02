@@ -1,6 +1,8 @@
 import { ControllerCreator } from './controllers/base/controller.interface';
+import { EventMapperController } from './controllers/event-mapper.controller';
 import { FigureHitController } from './controllers/figure-hit.controller';
 import { FigureController } from './controllers/figure.controller';
+import { MouseEventCounter } from './controllers/mouse-event-counter.controller';
 import { OffsetController } from './controllers/offset.controller';
 import { PlaceController } from './controllers/place.controller';
 import { SelectionController } from './controllers/selection.controller';
@@ -15,7 +17,9 @@ export class Project {
         FigureHitController,
         PlaceController,
         OffsetController,
-        SelectionController
+        SelectionController,
+        EventMapperController,
+        MouseEventCounter
     ];
 
     constructor(private readonly project: paper.Project) {

@@ -9,14 +9,13 @@ export class PlaceEventHandler implements EventHandler {
 
     constructor(private readonly injector: Injector) {}
 
-    public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
-        if (event.button === MouseButton.Left) {
+    public onClick(event: MouseEvent, options: EventHandlerOptions): void {
+        if (event.button === MouseButton.Left && event.repeatCount === 2) {
             this.placeController.placeSquare(
                 event.point.subtract(25),
                 [50, 50]
             );
-            event.preventDefault();
-            event.stopPropagation();
+            event.stop();
         }
     }
 }

@@ -1,11 +1,14 @@
 import { MouseButton, MouseEvent } from '../../shared/events/mouse.event';
 import { OffsetController } from '../controllers/offset.controller';
+import { ZoomController } from '../controllers/zoom.controller';
 import { Injector } from '../injector/injector';
 import { EventHandler, EventHandlerOptions } from './event-handler';
 
 export class OffsetEventHandler implements EventHandler {
     private readonly offsetController =
         this.injector.getController(OffsetController);
+    private readonly zoomController =
+        this.injector.getController(ZoomController);
     private start!: paper.Point;
 
     constructor(private readonly injector: Injector) {}
@@ -36,7 +39,7 @@ export class OffsetEventHandler implements EventHandler {
     public onWheel(event: WheelEvent, options: EventHandlerOptions): void {
         const modifierCount = +event.ctrlKey + +event.altKey + +event.shiftKey;
         const deltaOffset =
-            (Math.sign(event.deltaY) * 30) / this.injector.view.zoom;
+            (Math.sign(event.deltaY) * 30) / this.zoomController.zoom;
 
         if (modifierCount == 0) {
             this.offsetController.changeOffset([0, deltaOffset]);

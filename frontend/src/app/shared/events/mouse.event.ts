@@ -8,18 +8,10 @@ export enum MouseButton {
 
 export interface MouseEvent extends paper.MouseEvent {
     button: MouseButton;
+    repeatCount: number;
 }
 
-export function mapMouseEvent(event: paper.MouseEvent): MouseEvent {
-    const e = event as MouseEvent;
-    e.button = getMouseButton(
-        (event as unknown as { event: { which?: number; button: number } })
-            .event
-    );
-    return e;
-}
-
-function getMouseButton(event: {
+export function getMouseButton(event: {
     which?: number;
     button: number;
 }): MouseButton {

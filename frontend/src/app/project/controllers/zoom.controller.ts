@@ -32,6 +32,11 @@ export class ZoomController implements Controller {
         this.view.zoom = newZoom;
     }
 
+    // Returns in number format where 1 = 100% zoom
+    get zoom(): number {
+        return this.currentZoom / 100;
+    }
+
     private getIncreased(): number {
         let newValue = this.currentZoom;
 

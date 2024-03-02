@@ -1,7 +1,8 @@
 import { FrameEvent, mapFrameEvent } from '../shared/events/frame.event';
-import { MouseEvent, mapMouseEvent } from '../shared/events/mouse.event';
+import { MouseEvent } from '../shared/events/mouse.event';
 import { mergeEventCallbacks } from '../shared/helpers/callback.helper';
 import { Optional } from '../shared/types/optional';
+import { EventMapperController } from './controllers/event-mapper.controller';
 import { FigureHitController } from './controllers/figure-hit.controller';
 import {
     EventHandlerMethodPicker,
@@ -27,6 +28,9 @@ export class EventLoop {
 
     private readonly figureHitController =
         this.injector.getController(FigureHitController);
+    private readonly eventMapperController = this.injector.getController(
+        EventMapperController
+    );
 
     constructor(private readonly injector: ProjectInjector) {
         this.configureEvents();
@@ -35,7 +39,12 @@ export class EventLoop {
     private configureEvents(): void {
         const view = this.injector.view;
 
-        // view.element.onwheel = (event: WheelEvent) => this.onWheel(event);
+        view.element.onwheel = this.eventHandlerCallback(options =>
+            this.eventHandlerContainer.eventHandlerCallback(
+                x => x.onWheel,
+                options
+            )
+        );
 
         const getMouseCallback = (
             methodPicker: EventHandlerMethodPicker<MouseEvent>
@@ -44,16 +53,11 @@ export class EventLoop {
                 this.eventHandlerContainer.eventHandlerCallback(
                     methodPicker,
                     options,
-                    mapMouseEvent
+                    this.eventMapperController.mapMouseEvent.bind(
+                        this.eventMapperController
+                    )
                 )
             );
-
-        view.element.onwheel = this.eventHandlerCallback(options =>
-            this.eventHandlerContainer.eventHandlerCallback(
-                x => x.onWheel,
-                options
-            )
-        );
 
         view.on({
             mousedown: getMouseCallback(x => x.onMouseDown),
