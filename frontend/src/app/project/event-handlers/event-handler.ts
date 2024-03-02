@@ -29,6 +29,10 @@ export interface EventHandler {
     onDrag?(event: MouseEvent, option: EventHandlerOptions): void;
 }
 
+export interface EventHandlerCreator {
+    new (injector: Injector): EventHandler;
+}
+
 export interface FigureEventHandlerCreator {
     new (injector: Injector, figure: Figure): EventHandler;
 }
