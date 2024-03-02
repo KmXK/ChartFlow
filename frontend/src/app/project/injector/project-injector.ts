@@ -40,7 +40,7 @@ export class ProjectInjector implements Injector {
         const controller = this._controllerMap.get(type.prototype);
 
         if (!controller) {
-            throw new InvalidInjectionError();
+            throw new InvalidInjectionError(type);
         }
 
         return controller as TController;

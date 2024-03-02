@@ -5,6 +5,7 @@ import { Injector } from '../injector/injector';
 
 export type EventHandlerOptions = {
     stopPropagation(): void;
+    figures: Figure[];
 };
 
 export type EventHandlerMethod<TEvent> =
@@ -17,6 +18,8 @@ export type EventHandlerMethodPicker<TEvent> = (
 
 export interface EventHandler {
     onMouseDown?(event: MouseEvent, options: EventHandlerOptions): void;
+
+    onMouseMove?(event: MouseEvent, options: EventHandlerOptions): void;
 
     onMouseUp?(event: MouseEvent, options: EventHandlerOptions): void;
 

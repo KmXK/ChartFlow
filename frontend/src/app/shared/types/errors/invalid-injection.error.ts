@@ -1,5 +1,10 @@
-export class InvalidInjectionError extends Error {
-    constructor() {
-        super('Invalid injection.');
+import { Controller } from 'src/app/project/controllers/base/controller.interface';
+import { Class } from '../class';
+
+export class InvalidInjectionError<
+    TController extends Controller
+> extends Error {
+    constructor(type: Class<TController>) {
+        super(`Invalid injection: required type not found (${type.name})`);
     }
 }

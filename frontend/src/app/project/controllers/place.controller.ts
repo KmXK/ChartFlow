@@ -1,31 +1,34 @@
+import { Figure } from 'src/app/figures/base/figure';
 import { SquareFigure } from '../../figures/square.figure';
-import { FrameEvent } from '../../shared/events/frame.event';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
+import { FigureController } from './figure.controller';
 import { SelectionController } from './selection.controller';
 
 export class PlaceController implements Controller {
     private selectionController!: SelectionController;
+    private figureController!: FigureController;
 
     constructor(private readonly injector: Injector) {}
 
     public init(): void {
         this.selectionController =
             this.injector.getController(SelectionController);
+
+        this.figureController = this.injector.getController(FigureController);
     }
 
-    public onFrame(event: FrameEvent): void {}
-
     public placeSquare(position: paper.PointLike, size: paper.SizeLike): void {
-        const figure = new SquareFigure(
-            {
+        this.registerFigure(
+            new SquareFigure({
                 size: size,
                 leftTopCornerPosition: position
-            },
-            this.injector
+            })
         );
+    }
 
-        this.injector.project.activeLayer.addChild(figure.getItem());
+    private registerFigure(figure: Figure): void {
         this.selectionController.selectFigure(figure);
+        this.figureController.addFigure(figure);
     }
 }

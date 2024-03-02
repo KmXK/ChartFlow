@@ -1,5 +1,6 @@
 import { ControllerCreator } from './controllers/base/controller.interface';
-import { FigureEventHandlerRegistrationController } from './controllers/figure-event-handler-registration.controller';
+import { FigureHitController } from './controllers/figure-hit.controller';
+import { FigureController } from './controllers/figure.controller';
 import { OffsetController } from './controllers/offset.controller';
 import { PlaceController } from './controllers/place.controller';
 import { SelectionController } from './controllers/selection.controller';
@@ -10,10 +11,11 @@ import { ProjectInjector } from './injector/project-injector';
 export class Project {
     private controllersClasses: ControllerCreator[] = [
         ZoomController,
+        FigureController,
+        FigureHitController,
         PlaceController,
         OffsetController,
-        SelectionController,
-        FigureEventHandlerRegistrationController
+        SelectionController
     ];
 
     constructor(private readonly project: paper.Project) {
@@ -24,6 +26,13 @@ export class Project {
         injector.setControllers(controllers);
 
         const eventLoop = new EventLoop(injector);
-        eventLoop.start();
+
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                injector
+                    .getController(PlaceController)
+                    .placeSquare([i * 50, j * 50], [40, 40]);
+            }
+        }
     }
 }
