@@ -1,4 +1,4 @@
-import { MouseButton, MouseEvent } from '../../shared/events/mouse.event';
+import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
 import { PlaceController } from '../controllers/place.controller';
 import { Injector } from '../injector/injector';
 import { EventHandler, EventHandlerOptions } from './event-handler';

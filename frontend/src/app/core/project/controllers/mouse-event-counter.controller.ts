@@ -1,4 +1,4 @@
-import { MouseEvent } from 'src/app/shared/events/mouse.event';
+import { MouseEvent } from '@core/shared/events/mouse.event';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
 import { ZoomController } from './zoom.controller';

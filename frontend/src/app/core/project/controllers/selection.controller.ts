@@ -1,4 +1,4 @@
-import { Figure } from '../../figures/base/figure';
+import { Figure } from '@core/figures/base/figure';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
 

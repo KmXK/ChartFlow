@@ -1,5 +1,4 @@
-import * as paper from 'paper';
-import { Class } from '../../shared/types/class';
+import { Class } from '@core/shared/types/class';
 import { Controller } from '../controllers/base/controller.interface';
 
 export interface Injector {

@@ -1,6 +1,6 @@
-import { Figure } from '../../figures/base/figure';
-import { FrameEvent } from '../../shared/events/frame.event';
-import { MouseEvent } from '../../shared/events/mouse.event';
+import { Figure } from '@core/figures/base/figure';
+import { FrameEvent } from '@core/shared/events/frame.event';
+import { MouseEvent } from '@core/shared/events/mouse.event';
 import { Injector } from '../injector/injector';
 
 export type EventHandlerOptions = {

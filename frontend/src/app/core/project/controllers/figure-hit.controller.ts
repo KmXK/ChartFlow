@@ -1,4 +1,4 @@
-import { Figure } from 'src/app/figures/base/figure';
+import { Figure } from '@core/figures/base/figure';
 import { Injector } from '../injector/injector';
 import { PointChangeTracker } from '../shared/point-change-tracker';
 import { Controller } from './base/controller.interface';

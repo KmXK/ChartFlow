@@ -1,4 +1,4 @@
-import { MouseEvent, getMouseButton } from 'src/app/shared/events/mouse.event';
+import { MouseEvent, getMouseButton } from '@core/shared/events/mouse.event';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
 import { MouseEventCounter } from './mouse-event-counter.controller';

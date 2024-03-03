@@ -1,4 +1,4 @@
-import { Optional } from 'src/app/shared/types/optional';
+import { Optional } from '@core/shared/types/optional';
 import {
     EventHandler,
     EventHandlerCreator,

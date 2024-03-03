@@ -1,5 +1,5 @@
-import { Figure } from 'src/app/figures/base/figure';
-import { SquareFigure } from '../../figures/square.figure';
+import { Figure } from '@core/figures/base/figure';
+import { SquareFigure } from '@core/figures/square.figure';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
 import { FigureController } from './figure.controller';

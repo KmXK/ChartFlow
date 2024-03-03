@@ -1,5 +1,5 @@
-import { Figure } from 'src/app/figures/base/figure';
-import { MouseButton, MouseEvent } from '../../shared/events/mouse.event';
+import { Figure } from '@core/figures/base/figure';
+import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
 import { SelectionController } from '../controllers/selection.controller';
 import { Injector } from '../injector/injector';
 import { EventHandler, EventHandlerOptions } from './event-handler';

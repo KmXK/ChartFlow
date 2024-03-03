@@ -1,4 +1,4 @@
-import { MouseButton, MouseEvent } from '../../shared/events/mouse.event';
+import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
 import { OffsetController } from '../controllers/offset.controller';
 import { ZoomController } from '../controllers/zoom.controller';
 import { Injector } from '../injector/injector';

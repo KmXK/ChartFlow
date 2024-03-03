@@ -1,5 +1,5 @@
-import { Class } from '../../shared/types/class';
-import { InvalidInjectionError } from '../../shared/types/errors/invalid-injection.error';
+import { Class } from '@core/shared/types/class';
+import { InvalidInjectionError } from '@core/shared/types/errors/invalid-injection.error';
 import { Controller } from '../controllers/base/controller.interface';
 import { Injector } from './injector';
 

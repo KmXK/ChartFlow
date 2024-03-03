@@ -1,4 +1,4 @@
-import { FrameEvent } from '../../shared/events/frame.event';
+import { FrameEvent } from '@core/shared/events/frame.event';
 import { Injector } from '../injector/injector';
 import { Controller } from './base/controller.interface';
 
