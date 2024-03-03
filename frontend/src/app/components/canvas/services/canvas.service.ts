@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Project } from '@core/project/project';
 import * as paper from 'paper';
-import { Project } from '../../project/project';
 
 @Injectable()
 export class CanvasService {

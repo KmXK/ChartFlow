@@ -2,8 +2,7 @@ import { FrameEvent, mapFrameEvent } from '../shared/events/frame.event';
 import { MouseEvent } from '../shared/events/mouse.event';
 import { mergeEventCallbacks } from '../shared/helpers/callback.helper';
 import { Optional } from '../shared/types/optional';
-import { EventMapperController } from './controllers/event-mapper.controller';
-import { FigureHitController } from './controllers/figure-hit.controller';
+import { EventMapperController, FigureHitController } from './controllers';
 import {
     EventHandlerMethodPicker,
     EventHandlerOptions

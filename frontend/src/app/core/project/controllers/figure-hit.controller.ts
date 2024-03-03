@@ -1,20 +1,16 @@
 import { Figure } from '@core/figures/base/figure';
-import { Injector } from '../injector/injector';
+import { Inject } from '../injector/injector';
 import { PointChangeTracker } from '../shared/point-change-tracker';
-import { Controller } from './base/controller.interface';
-import { FigureController } from './figure.controller';
+import { Controller, ControllerBase } from './base';
+import FigureController from './figure.controller';
 
-export class FigureHitController implements Controller {
+@Controller
+export default class FigureHitController extends ControllerBase {
     private readonly pointChangeTracker = new PointChangeTracker();
-    private figureController!: FigureController;
+
+    @Inject(FigureController) private figureController!: FigureController;
 
     private cachedFigures: Figure[] = [];
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {
-        this.figureController = this.injector.getController(FigureController);
-    }
 
     public getFiguresUnderMouse(point?: paper.Point): Figure[] {
         // TODO: Add check for mouse wheel and keyboard arrow keys

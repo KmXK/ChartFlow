@@ -1,17 +1,16 @@
 import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
-import { OffsetController } from '../controllers/offset.controller';
-import { ZoomController } from '../controllers/zoom.controller';
-import { Injector } from '../injector/injector';
-import { EventHandler, EventHandlerOptions } from './event-handler';
+import { OffsetController, ZoomController } from '../controllers/';
+import {
+    EventHandler,
+    EventHandlerBase,
+    EventHandlerOptions
+} from './event-handler';
 
-export class OffsetEventHandler implements EventHandler {
-    private readonly offsetController =
-        this.injector.getController(OffsetController);
-    private readonly zoomController =
-        this.injector.getController(ZoomController);
+@EventHandler
+export class OffsetEventHandler extends EventHandlerBase {
+    private readonly offsetController = this.inject(OffsetController);
+    private readonly zoomController = this.inject(ZoomController);
     private start!: paper.Point;
-
-    constructor(private readonly injector: Injector) {}
 
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.button === MouseButton.Middle) {

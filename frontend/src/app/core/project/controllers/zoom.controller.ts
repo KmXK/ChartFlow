@@ -1,19 +1,10 @@
-import { FrameEvent } from '@core/shared/events/frame.event';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
+import { Controller, ControllerBase } from './base';
 
-export class ZoomController implements Controller {
-    private readonly view: paper.View;
+@Controller
+export default class ZoomController extends ControllerBase {
+    private readonly view = this.injector.view;
     private prevZoom = 85;
     private currentZoom = 100;
-
-    constructor(private readonly injector: Injector) {
-        this.view = injector.view;
-    }
-
-    public init(): void {}
-
-    public onFrame(event: FrameEvent): void {}
 
     public setZoom(zoomSign: number, viewMousePosition: paper.PointLike): void {
         const currentZoom = this.view.zoom;

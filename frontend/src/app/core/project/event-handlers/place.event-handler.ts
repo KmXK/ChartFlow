@@ -1,13 +1,14 @@
 import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
-import { PlaceController } from '../controllers/place.controller';
-import { Injector } from '../injector/injector';
-import { EventHandler, EventHandlerOptions } from './event-handler';
+import { PlaceController } from '../controllers';
+import {
+    EventHandler,
+    EventHandlerBase,
+    EventHandlerOptions
+} from './event-handler';
 
-export class PlaceEventHandler implements EventHandler {
-    private readonly placeController =
-        this.injector.getController(PlaceController);
-
-    constructor(private readonly injector: Injector) {}
+@EventHandler
+export class PlaceEventHandler extends EventHandlerBase {
+    private readonly placeController = this.inject(PlaceController);
 
     public onClick(event: MouseEvent, options: EventHandlerOptions): void {
         if (

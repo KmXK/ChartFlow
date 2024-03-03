@@ -1,16 +1,11 @@
 import { MouseEvent, getMouseButton } from '@core/shared/events/mouse.event';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
-import { MouseEventCounter } from './mouse-event-counter.controller';
+import { Inject } from '../injector/injector';
+import { Controller, ControllerBase } from './base';
+import MouseEventCounter from './mouse-event-counter.controller';
 
-export class EventMapperController implements Controller {
-    private mouseEventCounter!: MouseEventCounter;
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {
-        this.mouseEventCounter = this.injector.getController(MouseEventCounter);
-    }
+@Controller
+export default class EventMapperController extends ControllerBase {
+    @Inject(MouseEventCounter) private mouseEventCounter!: MouseEventCounter;
 
     public mapMouseEvent(event: paper.MouseEvent): MouseEvent {
         const e = event as MouseEvent;

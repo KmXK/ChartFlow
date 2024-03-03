@@ -1,22 +1,17 @@
 import { Figure } from '@core/figures/base/figure';
 import { SquareFigure } from '@core/figures/square.figure';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
-import { FigureController } from './figure.controller';
-import { SelectionController } from './selection.controller';
+import { Inject } from '../injector/injector';
+import { Controller, ControllerBase } from './base';
+import FigureController from './figure.controller';
+import SelectionController from './selection.controller';
 
-export class PlaceController implements Controller {
+@Controller
+export default class PlaceController extends ControllerBase {
+    @Inject(SelectionController)
     private selectionController!: SelectionController;
+
+    @Inject(FigureController)
     private figureController!: FigureController;
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {
-        this.selectionController =
-            this.injector.getController(SelectionController);
-
-        this.figureController = this.injector.getController(FigureController);
-    }
 
     public placeSquare(position: paper.PointLike, size: paper.SizeLike): void {
         this.registerFigure(

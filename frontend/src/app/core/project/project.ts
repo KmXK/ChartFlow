@@ -1,12 +1,14 @@
-import { ControllerCreator } from './controllers/base/controller.interface';
-import { EventMapperController } from './controllers/event-mapper.controller';
-import { FigureHitController } from './controllers/figure-hit.controller';
-import { FigureController } from './controllers/figure.controller';
-import { MouseEventCounter } from './controllers/mouse-event-counter.controller';
-import { OffsetController } from './controllers/offset.controller';
-import { PlaceController } from './controllers/place.controller';
-import { SelectionController } from './controllers/selection.controller';
-import { ZoomController } from './controllers/zoom.controller';
+import {
+    EventMapperController,
+    FigureController,
+    FigureHitController,
+    MouseEventCounter,
+    OffsetController,
+    PlaceController,
+    SelectionController
+} from './controllers';
+import { ControllerCreator } from './controllers/base';
+import ZoomController from './controllers/zoom.controller';
 import { EventLoop } from './event-loop';
 import { ProjectInjector } from './injector/project-injector';
 

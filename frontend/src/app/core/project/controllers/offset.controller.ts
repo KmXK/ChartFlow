@@ -1,18 +1,12 @@
 import { FrameEvent } from '@core/shared/events/frame.event';
 import * as paper from 'paper';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
+import { Controller, ControllerBase } from './base';
 
-export class OffsetController implements Controller {
-    private view!: paper.View;
+@Controller
+export default class OffsetController extends ControllerBase {
+    private view = this.injector.view;
     private requiredOffset = new paper.Point(0, 0);
     private smoothTime = 1;
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {
-        this.view = this.injector.view;
-    }
 
     public onFrame(event: FrameEvent): void {
         this.updateOffset(event.delta);

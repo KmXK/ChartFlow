@@ -6,7 +6,5 @@ export interface ControllerCreator {
 }
 
 export interface Controller {
-    init(): void;
-
     onFrame?(event: FrameEvent): void;
 }

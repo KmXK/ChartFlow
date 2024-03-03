@@ -1,7 +1,7 @@
+import Controller from '@core/project/controllers/base';
 import { Class } from '@core/shared/types/class';
 import { InvalidInjectionError } from '@core/shared/types/errors/invalid-injection.error';
-import { Controller } from '../controllers/base/controller.interface';
-import { Injector } from './injector';
+import { Injector, configureInjection } from './injector';
 
 export class ProjectInjector implements Injector {
     private readonly _controllerMap: Map<Class<Controller>, Controller> =
@@ -27,11 +27,11 @@ export class ProjectInjector implements Injector {
                 Object.getPrototypeOf(controller) as Class<Controller>,
                 controller
             );
+
+            console.log(controller);
         }
 
-        for (const controller of controllers) {
-            controller.init();
-        }
+        controllers.forEach(c => configureInjection(c, this));
     }
 
     public getController<TController extends Controller>(
@@ -48,5 +48,12 @@ export class ProjectInjector implements Injector {
 
     public getControllers(): Controller[] {
         return this._plainControllers;
+    }
+
+    public getInjectFunction(): <TController extends Controller>(
+        type: Class<TController>
+    ) => TController {
+        return <TController extends Controller>(type: Class<TController>) =>
+            this.getController(type) as TController;
     }
 }

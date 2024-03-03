@@ -1,12 +1,8 @@
 import { Figure } from '@core/figures/base/figure';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
+import { Controller, ControllerBase } from './base';
 
-export class SelectionController implements Controller {
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {}
-
+@Controller
+export default class SelectionController extends ControllerBase {
     public selectFigure(figure: Figure): void {
         this.injector.project.deselectAll();
         figure.getItem().bringToFront();

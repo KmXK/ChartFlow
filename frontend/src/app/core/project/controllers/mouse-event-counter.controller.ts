@@ -1,7 +1,7 @@
 import { MouseEvent } from '@core/shared/events/mouse.event';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
-import { ZoomController } from './zoom.controller';
+import { Inject } from '../injector/injector';
+import { Controller, ControllerBase } from './base';
+import ZoomController from './zoom.controller';
 
 type EventCount = {
     lastTime: number;
@@ -10,51 +10,41 @@ type EventCount = {
     event: MouseEvent;
 };
 
-export class MouseEventCounter implements Controller {
+@Controller
+export default class MouseEventCounter extends ControllerBase {
     private threshold = 250; // время между нажатиями
     private pointDelta = 5; // максимальное расстояние при 100% зуме для повторного клика
 
-    private eventsMap: Map<string, EventCount> = new Map();
+    private eventsMap = new Map<string, EventCount>();
 
-    private zoomController!: ZoomController;
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {
-        this.zoomController = this.injector.getController(ZoomController);
-    }
+    @Inject(ZoomController) private zoomController!: ZoomController;
 
     public getNumber(event: MouseEvent): number {
+        let count;
+
         if (!this.eventsMap.has(event.type)) {
-            this.eventsMap.set(event.type, {
-                lastTime: event.timeStamp,
-                count: 1,
-                point: event.point,
-                event
-            });
+            count = 1;
         } else {
             const data = this.eventsMap.get(event.type)!;
+
             if (
                 data.lastTime + this.threshold < event.timeStamp ||
                 !this.arePointsClose(data.point, event.point)
             ) {
-                this.eventsMap.set(event.type, {
-                    lastTime: event.timeStamp,
-                    count: 1,
-                    point: event.point,
-                    event
-                });
+                count = 1;
             } else {
-                this.eventsMap.set(event.type, {
-                    lastTime: event.timeStamp,
-                    count: data.count + 1,
-                    point: event.point,
-                    event
-                });
+                count = data.count + 1;
             }
         }
 
-        return this.eventsMap.get(event.type)!.count;
+        this.eventsMap.set(event.type, {
+            lastTime: event.timeStamp,
+            count,
+            point: event.point,
+            event
+        });
+
+        return count;
     }
 
     public getLastEventData(

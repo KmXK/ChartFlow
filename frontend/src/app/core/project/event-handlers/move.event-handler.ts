@@ -1,23 +1,23 @@
 import { Figure } from '@core/figures/base/figure';
 import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
-import { SelectionController } from '../controllers/selection.controller';
-import { Injector } from '../injector/injector';
-import { EventHandler, EventHandlerOptions } from './event-handler';
+import { SelectionController } from '../controllers';
+import {
+    EventHandler,
+    EventHandlerBase,
+    EventHandlerOptions
+} from './event-handler';
 
-export class MoveEventHandler implements EventHandler {
-    private readonly selectionController =
-        this.injector.getController(SelectionController);
+@EventHandler
+export class MoveEventHandler extends EventHandlerBase {
+    private readonly selectionController = this.inject(SelectionController);
 
     private figure: Figure | undefined;
-
-    constructor(private readonly injector: Injector) {}
 
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.button === MouseButton.Left && options.figures.length > 0) {
             this.injector.view.element.style.cursor = 'move';
-            this.selectionController.selectFigure(
-                (this.figure = options.figures[0])
-            );
+            this.figure = options.figures[0];
+            this.selectionController.selectFigure(this.figure);
 
             options.stopPropagation();
         }

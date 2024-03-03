@@ -1,14 +1,14 @@
 import { Optional } from '@core/shared/types/optional';
 import {
-    EventHandler,
     EventHandlerCreator,
     EventHandlerMethodPicker,
-    EventHandlerOptions
+    EventHandlerOptions,
+    IEventHandler
 } from '../event-handlers/event-handler';
 import { Injector } from './../injector/injector';
 
 export class EventHandlerContainer {
-    private readonly handlers: EventHandler[] = this.eventHandlerCreators.map(
+    private readonly handlers: IEventHandler[] = this.eventHandlerCreators.map(
         eventHandler => new eventHandler(this.injector)
     );
 

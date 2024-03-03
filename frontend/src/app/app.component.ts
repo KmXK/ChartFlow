@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CanvasComponent } from './canvas/canvas.component';
+import { CanvasComponent } from './components/canvas/canvas.component';
 
 @Component({
     selector: 'app-root',

@@ -1,14 +1,10 @@
 import { Figure } from '@core/figures/base/figure';
-import { Injector } from '../injector/injector';
-import { Controller } from './base/controller.interface';
+import { Controller, ControllerBase } from './base';
 
-export class FigureController implements Controller {
+@Controller
+export default class FigureController extends ControllerBase {
     private readonly figures: Figure[] = [];
     private readonly figureByItem: Map<paper.Item, Figure> = new Map();
-
-    constructor(private readonly injector: Injector) {}
-
-    public init(): void {}
 
     public addFigure(figure: Figure): void {
         this.figures.push(figure);
