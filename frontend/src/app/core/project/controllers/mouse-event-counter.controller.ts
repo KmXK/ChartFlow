@@ -1,7 +1,7 @@
 import { inject } from '@core/di';
 import { MouseEvent } from '@core/shared/events/mouse.event';
-import ZoomController from './zoom.controller';
 import Controller from './base';
+import ZoomController from './zoom.controller';
 
 type EventCount = {
     lastTime: number;
@@ -35,6 +35,8 @@ export default class MouseEventCounter extends Controller {
                 count = data.count + 1;
             }
         }
+
+        // TODO: Fix click event count
 
         this.eventsMap.set(event.type, {
             lastTime: event.timeStamp,
