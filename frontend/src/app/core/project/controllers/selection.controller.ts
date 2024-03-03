@@ -1,5 +1,6 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
+import paper from 'paper';
 import Controller from './base';
 
 export default class SelectionController extends Controller {
@@ -9,5 +10,9 @@ export default class SelectionController extends Controller {
         this.project.deselectAll();
         figure.getItem().bringToFront();
         figure.getItem().selected = true;
+    }
+
+    public deselectAll(): void {
+        this.project.deselectAll();
     }
 }

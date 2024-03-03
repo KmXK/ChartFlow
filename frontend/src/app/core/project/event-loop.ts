@@ -1,4 +1,5 @@
 import { inject, injectAll } from '@core/di';
+import paper from 'paper';
 import { FrameEvent, mapFrameEvent } from '../shared/events/frame.event';
 import { MouseEvent } from '../shared/events/mouse.event';
 import { mergeEventCallbacks } from '../shared/helpers/callback.helper';
@@ -20,6 +21,7 @@ export class EventLoop {
     private readonly controllers = injectAll(Controller);
 
     public start(): void {
+        console.log(this.view);
         this.view.element.onwheel = this.eventHandlerCallback(options =>
             this.eventHandlerContainer.eventHandlerCallback(
                 x => x.onWheel,

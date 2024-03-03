@@ -1,6 +1,7 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
 import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
+import paper from 'paper';
 import { SelectionController } from '../controllers';
 import { EventHandler, EventHandlerOptions } from './event-handler';
 
@@ -17,6 +18,8 @@ export class MoveEventHandler extends EventHandler {
             this.selectionController.selectFigure(this.figure);
 
             options.stopPropagation();
+        } else {
+            this.selectionController.deselectAll();
         }
     }
 

@@ -28,6 +28,7 @@
     "@angular-eslint/schematics": "17.2.1",
     "@angular-eslint/template-parser": "17.2.1",
     "@angular/cli": "^17.0.10",
+    "@types/paper": "^0.12.3",
     "@angular/compiler-cli": "^17.0.9",
     "@types/node": "^18.14.0",
     "@typescript-eslint/eslint-plugin": "6.19.0",

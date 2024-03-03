@@ -1,5 +1,6 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
+import paper from 'paper';
 import Controller from './base';
 
 export default class FigureController extends Controller {

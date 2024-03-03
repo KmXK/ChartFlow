@@ -1,4 +1,5 @@
 import { inject } from '@core/di';
+import paper from 'paper';
 import Controller from './base';
 
 export default class ZoomController extends Controller {

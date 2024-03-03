@@ -1,8 +1,9 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
+import paper from 'paper';
 import { PointChangeTracker } from '../shared/point-change-tracker';
-import FigureController from './figure.controller';
 import Controller from './base';
+import FigureController from './figure.controller';
 
 export default class FigureHitController extends Controller {
     private readonly pointChangeTracker = new PointChangeTracker();

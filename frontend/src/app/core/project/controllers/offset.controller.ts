@@ -1,6 +1,6 @@
 import { inject } from '@core/di';
 import { FrameEvent } from '@core/shared/events/frame.event';
-import * as paper from 'paper';
+import paper from 'paper';
 import Controller from './base';
 
 export default class OffsetController extends Controller {

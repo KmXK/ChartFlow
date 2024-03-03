@@ -1,15 +1,16 @@
 import { ServiceContainerBuilder } from '@core/di';
+import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import { PlaceController } from './controllers';
 import { EventLoop } from './event-loop';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
 
-export class Project {
+export class Sheet {
     constructor(project: paper.Project) {
         const builder = new ServiceContainerBuilder();
         builder.register(paper.Project, project);
         builder.register(paper.View, project.view);
-        builder.register(Project, this);
+        builder.register(Sheet, this);
 
         controllersClasses.forEach(x => {
             builder.add<unknown>(x);
