@@ -1,42 +1,36 @@
-import {
-    EventMapperController,
-    FigureController,
-    FigureHitController,
-    MouseEventCounter,
-    OffsetController,
-    PlaceController,
-    SelectionController
-} from './controllers';
-import { ControllerCreator } from './controllers/base';
-import ZoomController from './controllers/zoom.controller';
+import { ServiceContainerBuilder } from '@core/di';
+import { controllersClasses, eventHandlers } from './consts';
+import { PlaceController } from './controllers';
 import { EventLoop } from './event-loop';
-import { ProjectInjector } from './injector/project-injector';
+import { EventHandlerPipe } from './shared/event-handler-pipe';
 
 export class Project {
-    private controllersClasses: ControllerCreator[] = [
-        ZoomController,
-        FigureController,
-        FigureHitController,
-        PlaceController,
-        OffsetController,
-        SelectionController,
-        EventMapperController,
-        MouseEventCounter
-    ];
+    constructor(project: paper.Project) {
+        const builder = new ServiceContainerBuilder();
+        builder.register(paper.Project, project);
+        builder.register(paper.View, project.view);
+        builder.register(Project, this);
 
-    constructor(private readonly project: paper.Project) {
-        const injector = new ProjectInjector(this.project);
+        controllersClasses.forEach(x => {
+            builder.add<unknown>(x);
+        });
 
-        const controllers = this.controllersClasses.map(x => new x(injector));
+        eventHandlers.forEach(x => {
+            builder.add<unknown>(x);
+        });
 
-        injector.setControllers(controllers);
+        builder.add(EventHandlerPipe);
 
-        const eventLoop = new EventLoop(injector);
+        builder.add(EventLoop);
+
+        const container = builder.build();
+
+        container.get(EventLoop).start();
 
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
-                injector
-                    .getController(PlaceController)
+                container
+                    .get(PlaceController)
                     .placeSquare([i * 50, j * 50], [40, 40]);
             }
         }

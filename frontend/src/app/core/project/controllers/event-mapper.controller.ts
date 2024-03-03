@@ -1,11 +1,10 @@
+import { inject } from '@core/di';
 import { MouseEvent, getMouseButton } from '@core/shared/events/mouse.event';
-import { Inject } from '../injector/injector';
-import { Controller, ControllerBase } from './base';
+import Controller from './base';
 import MouseEventCounter from './mouse-event-counter.controller';
 
-@Controller
-export default class EventMapperController extends ControllerBase {
-    @Inject(MouseEventCounter) private mouseEventCounter!: MouseEventCounter;
+export default class EventMapperController extends Controller {
+    private readonly mouseEventCounter = inject(MouseEventCounter);
 
     public mapMouseEvent(event: paper.MouseEvent): MouseEvent {
         const e = event as MouseEvent;

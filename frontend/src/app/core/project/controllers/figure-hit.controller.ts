@@ -1,14 +1,14 @@
+import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
-import { Inject } from '../injector/injector';
 import { PointChangeTracker } from '../shared/point-change-tracker';
-import { Controller, ControllerBase } from './base';
 import FigureController from './figure.controller';
+import Controller from './base';
 
-@Controller
-export default class FigureHitController extends ControllerBase {
+export default class FigureHitController extends Controller {
     private readonly pointChangeTracker = new PointChangeTracker();
 
-    @Inject(FigureController) private figureController!: FigureController;
+    private readonly figureController = inject(FigureController);
+    private readonly project = inject(paper.Project);
 
     private cachedFigures: Figure[] = [];
 
@@ -17,9 +17,7 @@ export default class FigureHitController extends ControllerBase {
         if (!point || !this.pointChangeTracker.track(point))
             return this.cachedFigures;
 
-        const results = this.injector.project.hitTestAll(
-            this.pointChangeTracker.point!
-        );
+        const results = this.project.hitTestAll(this.pointChangeTracker.point!);
 
         return (this.cachedFigures = results
             .map(x => this.figureController.getFigure(x.item))

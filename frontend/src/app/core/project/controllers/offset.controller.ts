@@ -1,10 +1,10 @@
+import { inject } from '@core/di';
 import { FrameEvent } from '@core/shared/events/frame.event';
 import * as paper from 'paper';
-import { Controller, ControllerBase } from './base';
+import Controller from './base';
 
-@Controller
-export default class OffsetController extends ControllerBase {
-    private view = this.injector.view;
+export default class OffsetController extends Controller {
+    private view = inject(paper.View);
     private requiredOffset = new paper.Point(0, 0);
     private smoothTime = 1;
 

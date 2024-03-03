@@ -1,13 +1,9 @@
+import { inject } from '@core/di';
 import { ZoomController } from '../controllers';
-import {
-    EventHandler,
-    EventHandlerBase,
-    EventHandlerOptions
-} from './event-handler';
+import { EventHandler, EventHandlerOptions } from './event-handler';
 
-@EventHandler
-export class ZoomEventHandler extends EventHandlerBase {
-    private readonly zoomController = this.inject(ZoomController);
+export class ZoomEventHandler extends EventHandler {
+    private readonly zoomController = inject(ZoomController);
 
     public onWheel(event: WheelEvent, options: EventHandlerOptions): void {
         if (event.ctrlKey) {

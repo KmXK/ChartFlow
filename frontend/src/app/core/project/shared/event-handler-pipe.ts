@@ -1,21 +1,13 @@
+import { injectAll } from '@core/di';
 import { Optional } from '@core/shared/types/optional';
 import {
-    EventHandlerCreator,
+    EventHandler,
     EventHandlerMethodPicker,
-    EventHandlerOptions,
-    IEventHandler
+    EventHandlerOptions
 } from '../event-handlers/event-handler';
-import { Injector } from './../injector/injector';
 
-export class EventHandlerContainer {
-    private readonly handlers: IEventHandler[] = this.eventHandlerCreators.map(
-        eventHandler => new eventHandler(this.injector)
-    );
-
-    constructor(
-        private readonly injector: Injector,
-        private readonly eventHandlerCreators: EventHandlerCreator[]
-    ) {}
+export class EventHandlerPipe {
+    private readonly handlers = injectAll(EventHandler);
 
     public eventHandlerCallback<TEvent, TMappedEvent = TEvent>(
         callback: EventHandlerMethodPicker<TMappedEvent>,

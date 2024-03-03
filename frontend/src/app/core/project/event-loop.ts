@@ -1,44 +1,26 @@
+import { inject, injectAll } from '@core/di';
 import { FrameEvent, mapFrameEvent } from '../shared/events/frame.event';
 import { MouseEvent } from '../shared/events/mouse.event';
 import { mergeEventCallbacks } from '../shared/helpers/callback.helper';
 import { Optional } from '../shared/types/optional';
 import { EventMapperController, FigureHitController } from './controllers';
+import Controller from './controllers/base';
 import {
     EventHandlerMethodPicker,
     EventHandlerOptions
 } from './event-handlers/event-handler';
-import { MoveEventHandler } from './event-handlers/move.event-handler';
-import { OffsetEventHandler } from './event-handlers/offset.event-handler';
-import { PlaceEventHandler } from './event-handlers/place.event-handler';
-import { ZoomEventHandler } from './event-handlers/zoom.event-handler';
-import { ProjectInjector } from './injector/project-injector';
-import { EventHandlerContainer } from './shared/event-handler-container';
+import { EventHandlerPipe } from './shared/event-handler-pipe';
 
 export class EventLoop {
-    private readonly eventHandlerContainer = new EventHandlerContainer(
-        this.injector,
-        [
-            ZoomEventHandler,
-            OffsetEventHandler,
-            MoveEventHandler,
-            PlaceEventHandler
-        ]
-    );
+    private readonly eventHandlerContainer = inject(EventHandlerPipe);
+    private readonly view = inject(paper.View);
+    private readonly figureHitController = inject(FigureHitController);
+    private readonly eventMapperController = inject(EventMapperController);
 
-    private readonly figureHitController =
-        this.injector.getController(FigureHitController);
-    private readonly eventMapperController = this.injector.getController(
-        EventMapperController
-    );
+    private readonly controllers = injectAll(Controller);
 
-    constructor(private readonly injector: ProjectInjector) {
-        this.configureEvents();
-    }
-
-    private configureEvents(): void {
-        const view = this.injector.view;
-
-        view.element.onwheel = this.eventHandlerCallback(options =>
+    public start(): void {
+        this.view.element.onwheel = this.eventHandlerCallback(options =>
             this.eventHandlerContainer.eventHandlerCallback(
                 x => x.onWheel,
                 options
@@ -58,7 +40,7 @@ export class EventLoop {
                 )
             );
 
-        view.on({
+        this.view.on({
             mousedown: getMouseCallback(x => x.onMouseDown),
             mouseup: getMouseCallback(x => x.onMouseUp),
             mousedrag: getMouseCallback(x => x.onDrag),
@@ -67,10 +49,7 @@ export class EventLoop {
             mousemove: getMouseCallback(x => x.onMouseMove),
             frame: this.eventHandlerCallback<FrameEvent>(options =>
                 mergeEventCallbacks([
-                    event =>
-                        this.injector
-                            .getControllers()
-                            .forEach(c => c.onFrame?.(event)),
+                    event => this.controllers.forEach(c => c.onFrame?.(event)),
                     this.eventHandlerContainer.eventHandlerCallback(
                         x => x.onFrame,
                         options,

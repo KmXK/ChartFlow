@@ -1,21 +1,18 @@
+import { inject } from '@core/di';
 import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
 import { OffsetController, ZoomController } from '../controllers/';
-import {
-    EventHandler,
-    EventHandlerBase,
-    EventHandlerOptions
-} from './event-handler';
+import { EventHandler, EventHandlerOptions } from './event-handler';
 
-@EventHandler
-export class OffsetEventHandler extends EventHandlerBase {
-    private readonly offsetController = this.inject(OffsetController);
-    private readonly zoomController = this.inject(ZoomController);
+export class OffsetEventHandler extends EventHandler {
+    private readonly offsetController = inject(OffsetController);
+    private readonly zoomController = inject(ZoomController);
+    private readonly view = inject(paper.View);
     private start!: paper.Point;
 
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.button === MouseButton.Middle) {
             // TODO: Make cursor controller
-            this.injector.view.element.style.cursor = 'move';
+            this.view.element.style.cursor = 'move';
             this.start = event.point;
             event.preventDefault();
             event.stopPropagation();
@@ -24,7 +21,7 @@ export class OffsetEventHandler extends EventHandlerBase {
 
     public onMouseUp(event: MouseEvent, options: EventHandlerOptions): void {
         // TODO: Make cursor controller
-        this.injector.view.element.style.cursor = 'default';
+        this.view.element.style.cursor = 'default';
     }
 
     public onDrag(event: MouseEvent, option: EventHandlerOptions): void {

@@ -1,10 +1,9 @@
 import { FrameEvent } from '../../../shared/events/frame.event';
-import { Injector } from '../../injector/injector';
 
 export interface ControllerCreator {
-    new (injector: Injector): Controller;
+    new (): Controller;
 }
 
-export interface Controller {
-    onFrame?(event: FrameEvent): void;
+export abstract class Controller {
+    public onFrame?(event: FrameEvent): void {}
 }

@@ -1,8 +1,8 @@
-import { Controller, ControllerBase } from './base';
+import { inject } from '@core/di';
+import Controller from './base';
 
-@Controller
-export default class ZoomController extends ControllerBase {
-    private readonly view = this.injector.view;
+export default class ZoomController extends Controller {
+    private readonly view = inject(paper.View);
     private prevZoom = 85;
     private currentZoom = 100;
 

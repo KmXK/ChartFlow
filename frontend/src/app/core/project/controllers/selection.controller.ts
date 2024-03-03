@@ -1,10 +1,12 @@
+import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
-import { Controller, ControllerBase } from './base';
+import Controller from './base';
 
-@Controller
-export default class SelectionController extends ControllerBase {
+export default class SelectionController extends Controller {
+    private readonly project = inject(paper.Project);
+
     public selectFigure(figure: Figure): void {
-        this.injector.project.deselectAll();
+        this.project.deselectAll();
         figure.getItem().bringToFront();
         figure.getItem().selected = true;
     }
