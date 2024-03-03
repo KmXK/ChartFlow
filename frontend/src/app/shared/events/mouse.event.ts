@@ -1,15 +1,13 @@
-import * as paper from 'paper';
-
 export enum MouseButton {
     Left = 1,
     Middle,
     Right
 }
 
-export interface MouseEvent extends paper.MouseEvent {
+export type MouseEvent = paper.MouseEvent & {
     button: MouseButton;
     repeatCount: number;
-}
+} & { type: 'mouseup'; pairEvent: MouseEvent };
 
 export function getMouseButton(event: {
     which?: number;

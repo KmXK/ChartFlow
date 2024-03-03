@@ -19,7 +19,18 @@ export class EventMapperController implements Controller {
                 .event
         );
 
-        e.repeatCount = this.mouseEventCounter.getNumber(e, event.type);
+        e.repeatCount = this.mouseEventCounter.getNumber(e);
+
+        if (e.type === 'mouseup') {
+            const data = this.mouseEventCounter.getLastEventData(
+                'mousedown',
+                e.point
+            );
+
+            if (data) {
+                e.pairEvent = data.event;
+            }
+        }
 
         return e;
     }

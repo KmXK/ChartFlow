@@ -63,7 +63,8 @@ export class EventLoop {
             mousedown: getMouseCallback(x => x.onMouseDown),
             mouseup: getMouseCallback(x => x.onMouseUp),
             mousedrag: getMouseCallback(x => x.onDrag),
-            click: getMouseCallback(x => x.onClick),
+            // we use custom "click" event fired as a copy of "mouseup", see below
+            // click: getMouseCallback(x => x.onClick),
             mousemove: getMouseCallback(x => x.onMouseMove),
             frame: this.eventHandlerCallback<FrameEvent>(options =>
                 mergeEventCallbacks([
@@ -84,7 +85,7 @@ export class EventLoop {
     private eventHandlerCallback<TEvent>(
         callback: (
             options: Optional<EventHandlerOptions, 'stopPropagation'>
-        ) => (event: TEvent) => void
+        ) => (event: TEvent) => boolean | void
     ): (event: TEvent) => void {
         return event => {
             const point = (event as { point?: paper.Point }).point;
@@ -93,7 +94,35 @@ export class EventLoop {
                 figures: this.figureHitController.getFiguresUnderMouse(point)
             };
 
-            callback(options)(event);
+            const stopped = callback(options)(event);
+
+            // if "mouseup" hasn't been stopped in pipe,
+            // fire "click" event with same information
+
+            // "click" event is comfortable for easy plane handlers
+            // who don't want to calculate mouse duration and want just to
+            // handle click situation
+            if (stopped === true) return;
+
+            const mouseUpEvent = event as {
+                type?: string;
+                pairEvent: MouseEvent;
+            };
+
+            if (mouseUpEvent.type === 'mouseup' && mouseUpEvent.pairEvent) {
+                const clickEvent: Optional<typeof mouseUpEvent, 'pairEvent'> =
+                    mouseUpEvent;
+                clickEvent.type = 'click';
+                delete clickEvent.pairEvent;
+
+                this.eventHandlerContainer.eventHandlerCallback(
+                    x => x.onClick,
+                    options,
+                    this.eventMapperController.mapMouseEvent.bind(
+                        this.eventMapperController
+                    )
+                )(clickEvent as MouseEvent);
+            }
         };
     }
 }

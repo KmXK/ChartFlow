@@ -34,8 +34,6 @@ export class MoveEventHandler implements EventHandler {
 
     public onDrag(event: MouseEvent, options: EventHandlerOptions): void {
         if (this.figure) {
-            console.log('drag');
-
             const item = this.figure.getItem();
             item.position = item.position.add(event.delta);
 

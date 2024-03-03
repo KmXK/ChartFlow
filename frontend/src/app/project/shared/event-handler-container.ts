@@ -21,7 +21,7 @@ export class EventHandlerContainer {
         callback: EventHandlerMethodPicker<TMappedEvent>,
         options: Optional<EventHandlerOptions, 'stopPropagation'>,
         mapFunction?: (event: TEvent) => TMappedEvent
-    ): (event: TEvent) => void {
+    ): (event: TEvent) => boolean {
         return event => {
             let propagationStopped = false;
             options.stopPropagation = () => {
@@ -39,6 +39,8 @@ export class EventHandlerContainer {
                     options as EventHandlerOptions
                 ]);
             }
+
+            return propagationStopped;
         };
     }
 }
