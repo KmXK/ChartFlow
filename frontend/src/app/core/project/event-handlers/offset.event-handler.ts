@@ -1,5 +1,8 @@
 import { inject } from '@core/di';
-import { MouseButton, MouseEvent } from '@core/shared/events/mouse.event';
+import {
+    MouseButton,
+    MouseEvent
+} from '@core/project/shared/events/mouse.event';
 import paper from 'paper';
 import { OffsetController, ZoomController } from '../controllers/';
 import { EventHandler, EventHandlerOptions } from './event-handler';

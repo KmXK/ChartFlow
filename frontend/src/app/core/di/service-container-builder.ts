@@ -76,11 +76,6 @@ export class ServiceContainerBuilder {
                         (service as Record<string, unknown>)[p] =
                             this.services.get(value.type);
                     } else {
-                        console.log(
-                            [...this.services.entries()],
-                            value,
-                            value.constructor
-                        );
                         (service as Record<string, unknown>)[p] = [
                             ...this.services.entries()
                         ]

@@ -1,5 +1,5 @@
 import { inject } from '@core/di';
-import { MouseEvent } from '@core/shared/events/mouse.event';
+import { MouseEvent } from '@core/project/shared/events/mouse.event';
 import Controller from './base';
 import ZoomController from './zoom.controller';
 

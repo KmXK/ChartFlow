@@ -1,9 +1,9 @@
-﻿export interface Figure {
-    onViewSizeChanged?(): void;
+﻿export abstract class Figure<TItem extends paper.Item = paper.Item> {
+    constructor(private readonly _item: TItem) {}
 
-    getItem(): paper.Item;
+    public onViewSizeChanged(): void {}
 
-    onSelected?(): void;
-
-    onDeselected?(): void;
+    get item(): TItem {
+        return this._item;
+    }
 }

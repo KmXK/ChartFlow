@@ -9,6 +9,8 @@ export class CanvasService {
 
     public setCanvas(canvasElement: HTMLCanvasElement): void {
         this.scope = new paper.PaperScope();
+        this.scope.settings.insertItems = false;
+
         this.sheet = new Sheet(new paper.Project(canvasElement));
     }
 }

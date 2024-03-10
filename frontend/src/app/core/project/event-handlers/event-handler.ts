@@ -1,10 +1,13 @@
 import { Figure } from '@core/figures/base/figure';
-import { FrameEvent } from '@core/shared/events/frame.event';
-import { MouseEvent } from '@core/shared/events/mouse.event';
+import { FrameEvent } from '@core/project/shared/events/frame.event';
+import { MouseEvent } from '@core/project/shared/events/mouse.event';
+import { FigureTreeNode } from '../shared/types/figure-hit-result';
 
+// TODO: Move to class definition with propagation logic inside
 export type EventHandlerOptions = {
     stopPropagation(): void;
-    figures: Figure[];
+    figureTreeNodes: FigureTreeNode[];
+    plainFigures: Figure[];
 };
 
 export type EventHandlerMethod<TEvent> =

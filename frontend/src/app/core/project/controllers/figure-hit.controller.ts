@@ -1,7 +1,7 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
 import paper from 'paper';
-import { PointChangeTracker } from '../shared/point-change-tracker';
+import { PointChangeTracker } from '../shared/types/point-change-tracker';
 import Controller from './base';
 import FigureController from './figure.controller';
 
@@ -11,19 +11,24 @@ export default class FigureHitController extends Controller {
     private readonly figureController = inject(FigureController);
     private readonly project = inject(paper.Project);
 
-    private cachedFigures: Figure[] = [];
+    private cachedResults: Figure[] = [];
 
     public getFiguresUnderMouse(point?: paper.Point): Figure[] {
         // TODO: Add check for mouse wheel and keyboard arrow keys
         if (!point || !this.pointChangeTracker.track(point))
-            return this.cachedFigures;
+            return this.cachedResults;
 
-        const results = this.project.hitTestAll(this.pointChangeTracker.point!);
+        const hitResults = this.project.hitTestAll(
+            this.pointChangeTracker.point!
+        );
 
-        return (this.cachedFigures = results
+        const hitFigures = hitResults
             .map(x => this.figureController.getFigure(x.item))
             .filter(function (x): x is Figure {
                 return x !== undefined;
-            }));
+            });
+
+        this.cachedResults = hitFigures;
+        return hitFigures;
     }
 }

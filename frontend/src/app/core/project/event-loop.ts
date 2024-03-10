@@ -1,27 +1,31 @@
 import { inject, injectAll } from '@core/di';
 import paper from 'paper';
-import { FrameEvent, mapFrameEvent } from '../shared/events/frame.event';
-import { MouseEvent } from '../shared/events/mouse.event';
-import { mergeEventCallbacks } from '../shared/helpers/callback.helper';
 import { Optional } from '../shared/types/optional';
-import { EventMapperController, FigureHitController } from './controllers';
+import {
+    EventMapperController,
+    FigureController,
+    FigureHitController
+} from './controllers';
 import Controller from './controllers/base';
 import {
     EventHandlerMethodPicker,
     EventHandlerOptions
 } from './event-handlers/event-handler';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
+import { FrameEvent, mapFrameEvent } from './shared/events/frame.event';
+import { MouseEvent } from './shared/events/mouse.event';
+import { mergeEventCallbacks } from './shared/helpers/callback.helper';
 
 export class EventLoop {
     private readonly eventHandlerContainer = inject(EventHandlerPipe);
     private readonly view = inject(paper.View);
     private readonly figureHitController = inject(FigureHitController);
+    private readonly figureController = inject(FigureController);
     private readonly eventMapperController = inject(EventMapperController);
 
     private readonly controllers = injectAll(Controller);
 
     public start(): void {
-        console.log(this.view);
         this.view.element.onwheel = this.eventHandlerCallback(options =>
             this.eventHandlerContainer.eventHandlerCallback(
                 x => x.onWheel,
@@ -70,8 +74,13 @@ export class EventLoop {
         return event => {
             const point = (event as { point?: paper.Point }).point;
 
-            const options = {
-                figures: this.figureHitController.getFiguresUnderMouse(point)
+            const figures =
+                this.figureHitController.getFiguresUnderMouse(point);
+
+            const options: Optional<EventHandlerOptions, 'stopPropagation'> = {
+                figureTreeNodes:
+                    this.figureController.foldPlainFigures(figures),
+                plainFigures: figures
             };
 
             const stopped = callback(options)(event);

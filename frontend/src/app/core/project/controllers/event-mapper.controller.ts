@@ -1,5 +1,8 @@
 import { inject } from '@core/di';
-import { MouseEvent, getMouseButton } from '@core/shared/events/mouse.event';
+import {
+    MouseEvent,
+    getMouseButton
+} from '@core/project/shared/events/mouse.event';
 import Controller from './base';
 import MouseEventCounter from './mouse-event-counter.controller';
 

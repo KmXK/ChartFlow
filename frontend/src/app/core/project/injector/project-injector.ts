@@ -27,8 +27,6 @@ export class ProjectInjector implements Injector {
                 Object.getPrototypeOf(controller) as Class<Controller>,
                 controller
             );
-
-            console.log(controller);
         }
 
         controllers.forEach(c => configureInjection(c, this));

@@ -6,20 +6,17 @@ export type SquareFigureOptions = {
     size: paper.SizeLike;
 };
 
-export class SquareFigure implements Figure {
-    private readonly rect: paper.Path.Rectangle;
+let a = 0;
 
+export class SquareFigure extends Figure<paper.Path.Rectangle> {
     constructor(options: SquareFigureOptions) {
         const rect = new paper.Path.Rectangle(
             options.leftTopCornerPosition,
             options.size
         );
         rect.strokeColor = new paper.Color(0, 1);
-        rect.fillColor = new paper.Color('red');
-        this.rect = rect;
-    }
+        rect.fillColor = new paper.Color(a++ % 3 > 0 ? 'white' : 'red');
 
-    public getItem(): paper.Item {
-        return this.rect;
+        super(rect);
     }
 }

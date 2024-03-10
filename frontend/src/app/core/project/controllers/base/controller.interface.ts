@@ -1,4 +1,4 @@
-import { FrameEvent } from '../../../shared/events/frame.event';
+import { FrameEvent } from '../../shared/events/frame.event';
 
 export interface ControllerCreator {
     new (): Controller;
