@@ -2,6 +2,7 @@ import { ServiceContainerBuilder } from '@core/di';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import { PlaceController } from './controllers';
+import Controller from './controllers/base';
 import { EventLoop } from './event-loop';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
 
@@ -25,6 +26,10 @@ export class Sheet {
         builder.add(EventLoop);
 
         const container = builder.build();
+
+        container.getAll(Controller).forEach(c => {
+            c.init?.();
+        });
 
         container.get(EventLoop).start();
 

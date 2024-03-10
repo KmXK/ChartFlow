@@ -8,6 +8,7 @@ import {
     SelectionController,
     ZoomController
 } from './controllers';
+import { SizeControlPointController } from './controllers/size-control-point.controller';
 import { MoveEventHandler } from './event-handlers/move.event-handler';
 import { OffsetEventHandler } from './event-handlers/offset.event-handler';
 import { PlaceEventHandler } from './event-handlers/place.event-handler';
@@ -22,7 +23,8 @@ export const controllersClasses = [
     OffsetController,
     SelectionController,
     EventMapperController,
-    MouseEventCounter
+    MouseEventCounter,
+    SizeControlPointController
 ];
 
 export const eventHandlers = [

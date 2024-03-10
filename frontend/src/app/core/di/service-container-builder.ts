@@ -1,40 +1,39 @@
 import { InjectionMetakey } from './consts';
 import { Metadata } from './metadata';
 import { ServiceContainer } from './service-container';
+import { ServiceStorage } from './service-storage';
 import { InjectionPlace } from './types/injection-place';
 import { InjectToken, ParameterlessServiceType } from './types/type';
 
 import 'reflect-metadata';
 
 export class ServiceContainerBuilder {
-    private readonly services = new Map<InjectToken, unknown>();
+    private readonly storage = new ServiceStorage();
 
     public register<T>(token: InjectToken, service: T): void {
-        this.checkRegistered(token);
-
-        this.services.set(token, service);
+        this.storage.add(token, service);
     }
 
     public add<T>(type: ParameterlessServiceType<T>): void {
-        this.checkRegistered(type);
-
         const service = new type();
 
-        this.services.set(type, service);
+        this.storage.add(type, service);
     }
 
     public build(): ServiceContainer {
         this.resolveInjections();
 
-        const container = new ServiceContainer(new Map(this.services));
+        const container = new ServiceContainer(
+            new ServiceStorage(this.storage)
+        );
 
-        this.services.clear();
+        this.storage.clear();
 
         return container;
     }
 
     private resolveInjections(): void {
-        for (const [token, service] of this.services) {
+        for (const [token, service] of this.storage) {
             Reflect.getMetadataKeys(token.constructor).forEach(metadataKey => {
                 if (
                     typeof metadataKey !== 'string' ||
@@ -49,7 +48,7 @@ export class ServiceContainerBuilder {
                 );
 
                 if (metadata && metadata.type) {
-                    const resolvedService = this.services.get(metadata.type);
+                    const resolvedService = this.storage.get(metadata.type);
 
                     if (!resolvedService) {
                         throw new Error(
@@ -74,31 +73,27 @@ export class ServiceContainerBuilder {
                 if (value instanceof InjectionPlace) {
                     if (!value.takeAll) {
                         (service as Record<string, unknown>)[p] =
-                            this.services.get(value.type);
+                            this.storage.get(value.type);
                     } else {
-                        (service as Record<string, unknown>)[p] = [
-                            ...this.services.entries()
-                        ]
-                            .filter(
-                                ([key]) =>
-                                    key instanceof value.type!.constructor
-                            )
-                            .map(([key, value]) => value);
+                        // (service as Record<string, unknown>)[p] = [
+                        //     ...this.services.entries()
+                        // ]
+                        //     .filter(
+                        //         ([key]) =>
+                        //             key instanceof value.type!.constructor
+                        //     )
+                        //     .map(([key, value]) => value);
+                        (service as Record<string, unknown>)[p] =
+                            this.storage.getAll(value.type);
                     }
                 } else if (value instanceof Array) {
                     if (value.every(x => x instanceof InjectionPlace)) {
                         (service as Record<string, unknown>)[p] = (
                             value as InjectionPlace[]
-                        ).map(x => this.services.get(x.type));
+                        ).map(x => this.storage.get(x.type));
                     }
                 }
             });
-        }
-    }
-
-    private checkRegistered(type: InjectToken): void {
-        if (this.services.has(type)) {
-            throw new Error(`Service was already registered: \${type.name}`);
         }
     }
 }

@@ -31,6 +31,10 @@ export class MoveEventHandler extends EventHandler {
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.repeatCount > 1) return;
 
+        // TODO: Нужно предотвратить нажатие по ControlPoint, т.е. нужно
+        // добавить их как-то в опции, но для солид нужно же оставлять группы как есть
+        // чтобы двигать их, лучше добавить ещё одно свойство на уровне plainFigures и tree...
+
         if (
             event.button === MouseButton.Left &&
             options.plainFigures.length > 0 &&

@@ -34,7 +34,8 @@ export class GroupFigure extends Figure {
     private static calculatePlainFigures(figures: Figure[]): Figure[] {
         return figures.reduce<Figure[]>((acc, x) => {
             // спорное решение насчёт солид, порешаем потом на моменте группировки
-            if (x instanceof GroupFigure && !x.solid) {
+            // TODO: мб добавить solid
+            if (x instanceof GroupFigure) {
                 acc.push(...x._plainFigures);
             } else {
                 acc.push(x);

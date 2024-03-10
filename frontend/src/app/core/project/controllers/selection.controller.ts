@@ -1,5 +1,6 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
+import { ControlPoint } from '@core/figures/control-points/control-point';
 import { GroupFigure } from '@core/figures/group.figure';
 import paper from 'paper';
 import {
@@ -7,6 +8,7 @@ import {
     FigureTreeNodeType
 } from '../shared/types/figure-hit-result';
 import Controller from './base';
+import { event } from './base/controller';
 import FigureController from './figure.controller';
 
 export default class SelectionController extends Controller {
@@ -15,10 +17,13 @@ export default class SelectionController extends Controller {
 
     private readonly selectedFigures = new Set<Figure>();
 
+    public readonly selection = event<[Figure[]]>();
+
     public selectFigure(figure: Figure): void {
         this.deselectAll();
 
         this.addToSelection(figure);
+        this.selection.fire([figure]);
     }
 
     public freeSelect(hit: FigureTreeNode): void {
@@ -43,9 +48,16 @@ export default class SelectionController extends Controller {
     public deselectAll(): void {
         this.selectedFigures.clear();
         this.project.deselectAll();
+        this.selection.fire([]);
     }
 
     public isSelected(figure: Figure): boolean {
+        console.log(figure);
+        if (figure instanceof ControlPoint) {
+            // TODO: подумать ещё тут
+            return false;
+        }
+
         // TODO: create some tree structure with fast and easy access, now we can read only 2 levels
         let testFigure: Figure | undefined = figure;
 
@@ -73,7 +85,7 @@ export default class SelectionController extends Controller {
             }
 
             // For Debug
-            figure.item.selected = true;
+            // figure.item.selected = true;
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Controller } from '@core/project/controllers/base/controller.interface';
+import { Controller } from '@core/project/controllers/base/controller';
 import { Class } from '../class';
 
 export class InvalidInjectionError<

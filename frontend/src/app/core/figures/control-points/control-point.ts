@@ -6,5 +6,6 @@ export abstract class ControlPoint extends Figure {
         item: paper.Item
     ) {
         super(item);
+        item.visible = false;
     }
 }

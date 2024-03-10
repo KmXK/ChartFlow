@@ -1,15 +1,14 @@
-import { InjectToken, ServiceType } from './types/type';
+import { ServiceStorage } from './service-storage';
+import { InjectToken } from './types/type';
 
 export class ServiceContainer {
-    constructor(private readonly services: Map<InjectToken, unknown>) {}
+    constructor(private readonly storage: ServiceStorage) {}
 
-    public get<T>(type: ServiceType<T>): T {
-        const service = this.services.get(type) as T;
+    public get<T>(type: InjectToken<T>): T {
+        return this.storage.get(type);
+    }
 
-        if (!service) {
-            throw new Error(`Service could not be resolved: ${type.name}`);
-        }
-
-        return service;
+    public getAll<T>(type: InjectToken<T>): T[] {
+        return this.storage.getAll(type);
     }
 }

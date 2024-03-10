@@ -1,5 +1,5 @@
-import { Controller } from './controller.interface';
+import { Controller } from './controller';
 
 export default Controller;
 
-export { ControllerCreator } from './controller.interface';
+export { ControllerCreator } from './controller';
