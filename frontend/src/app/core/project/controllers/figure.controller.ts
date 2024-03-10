@@ -16,9 +16,9 @@ export default class FigureController extends Controller {
     private readonly project = inject(paper.Project);
 
     public addFigure(figure: Figure): void {
-        this.addFigureAndNested(figure);
+        figure = this.addFigureAndNested(figure);
 
-        // TODO: nested figures must not be added to active layer
+        // nested figures must not be added to active layer
         this.project.activeLayer.addChild(figure.item);
     }
 
@@ -87,17 +87,44 @@ export default class FigureController extends Controller {
         return [...set];
     }
 
-    private addFigureAndNested(figure: Figure): void {
+    private addFigureAndNested(figure: Figure): Figure {
+        if (figure instanceof GroupFigure) {
+            const figures = figure.getFigures();
+
+            const newFigures = figures.map(x => this.addFigureAndNested(x));
+
+            figure = new GroupFigure({
+                figures: newFigures,
+                solid: figure.solid
+            });
+
+            newFigures.forEach(child => {
+                this.parents.set(child, figure);
+            });
+        }
+
+        const points = figure.createControlPoints();
+
+        if (points.length) {
+            // Было бы лучше объединить это с кодом ниже.
+            // Просто тут сложновато)
+            this.figures.push(figure);
+            this.figureByItem.set(figure.item, figure);
+
+            const pointsFigure = points.map(x => this.addFigureAndNested(x));
+
+            figure = new GroupFigure({
+                figures: [figure, ...pointsFigure],
+                solid: true
+            });
+
+            (figure as GroupFigure).getFigures().forEach(child => {
+                this.parents.set(child, figure);
+            });
+        }
+
         this.figures.push(figure);
         this.figureByItem.set(figure.item, figure);
-
-        if (figure.item.parent && this.figureByItem.has(figure.item.parent)) {
-            const parentFigure = this.getFigure(figure.item.parent)!;
-            this.parents.set(figure, parentFigure);
-        }
-
-        if (figure instanceof GroupFigure) {
-            figure.getFigures().forEach(x => this.addFigureAndNested(x));
-        }
+        return figure;
     }
 }

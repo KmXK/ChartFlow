@@ -27,6 +27,7 @@ export default class SelectionController extends Controller {
 
     // TODO: нужно выделить некую структуру дерева и всегда выделять дочерник ноды,
     // но предоставить апи для того, чтобы получать лишь верхнеуровневые ноды выделения (корни леса)
+    // mb selectNodeAndChildren, а верхний метод - selectNode
     public deepSelect(hit: FigureTreeNode): void {
         if (hit.type === FigureTreeNodeType.Group) {
             if (this.selectedFigures.has(hit.figure) && !hit.figure.solid) {
@@ -46,14 +47,17 @@ export default class SelectionController extends Controller {
 
     public isSelected(figure: Figure): boolean {
         // TODO: create some tree structure with fast and easy access, now we can read only 2 levels
-        return (
-            this.selectedFigures.has(figure) ||
-            [...this.selectedFigures.values()]
-                .filter(function (x: Figure): x is GroupFigure {
-                    return x instanceof GroupFigure;
-                })
-                .some(x => x.getFigures().includes(figure))
-        );
+        let testFigure: Figure | undefined = figure;
+
+        while (testFigure) {
+            if (this.selectedFigures.has(testFigure)) {
+                return true;
+            }
+
+            testFigure = this.figureController.getParent(testFigure);
+        }
+
+        return false;
     }
 
     public getSelection(): Figure[] {

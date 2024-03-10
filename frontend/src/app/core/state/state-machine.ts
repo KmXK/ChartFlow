@@ -67,6 +67,7 @@ export class StateMachine<TEnum extends IntEnumObject<TEnum>> {
             console.warn(`Invalid transition: ${transitionLog}`);
         } else {
             this.state = to;
+            console.log(transitionLog);
         }
     }
 

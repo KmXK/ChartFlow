@@ -30,6 +30,7 @@ export class MoveEventHandler extends EventHandler {
 
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.repeatCount > 1) return;
+
         if (
             event.button === MouseButton.Left &&
             options.plainFigures.length > 0 &&

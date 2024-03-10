@@ -25,6 +25,11 @@ export class EventLoop {
 
     private readonly controllers = injectAll(Controller);
 
+    // Нужно добавить регистрацию событий (лучше через декораторы для простоты)
+    // внутрь контроллеров и возможность на них подписываться
+    // Сами контроллеры будут события вызывать, а другие подписываться
+    // После этого добавим контроллер, который будет включать/выключать контрольные точки для "выделения"
+
     public start(): void {
         this.view.element.onwheel = this.eventHandlerCallback(options =>
             this.eventHandlerContainer.eventHandlerCallback(
