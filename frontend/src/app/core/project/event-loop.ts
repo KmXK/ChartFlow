@@ -58,15 +58,18 @@ export class EventLoop {
             // we use custom "click" event fired as a copy of "mouseup", see below
             // click: getMouseCallback(x => x.onClick),
             mousemove: getMouseCallback(x => x.onMouseMove),
-            frame: this.eventHandlerCallback<FrameEvent>(options =>
-                mergeEventCallbacks([
-                    event => this.controllers.forEach(c => c.onFrame?.(event)),
-                    this.eventHandlerContainer.eventHandlerCallback(
-                        x => x.onFrame,
-                        options,
-                        mapFrameEvent
-                    )
-                ])
+            frame: this.eventHandlerCallback<FrameEvent>(
+                options =>
+                    mergeEventCallbacks([
+                        event =>
+                            this.controllers.forEach(c => c.onFrame?.(event)),
+                        this.eventHandlerContainer.eventHandlerCallback(
+                            x => x.onFrame,
+                            options,
+                            mapFrameEvent
+                        )
+                    ]),
+                false
             )
         });
     }
@@ -74,17 +77,19 @@ export class EventLoop {
     private eventHandlerCallback<TEvent>(
         callback: (
             options: Optional<EventHandlerOptions, 'stopPropagation'>
-        ) => (event: TEvent) => boolean | void
+        ) => (event: TEvent) => boolean | void,
+        calculateFigures: boolean = true
     ): (event: TEvent) => void {
         return event => {
             const point = (event as { point?: paper.Point }).point;
 
-            const figures =
-                this.figureHitController.getFiguresUnderMouse(point);
+            const figures = calculateFigures
+                ? this.figureHitController.getFiguresUnderMouse(point)
+                : [];
 
             const options: Optional<EventHandlerOptions, 'stopPropagation'> = {
                 figureTreeNodes:
-                    this.figureController.foldPlainFigures(figures),
+                    this.figureController.makeFigureForest(figures),
                 plainFigures: figures
             };
 

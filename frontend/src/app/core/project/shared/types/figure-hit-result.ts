@@ -14,5 +14,6 @@ export type FigureTreeNode =
     | {
           type: FigureTreeNodeType.Group;
           figure: GroupFigure;
-          figures: Figure[];
+          figures: FigureTreeNode[];
+          plainFigures: Figure[];
       };

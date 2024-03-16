@@ -26,6 +26,13 @@ export default class SelectionController extends Controller {
         this.selection.fire([figure]);
     }
 
+    public selectFigures(figures: Figure[]): void {
+        this.deselectAll();
+
+        figures.forEach(figure => this.addToSelection(figure));
+        this.selection.fire([...this.selectedFigures.values()]);
+    }
+
     public freeSelect(hit: FigureTreeNode): void {
         this.selectFigure(hit.figure);
     }
@@ -36,7 +43,7 @@ export default class SelectionController extends Controller {
     public deepSelect(hit: FigureTreeNode): void {
         if (hit.type === FigureTreeNodeType.Group) {
             if (this.selectedFigures.has(hit.figure) && !hit.figure.solid) {
-                this.selectFigure(hit.figures[0]);
+                this.selectFigure(hit.figures[0].figure);
             } else {
                 this.selectFigure(hit.figure);
             }
@@ -52,7 +59,6 @@ export default class SelectionController extends Controller {
     }
 
     public isSelected(figure: Figure): boolean {
-        console.log(figure);
         if (figure instanceof ControlPoint) {
             // TODO: подумать ещё тут
             return false;
@@ -72,8 +78,12 @@ export default class SelectionController extends Controller {
         return false;
     }
 
-    public getSelection(): Figure[] {
-        return [...this.selectedFigures];
+    public getSelection(): FigureTreeNode[] {
+        // TODO: может стоит держать выделение уже в виде дерева и модифицировать его через специальные функции? (создать класс для дерева)
+        return this.figureController.makeFigureForest(
+            [...this.selectedFigures.values()],
+            true
+        );
     }
 
     private addToSelection(...figures: Figure[]): void {

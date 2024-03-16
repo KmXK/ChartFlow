@@ -1,16 +1,15 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
+import { ControlPoint } from '@core/figures/control-points/control-point';
 import { GroupFigure } from '@core/figures/group.figure';
 import paper from 'paper';
-import {
-    FigureTreeNode,
-    FigureTreeNodeType
-} from '../shared/types/figure-hit-result';
+import { FigureTreeNode } from '../shared/types/figure-hit-result';
+import { FigureTreeNodeType } from './../shared/types/figure-hit-result';
 import Controller from './base';
 import { event } from './base/controller';
 
 export default class FigureController extends Controller {
-    private readonly figures: Figure[] = [];
+    private readonly figures = new Set<Figure>();
     private readonly figureByItem = new Map<paper.Item, Figure>();
     private readonly parents = new Map<Figure, Figure>();
 
@@ -26,8 +25,45 @@ export default class FigureController extends Controller {
         this.project.activeLayer.addChild(figure.item);
     }
 
+    public removeFigure(figure: Figure): void {
+        if (figure instanceof GroupFigure) {
+            for (const child of figure.getFigures()) {
+                this.removeFigure(child);
+            }
+        }
+
+        // TODO: Optimize
+        [...this.parents.entries()]
+            .filter(([_, parent]) => parent === figure)
+            .forEach(([figure, _]) => {
+                this.parents.delete(figure);
+            });
+        this.figureByItem.delete(figure.item);
+        this.figures.delete(figure);
+        this.removed.fire(figure);
+
+        this.project.activeLayer.removeChildren(
+            this.project.activeLayer.children.findIndex(x => x === figure.item)
+        );
+    }
+
     public getParent(figure: Figure): Figure | undefined {
         return this.parents.get(figure);
+    }
+
+    public getFiguresInArea(square: paper.Rectangle): Figure[] {
+        const result: Figure[] = [];
+
+        for (const figure of this.figures) {
+            if (
+                !(figure instanceof ControlPoint) &&
+                square.contains(figure.item.bounds)
+            ) {
+                result.push(figure);
+            }
+        }
+
+        return result;
     }
 
     public getTopParent(figure: Figure): Figure {
@@ -51,44 +87,167 @@ export default class FigureController extends Controller {
         return this.figureByItem.get(item);
     }
 
-    public foldPlainFigures(figures: Figure[]): FigureTreeNode[] {
+    // public foldPlainFigures(figures: Figure[]): FigureTreeNode[] {
+    //     const groups = new Map<
+    //         Figure,
+    //         { figure: GroupFigure; figures: Figure[] }
+    //     >();
+
+    //     const set = new Set<FigureTreeNode>();
+
+    //     figures.forEach(figure => {
+    //         const topParent = this.getTopParent(figure);
+    //         if (topParent !== figure) {
+    //             if (!(topParent instanceof GroupFigure)) {
+    //                 // Для предупреждения будущих ошибок, если будем тут расширяться
+    //                 throw new Error('Top parent is not a group figure');
+    //             }
+
+    //             if (groups.has(topParent)) {
+    //                 groups.get(topParent)!.figures.push(figure);
+    //             } else {
+    //                 groups.set(topParent, {
+    //                     figure: topParent,
+    //                     figures: [figure]
+    //                 });
+
+    //                 set.add({
+    //                     type: FigureTreeNodeType.Group,
+    //                     ...groups.get(topParent)!
+    //                 });
+    //             }
+    //         } else {
+    //             set.add({
+    //                 type: FigureTreeNodeType.Figure,
+    //                 figure
+    //             });
+    //         }
+    //     });
+
+    //     if (set.size > 0)
+    //         console.log(
+    //             [...set.values()].filter(
+    //                 x => x.type === FigureTreeNodeType.Group
+    //             ),
+    //             set
+    //         );
+
+    //     return [...set.values()].filter(
+    //         x => x.type === FigureTreeNodeType.Group
+    //     );
+    // }
+
+    public makeFigureForest(
+        figures: Figure[],
+        onlyFullGroup: boolean = false
+    ): FigureTreeNode[] {
         const groups = new Map<
             Figure,
             { figure: GroupFigure; figures: Figure[] }
         >();
 
-        const set = new Set<FigureTreeNode>();
+        const roots: Figure[] = [];
 
-        figures.forEach(figure => {
-            const topParent = this.getTopParent(figure);
-            if (topParent !== figure) {
-                if (!(topParent instanceof GroupFigure)) {
-                    // Для предупреждения будущих ошибок, если будем тут расширяться
-                    throw new Error('Top parent is not a group figure');
+        const initialFigure = new Set<Figure>(figures);
+        const allFigures = new Set<Figure>(initialFigure);
+        const process = new Set<Figure>(initialFigure);
+
+        while (process.size > 0) {
+            const figure = process[Symbol.iterator]().next().value;
+            process.delete(figure);
+
+            const parent = this.parents.get(figure);
+
+            // Сейчас все фигуры обёрнуты в группу для того, чтобы содержать внутри себя точки
+            if (!parent) {
+                if (!(figure instanceof GroupFigure)) {
+                    // console.error(figure);
+                    // throw new Error('Top parent is not a group figure: ');
+                    continue;
                 }
 
-                if (groups.has(topParent)) {
-                    groups.get(topParent)!.figures.push(figure);
+                roots.push(figure);
+            } else {
+                if (!(parent instanceof GroupFigure)) {
+                    // console.error(figure);
+                    throw new Error('Parent figure is not a group figure');
+                }
+
+                if (groups.has(parent)) {
+                    groups.get(parent)!.figures.push(figure);
                 } else {
-                    groups.set(topParent, {
-                        figure: topParent,
+                    groups.set(parent, {
+                        figure: parent,
                         figures: [figure]
                     });
-
-                    set.add({
-                        type: FigureTreeNodeType.Group,
-                        ...groups.get(topParent)!
-                    });
                 }
-            } else {
-                set.add({
-                    type: FigureTreeNodeType.Figure,
-                    figure
+
+                if (!allFigures.has(parent)) {
+                    allFigures.add(parent);
+                    process.add(parent);
+                }
+            }
+
+            if (figure instanceof GroupFigure && !groups.has(figure)) {
+                groups.set(figure, {
+                    figure,
+                    figures: []
                 });
             }
-        });
+        }
 
-        return [...set];
+        const checkNode: (node: Figure, full: boolean) => FigureTreeNode[] = (
+            node,
+            full
+        ) => {
+            if (!(node instanceof GroupFigure)) {
+                return [
+                    {
+                        type: FigureTreeNodeType.Figure,
+                        figure: node
+                    }
+                ];
+            }
+
+            if (initialFigure.has(node) || full) {
+                return [
+                    {
+                        type: FigureTreeNodeType.Group,
+                        figure: node,
+                        figures: [],
+                        plainFigures: node.getFigures()
+                    }
+                ];
+            }
+
+            const children = groups.get(node)!.figures;
+            const childForests = children.flatMap(x => checkNode(x, false));
+
+            if (
+                onlyFullGroup &&
+                !node.solid &&
+                children.length !== node.childrenCount
+            ) {
+                // skip node and get its children
+                return childForests;
+            } else {
+                return [
+                    {
+                        type: FigureTreeNodeType.Group,
+                        figure: node,
+                        figures: childForests,
+                        plainFigures: childForests.flatMap(x => {
+                            if (x.type === FigureTreeNodeType.Group)
+                                return x.plainFigures;
+                            return [];
+                        })
+                    }
+                ];
+            }
+        };
+
+        const result = roots.flatMap(root => checkNode(root, false));
+        return result;
     }
 
     private addFigureAndNested(figure: Figure): Figure {
@@ -112,7 +271,7 @@ export default class FigureController extends Controller {
         if (points.length) {
             // Было бы лучше объединить это с кодом ниже.
             // Просто тут сложновато)
-            this.figures.push(figure);
+            this.figures.add(figure);
             this.created.fire(figure);
             this.figureByItem.set(figure.item, figure);
 
@@ -128,7 +287,7 @@ export default class FigureController extends Controller {
             });
         }
 
-        this.figures.push(figure);
+        this.figures.add(figure);
         this.created.fire(figure);
 
         this.figureByItem.set(figure.item, figure);

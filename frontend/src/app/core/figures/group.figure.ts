@@ -1,5 +1,5 @@
+import { Figure } from '@core/figures/base/figure';
 import paper from 'paper';
-import { Figure } from './base/figure';
 
 export type GroupFigureOptions =
     | {
@@ -10,7 +10,7 @@ export type GroupFigureOptions =
 
 export class GroupFigure extends Figure {
     private readonly _initialFigures: Figure[];
-    private readonly _plainFigures: Figure[];
+    private readonly _plainFigures: Set<Figure>;
     private readonly _solid: boolean;
 
     constructor(options: GroupFigureOptions) {
@@ -27,20 +27,34 @@ export class GroupFigure extends Figure {
         return [...this._plainFigures];
     }
 
+    get childrenCount(): number {
+        return this._initialFigures.length;
+    }
+
+    get children(): Figure[] {
+        return [...this._initialFigures];
+    }
+
     get solid(): boolean {
         return this._solid;
     }
 
-    private static calculatePlainFigures(figures: Figure[]): Figure[] {
-        return figures.reduce<Figure[]>((acc, x) => {
+    private containsFigure(figure: Figure): boolean {
+        return this._plainFigures.has(figure);
+    }
+
+    private static calculatePlainFigures(figures: Figure[]): Set<Figure> {
+        return figures.reduce((acc, x) => {
             // спорное решение насчёт солид, порешаем потом на моменте группировки
             // TODO: мб добавить solid
             if (x instanceof GroupFigure) {
-                acc.push(...x._plainFigures);
+                for (const figure of x._plainFigures.values()) {
+                    acc.add(figure);
+                }
             } else {
-                acc.push(x);
+                acc.add(x);
             }
             return acc;
-        }, []);
+        }, new Set<Figure>());
     }
 }

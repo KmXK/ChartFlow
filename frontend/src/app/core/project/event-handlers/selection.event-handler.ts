@@ -1,16 +1,40 @@
 import { inject } from '@core/di';
-import { SelectionController } from '../controllers';
+import { SelectionBoxFigure } from '@core/figures/selection-box.figure';
+import { FigureController, SelectionController } from '../controllers';
 import { MouseButton, MouseEvent } from '../shared/events/mouse.event';
 import { EventHandler, EventHandlerOptions } from './event-handler';
 
 export class SelectionEventHandler extends EventHandler {
     private readonly selectionController = inject(SelectionController);
+    private readonly figureController = inject(FigureController);
+
+    private selectionBox: SelectionBoxFigure | undefined;
     private waitingForDeepSelect = false;
 
-    public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
+    public onClick(event: MouseEvent, options: EventHandlerOptions): void {
         if (
             event.button === MouseButton.Left &&
-            options.figureTreeNodes.length > 0
+            options.figureTreeNodes.length === 0
+        ) {
+            this.selectionController.deselectAll();
+        }
+    }
+
+    public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
+        // console.log(event, options);
+        if (this.selectionBox) {
+            throw new Error('Selection box cannot be set before onMouseDown');
+        }
+
+        if (
+            event.button === MouseButton.Left &&
+            options.figureTreeNodes.length === 0
+        ) {
+            this.selectionBox = new SelectionBoxFigure(event.point);
+            this.figureController.addFigure(this.selectionBox);
+        } else if (
+            event.button === MouseButton.Left &&
+            options.figureTreeNodes.length
         ) {
             const hit = options.figureTreeNodes[0];
 
@@ -24,9 +48,11 @@ export class SelectionEventHandler extends EventHandler {
             if (!this.waitingForDeepSelect) {
                 this.selectionController.freeSelect(hit);
             }
-        } else {
-            this.selectionController.deselectAll();
         }
+    }
+
+    public onDrag(event: MouseEvent, options: EventHandlerOptions): void {
+        this.selectionBox?.selectTo(event.point);
     }
 
     // TODO: Change to Click, fix
@@ -40,6 +66,17 @@ export class SelectionEventHandler extends EventHandler {
             const hit = options.figureTreeNodes[0];
 
             this.selectionController.deepSelect(hit);
+        }
+
+        if (this.selectionBox) {
+            this.selectionController.selectFigures(
+                this.figureController.getFiguresInArea(
+                    this.selectionBox.item.bounds
+                )
+            );
+
+            this.figureController.removeFigure(this.selectionBox);
+            this.selectionBox = undefined;
         }
     }
 }

@@ -44,7 +44,6 @@ export class SizeControlPointController extends Controller {
                     return x;
                 })
                 .forEach(x => {
-                    console.log(x);
                     this.targetPoints.get(x)?.forEach(x => {
                         x.item.visible = true;
                     });
