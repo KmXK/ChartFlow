@@ -1,23 +1,19 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
-import { RainbowControlPoint } from '@core/figures/control-points/rainbow.control-point';
+import { ControlPoint } from '@core/figures/control-points/control-point';
 import { GroupFigure } from '@core/figures/group.figure';
 import { FigureController, SelectionController } from '.';
 import Controller from './base';
 
-export class SizeControlPointController extends Controller {
+export class ControlPointController extends Controller {
     private readonly figureController = inject(FigureController);
     private readonly selectionController = inject(SelectionController);
 
-    private readonly targetPoints = new Map<Figure, RainbowControlPoint[]>();
+    private readonly targetPoints = new Map<Figure, ControlPoint[]>();
 
     public init(): void {
         this.figureController.created.on(figure => {
-            const points = figure
-                .getControlPoints()
-                .filter(function (x): x is RainbowControlPoint {
-                    return x instanceof RainbowControlPoint;
-                });
+            const points = figure.getControlPoints();
             if (points.length) {
                 this.targetPoints.set(figure, points);
             }

@@ -17,6 +17,7 @@ export class GroupFigure extends Figure {
         const figures = Array.isArray(options) ? options : options.figures;
 
         super(new paper.Group(figures.map(x => x.item)));
+
         this._initialFigures = figures;
         this._plainFigures = GroupFigure.calculatePlainFigures(figures);
 

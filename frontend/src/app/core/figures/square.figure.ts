@@ -1,7 +1,7 @@
 import paper from 'paper';
 import { Figure } from './base/figure';
 import { ControlPoint } from './control-points/control-point';
-import { RainbowControlPoint } from './control-points/rainbow.control-point';
+import { SizeControlPoint } from './control-points/size.control-point';
 
 export type SquareFigureOptions = {
     leftTopCornerPosition: paper.PointLike;
@@ -25,10 +25,10 @@ export class SquareFigure extends Figure<paper.Path.Rectangle> {
     public createControlPoints(): ControlPoint[] {
         const size = new paper.Size(this.options.size);
         return [
-            new RainbowControlPoint(this, [0, 0]),
-            new RainbowControlPoint(this, [size.width, 0]),
-            new RainbowControlPoint(this, [0, size.height]),
-            new RainbowControlPoint(this, size)
+            new SizeControlPoint(this, [0, 0]),
+            new SizeControlPoint(this, [1, 0]),
+            new SizeControlPoint(this, [0, 1]),
+            new SizeControlPoint(this, [1, 1])
         ];
     }
 }

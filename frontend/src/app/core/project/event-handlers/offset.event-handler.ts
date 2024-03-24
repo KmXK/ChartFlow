@@ -11,7 +11,7 @@ export class OffsetEventHandler extends EventHandler {
     private readonly offsetController = inject(OffsetController);
     private readonly zoomController = inject(ZoomController);
     private readonly view = inject(paper.View);
-    private start!: paper.Point;
+    private start: paper.Point | undefined;
 
     public onMouseDown(event: MouseEvent, options: EventHandlerOptions): void {
         if (event.button === MouseButton.Middle) {
@@ -25,11 +25,14 @@ export class OffsetEventHandler extends EventHandler {
 
     public onMouseUp(event: MouseEvent, options: EventHandlerOptions): void {
         // TODO: Make cursor controller
-        this.view.element.style.cursor = 'default';
+        if (this.start) {
+            this.view.element.style.cursor = 'default';
+            this.start = undefined;
+        }
     }
 
     public onDrag(event: MouseEvent, option: EventHandlerOptions): void {
-        if (event.button === MouseButton.Middle) {
+        if (this.start && event.button === MouseButton.Middle) {
             this.offsetController.setOffset(this.start.subtract(event.point));
             event.preventDefault();
             event.stopPropagation();

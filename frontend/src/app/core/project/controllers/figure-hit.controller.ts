@@ -1,6 +1,5 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
-import { GroupFigure } from '@core/figures/group.figure';
 import paper from 'paper';
 import { PointChangeTracker } from '../shared/types/point-change-tracker';
 import Controller from './base';
@@ -32,21 +31,6 @@ export default class FigureHitController extends Controller {
             .map(x => this.figureController.getFigure(x.item))
             .filter(function (x): x is Figure {
                 return x !== undefined;
-            })
-            .map(x => {
-                let figure = x;
-                let parent = x;
-
-                do {
-                    figure = parent;
-                    parent = this.figureController.getParent(figure)!;
-                } while (
-                    parent &&
-                    parent instanceof GroupFigure &&
-                    parent.solid
-                );
-
-                return figure;
             });
 
         this.cachedResults = hitFigures;

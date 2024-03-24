@@ -1,5 +1,4 @@
 import { inject } from '@core/di';
-import { Figure } from '@core/figures/base/figure';
 import {
     MouseButton,
     MouseEvent
@@ -7,8 +6,8 @@ import {
 import { StateMachine } from '@core/state/state-machine';
 import paper from 'paper';
 import { SelectionController } from '../controllers';
-import { EventHandler, EventHandlerOptions } from './event-handler';
 import { FigureTreeNode } from '../shared/types/figure-hit-result';
+import { EventHandler, EventHandlerOptions } from './event-handler';
 
 enum MoveState {
     Idle,
@@ -48,6 +47,7 @@ export class MoveEventHandler extends EventHandler {
     }
 
     public onMouseUp(event: MouseEvent, options: EventHandlerOptions): void {
+        console.log(this.figures);
         if (this.figures && event.button === MouseButton.Left) {
             this.view.element.style.cursor = 'default';
 
