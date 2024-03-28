@@ -13,7 +13,7 @@ export class ControlPointController extends Controller {
 
     public init(): void {
         this.figureController.created.on(figure => {
-            const points = figure.getControlPoints();
+            const points = figure.controlPoints;
             if (points.length) {
                 this.targetPoints.set(figure, points);
             }

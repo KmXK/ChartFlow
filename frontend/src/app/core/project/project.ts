@@ -1,7 +1,6 @@
 import { ServiceContainerBuilder } from '@core/di';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
-import { PlaceController } from './controllers';
 import Controller from './controllers/base';
 import { EventLoop } from './event-loop';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
@@ -33,12 +32,12 @@ export class Sheet {
 
         container.get(EventLoop).start();
 
-        for (let i = 0; i < 10; i++) {
-            for (let j = 0; j < 10; j++) {
-                container
-                    .get(PlaceController)
-                    .placeSquare([i * 50, j * 50], [40, 40]);
-            }
-        }
+        // for (let i = 0; i < 10; i++) {
+        //     for (let j = 0; j < 10; j++) {
+        //         container
+        //             .get(PlaceController)
+        //             .placeSquare([i * 50, j * 50], [40, 40]);
+        //     }
+        // }
     }
 }

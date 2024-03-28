@@ -7,7 +7,7 @@ export class SizeControlPoint extends ControlPoint {
 
     constructor(
         _target: Figure,
-        delta: paper.PointLike, // relative: [0, 0] - topLeft, [1, 1] - bottomRight
+        delta: paper.PointLike // relative: [0, 0] - topLeft, [1, 1] - bottomRight
     ) {
         const item = new paper.Path.Circle([0, 0], 3);
 
@@ -18,6 +18,10 @@ export class SizeControlPoint extends ControlPoint {
         this._delta = new paper.Point(delta);
 
         this.updatePosition();
+    }
+
+    get delta(): paper.Point {
+        return this._delta;
     }
 
     public override updatePosition(): void {

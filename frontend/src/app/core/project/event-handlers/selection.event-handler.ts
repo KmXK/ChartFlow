@@ -26,6 +26,8 @@ export class SelectionEventHandler extends EventHandler {
             throw new Error('Selection box cannot be set before onMouseDown');
         }
 
+        console.log(options);
+
         if (
             event.button === MouseButton.Left &&
             options.figureTreeNodes.length === 0

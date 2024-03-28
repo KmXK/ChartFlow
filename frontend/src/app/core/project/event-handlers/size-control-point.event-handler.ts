@@ -53,11 +53,11 @@ export class SizeControlPointEventHandler extends EventHandler {
 
             const figureItem = controlPoint.target.item;
 
-            const sizePoints = controlPoint.target
-                .getControlPoints()
-                .filter(function (x): x is SizeControlPoint {
+            const sizePoints = controlPoint.target.controlPoints.filter(
+                function (x): x is SizeControlPoint {
                     return x instanceof SizeControlPoint;
-                });
+                }
+            );
 
             console.log(sizePoints, controlPoint);
 
@@ -105,10 +105,13 @@ export class SizeControlPointEventHandler extends EventHandler {
             const bottom =
                 this.data.startTopLeft.y + this.data.startSize.height;
 
+            // TODO: Change cursor type on inversing on size changing
             if (this.data.type.left) {
                 if (event.point.x >= right) {
                     size.width = event.point.x - right;
                     topLeft.x = right;
+
+                    this.view.element.style.cursor = 'nesw-resize';
                 } else {
                     size.width = right - event.point.x;
                     topLeft.x = event.point.x;
@@ -142,13 +145,9 @@ export class SizeControlPointEventHandler extends EventHandler {
             if (size.width === 0) size.width = 1;
             if (size.height === 0) size.height = 1;
 
-            item.bounds.size.width = size.width;
-            item.bounds.size.height = size.height;
-            item.position = topLeft.add(size.divide(2));
+            this.data.controlPoint.target.setSize(size);
 
-            this.data.controlPoint.target
-                .getControlPoints()
-                .forEach(p => p.updatePosition());
+            item.position = topLeft.add(size.divide(2));
         }
     }
 }

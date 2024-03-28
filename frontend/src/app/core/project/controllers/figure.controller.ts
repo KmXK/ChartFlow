@@ -266,7 +266,7 @@ export default class FigureController extends Controller {
             });
         }
 
-        const points = figure.getControlPoints();
+        const points = figure.controlPoints;
 
         if (points.length) {
             // Было бы лучше объединить это с кодом ниже.
@@ -274,6 +274,15 @@ export default class FigureController extends Controller {
             this.figures.add(figure);
             this.created.fire(figure);
             this.figureByItem.set(figure.item, figure);
+
+            if (
+                !(figure instanceof GroupFigure) &&
+                figure.item instanceof paper.Group
+            ) {
+                figure.item.children.forEach(c =>
+                    this.figureByItem.set(c, figure)
+                );
+            }
 
             const pointsFigure = points.map(x => this.addFigureAndNested(x));
 
