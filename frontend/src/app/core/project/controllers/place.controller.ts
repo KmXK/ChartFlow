@@ -11,38 +11,21 @@ export default class PlaceController extends Controller {
 
     private readonly figureController = inject(FigureController);
 
-    public placeSquare(position: paper.PointLike, size: paper.SizeLike): void {
-        const outerSize = new paper.Size(size);
-        const innerSize = outerSize.divide(2);
-        const innerPosition = new paper.Point(position).add(
-            outerSize.subtract(innerSize).divide(2)
-        );
+    public placeSquare(data: {
+        position: paper.PointLike;
+        size: paper.SizeLike;
+        text: string;
+    }): void {
+        const outerSize = new paper.Size(data.size);
 
         const rect = new RectangleFigure();
-        rect.setSize([100, 100]);
-        rect.setText('ДОРА ДУРА');
+        rect.setSize(outerSize);
+        rect.setText(data.text);
 
-        this.registerFigure(
-            // rect
-            rect
-            // new GroupFigure({
-            //     figures: [
-            //         new SquareFigure({
-            //             size: outerSize,
-            //             leftTopCornerPosition: position
-            //         }),
-            //         new SquareFigure({
-            //             size: outerSize.divide(2),
-            //             leftTopCornerPosition: innerPosition
-            //         })
-            //     ],
-            //     solid: false
-            // })
-        );
+        this.registerFigure(rect);
     }
 
     private registerFigure(figure: Figure): void {
-        this.selectionController.selectFigure(figure);
         this.figureController.addFigure(figure);
     }
 }

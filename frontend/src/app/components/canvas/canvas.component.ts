@@ -5,6 +5,7 @@ import {
     inject,
     ViewChild
 } from '@angular/core';
+import { CanvasSidebarComponent } from './canvas-sidebar/canvas-sidebar.component';
 import { CanvasService } from './services/canvas.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { CanvasService } from './services/canvas.service';
     templateUrl: './canvas.component.html',
     styleUrl: './canvas.component.scss',
     standalone: true,
+    imports: [CanvasSidebarComponent],
     providers: [CanvasService]
 })
 export class CanvasComponent implements AfterViewInit {

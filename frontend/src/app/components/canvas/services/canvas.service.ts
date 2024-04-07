@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Sheet } from '@core/project/project';
+import { Sheet } from '@core/project/sheet';
 import paper from 'paper';
 
 @Injectable()
@@ -12,5 +12,9 @@ export class CanvasService {
         this.scope.settings.insertItems = false;
 
         this.sheet = new Sheet(new paper.Project(canvasElement));
+    }
+
+    public getSheet(): Sheet {
+        return this.sheet;
     }
 }

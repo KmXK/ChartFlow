@@ -15,10 +15,11 @@ export class PlaceEventHandler extends EventHandler {
             event.repeatCount === 2 &&
             options.figureTreeNodes.length === 0
         ) {
-            this.placeController.placeSquare(
-                event.point.subtract(25),
-                [50, 50]
-            );
+            this.placeController.placeSquare({
+                position: event.point.subtract(25),
+                size: [50, 50],
+                text: ''
+            });
 
             event.stop(); // TODO ?
             options.stopPropagation();

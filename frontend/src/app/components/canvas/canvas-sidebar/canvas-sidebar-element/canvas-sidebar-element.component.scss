@@ -1,0 +1,27 @@
+.container {
+    width: 120px;
+    max-width: 120px;
+    min-width: 120px;
+    padding: 20px 10px;
+    background-color: #eee;
+    border-radius: 10px;
+    border: #888 2px solid;
+
+    text-align: center;
+
+    transition: all .3s;
+
+    &:hover {
+        background-color: #ddd;
+        cursor: pointer;
+
+        transition: all .3s;
+    }
+
+    &:active {
+        background-color: #444;
+        cursor: pointer;
+
+        transition: all .3s;
+    }
+}

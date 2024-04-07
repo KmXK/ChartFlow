@@ -23,6 +23,8 @@ export class EventLoop {
     private readonly figureController = inject(FigureController);
     private readonly eventMapperController = inject(EventMapperController);
 
+    private readonly canvas = inject(HTMLCanvasElement);
+
     private readonly controllers = injectAll(Controller);
 
     // Нужно добавить регистрацию событий (лучше через декораторы для простоты)
@@ -34,7 +36,9 @@ export class EventLoop {
         this.view.element.onwheel = this.eventHandlerCallback(options =>
             this.eventHandlerContainer.eventHandlerCallback(
                 x => x.onWheel,
-                options
+                options,
+                event =>
+                    this.eventMapperController.mapWheelEvent(event, this.canvas)
             )
         );
 

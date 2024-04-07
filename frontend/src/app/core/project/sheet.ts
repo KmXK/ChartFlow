@@ -1,4 +1,5 @@
-import { ServiceContainerBuilder } from '@core/di';
+import { ServiceContainer, ServiceContainerBuilder } from '@core/di';
+import { ServiceType } from '@core/di/types/type';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import Controller from './controllers/base';
@@ -6,11 +7,14 @@ import { EventLoop } from './event-loop';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
 
 export class Sheet {
+    private readonly container: ServiceContainer;
+
     constructor(project: paper.Project) {
         const builder = new ServiceContainerBuilder();
         builder.register(paper.Project, project);
         builder.register(paper.View, project.view);
         builder.register(Sheet, this);
+        builder.register(HTMLCanvasElement, project.view.element);
 
         controllersClasses.forEach(x => {
             builder.add<unknown>(x);
@@ -24,13 +28,13 @@ export class Sheet {
 
         builder.add(EventLoop);
 
-        const container = builder.build();
+        this.container = builder.build();
 
-        container.getAll(Controller).forEach(c => {
+        this.container.getAll(Controller).forEach(c => {
             c.init?.();
         });
 
-        container.get(EventLoop).start();
+        this.container.get(EventLoop).start();
 
         // for (let i = 0; i < 10; i++) {
         //     for (let j = 0; j < 10; j++) {
@@ -39,5 +43,9 @@ export class Sheet {
         //             .placeSquare([i * 50, j * 50], [40, 40]);
         //     }
         // }
+    }
+
+    public getService<TService>(controller: ServiceType<TService>): TService {
+        return this.container.get(controller);
     }
 }

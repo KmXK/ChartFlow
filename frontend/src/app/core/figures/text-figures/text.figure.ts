@@ -2,10 +2,10 @@ import paper from 'paper';
 import { Figure } from '../base/figure';
 import { SizeControlPoint } from '../control-points/size.control-point';
 
-export class TextFigure extends Figure<paper.Group> {
+export class TextFigure<TItem extends paper.Item> extends Figure<paper.Group> {
     private readonly _text: paper.PointText;
 
-    constructor(private readonly _baseItem: paper.Item) {
+    constructor(private readonly _baseItem: TItem) {
         const item = new paper.Group();
 
         item.addChild(_baseItem);
@@ -20,6 +20,10 @@ export class TextFigure extends Figure<paper.Group> {
 
         this._text = text;
         item.addChild(this._text);
+    }
+
+    get baseItem(): TItem {
+        return this._baseItem;
     }
 
     public setText(text: string): void {
