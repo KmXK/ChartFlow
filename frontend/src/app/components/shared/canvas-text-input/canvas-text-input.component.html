@@ -1,0 +1,38 @@
+<span
+    class="element"
+    contenteditable
+    [style.fontSize.px]="options().fontSize"
+    [style.fontFamily]="options().fontFamily"
+    [style.color]="options().textColor"
+    [style.backgroundColor]="options().backgroundColor"
+    [style.top.px]="options().center.y"
+    [style.left.px]="options().center.x"
+    type="text"
+    role="textbox"
+    [ariaMultiLine]="true"
+    #element
+    (input)="input()"
+></span>
+
+<!-- <textarea
+
+    [style.width.ch]="width()"
+    [style.width]="height()"
+    [textContent]="options().text"
+
+    class="element"
+    [textContent]="options().text"
+    [style.fontSize.px]="options().fontSize"
+    [style.fontFamily]="options().fontFamily"
+    [style.color]="options().textColor"
+    [style.backgroundColor]="options().backgroundColor"
+    [style.width.ch]="width()"
+    [style.height]="height()"
+    [style.top.px]="options().center.y"
+    [style.left.px]="options().center.x"
+    type="text"
+    [ariaMultiLine]="true"
+    #element
+    (change)="textChanged.emit(element.textContent!)"
+    (input)="input()"
+></textarea> -->

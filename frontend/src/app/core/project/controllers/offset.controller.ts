@@ -6,6 +6,7 @@ import Controller from './base';
 export default class OffsetController extends Controller {
     private view = inject(paper.View);
     private requiredOffset = new paper.Point(0, 0);
+    private currentOffset = new paper.Point(0, 0);
     private smoothTime = 1;
 
     public onFrame(event: FrameEvent): void {
@@ -25,7 +26,13 @@ export default class OffsetController extends Controller {
 
     public setOffset(offset: paper.PointLike): void {
         this.view.center = this.view.center.add(offset);
+        this.currentOffset = this.currentOffset.add(offset);
+        this.requiredOffset = new paper.Point(0, 0);
         this.smoothTime = 1;
+    }
+
+    get offset(): paper.Point {
+        return this.currentOffset;
     }
 
     private updateOffset(deltaTime: number): void {
@@ -46,6 +53,7 @@ export default class OffsetController extends Controller {
             this.smoothTime - prevSmoothTime
         );
 
+        this.currentOffset = this.currentOffset.add(distance);
         this.view.center = this.view.center.add(distance);
     }
 }

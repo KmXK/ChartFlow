@@ -1,0 +1,33 @@
+.element {
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: transparent;
+
+    resize: none;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    border: 1px solid transparent;
+    text-align: center;
+    overflow-wrap: normal;
+    white-space: normal;
+    outline: none;
+    width: fit-content;
+    min-width: 1px;
+    overflow: visible;
+
+    // transform-origin: 0px 0px;
+    // transform: scale(1, 1) translate(-50%, -50%);
+}

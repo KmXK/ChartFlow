@@ -1,4 +1,11 @@
-<div class="canvas-container">
+<div class="container">
     <app-canvas-sidebar></app-canvas-sidebar>
-    <canvas #canvas resize></canvas>
+    <div class="subcontainer">
+        <div class="canvas-container">
+            <canvas #canvas resize></canvas>
+        </div>
+        <div class="text-input-container">
+            <ng-container #textInputContainer></ng-container>
+        </div>
+    </div>
 </div>

@@ -2,7 +2,14 @@ import paper from 'paper';
 import { Figure } from '../base/figure';
 import { SizeControlPoint } from '../control-points/size.control-point';
 
-export class TextFigure<TItem extends paper.Item> extends Figure<paper.Group> {
+export interface ITextContainer {
+    setText(text: string): void;
+}
+
+export class TextFigure<TItem extends paper.Item>
+    extends Figure<paper.Group>
+    implements ITextContainer
+{
     private readonly _text: paper.PointText;
 
     constructor(private readonly _baseItem: TItem) {
@@ -17,6 +24,8 @@ export class TextFigure<TItem extends paper.Item> extends Figure<paper.Group> {
         text.fillColor = new paper.Color('white');
         text.strokeWidth = 0;
         text.fontSize = 12;
+        text.fontFamily = 'Times New Roman';
+        text.justification = 'center';
 
         this._text = text;
         item.addChild(this._text);
@@ -27,8 +36,36 @@ export class TextFigure<TItem extends paper.Item> extends Figure<paper.Group> {
     }
 
     public setText(text: string): void {
-        this._text.content = text;
+        this._text.content = text.trim();
         this.setSize(this._baseItem.bounds.size);
+    }
+
+    get text(): string {
+        return this._text.content;
+    }
+
+    get fontSize(): number {
+        return +this._text.fontSize;
+    }
+
+    set fontSize(value: number) {
+        this._text.fontSize = value;
+    }
+
+    get fontFamily(): string {
+        return this._text.fontFamily;
+    }
+
+    set fontFamily(value: string) {
+        this._text.fontFamily = value;
+    }
+
+    get textColor(): string {
+        return this._text.fillColor!.toCSS(true);
+    }
+
+    set textColor(value: string) {
+        this._text.fillColor = new paper.Color(value);
     }
 
     protected override setSizeImpl(size: paper.SizeLike): void {

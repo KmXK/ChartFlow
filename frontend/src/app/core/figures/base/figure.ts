@@ -34,4 +34,8 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
     protected createControlPoints(): ControlPoint[] {
         return [];
     }
+
+    public hide(): void {}
+
+    public show(): void {}
 }

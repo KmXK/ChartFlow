@@ -1,20 +1,24 @@
 import {
+    ControlPointController,
     EventMapperController,
     FigureController,
     FigureHitController,
+    HtmlElementController,
     MouseEventCounter,
     OffsetController,
     PlaceController,
     SelectionController,
     ZoomController
 } from './controllers';
-import { ControlPointController } from './controllers/control-point.controller';
-import { MoveEventHandler } from './event-handlers/move.event-handler';
-import { OffsetEventHandler } from './event-handlers/offset.event-handler';
-import { PlaceEventHandler } from './event-handlers/place.event-handler';
-import { SelectionEventHandler } from './event-handlers/selection.event-handler';
-import { SizeControlPointEventHandler } from './event-handlers/size-control-point.event-handler';
-import { ZoomEventHandler } from './event-handlers/zoom.event-handler';
+import {
+    MoveEventHandler,
+    OffsetEventHandler,
+    PlaceEventHandler,
+    SelectionEventHandler,
+    SizeControlPointEventHandler,
+    TextEditEventHandler,
+    ZoomEventHandler
+} from './event-handlers';
 
 export const controllersClasses = [
     ZoomController,
@@ -25,7 +29,8 @@ export const controllersClasses = [
     SelectionController,
     EventMapperController,
     MouseEventCounter,
-    ControlPointController
+    ControlPointController,
+    HtmlElementController
 ];
 
 export const eventHandlers = [
@@ -34,5 +39,6 @@ export const eventHandlers = [
     SelectionEventHandler,
     MoveEventHandler,
     SizeControlPointEventHandler,
-    PlaceEventHandler
+    PlaceEventHandler,
+    TextEditEventHandler
 ];
