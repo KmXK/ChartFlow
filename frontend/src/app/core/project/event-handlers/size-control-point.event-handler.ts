@@ -59,8 +59,6 @@ export class SizeControlPointEventHandler extends EventHandler {
                 }
             );
 
-            console.log(sizePoints, controlPoint);
-
             if (sizePoints.length !== 4) {
                 throw new Error(
                     'Invalid size control points count. Try to recheck logic.'
@@ -161,8 +159,6 @@ export class SizeControlPointEventHandler extends EventHandler {
         }
 
         const validSize = target.validateSize(size);
-
-        console.log(overlapping.horizontal);
 
         if (validSize.width > size.width) {
             if (overlapping.horizontal) {

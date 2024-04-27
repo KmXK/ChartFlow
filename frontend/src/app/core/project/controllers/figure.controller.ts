@@ -286,6 +286,8 @@ export default class FigureController extends Controller {
 
             const pointsFigure = points.map(x => this.addFigureAndNested(x));
 
+            // points.forEach(x => x.item.bringToFront());?????
+
             figure = new GroupFigure({
                 figures: [figure, ...pointsFigure],
                 solid: true

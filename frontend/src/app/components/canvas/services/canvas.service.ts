@@ -5,10 +5,11 @@ import { ICanvasTextInputComponent } from '@shared/components/interfaces/text-in
 import { TextInputOptions } from '@shared/components/options';
 import { Destroyable } from '@shared/types/destroyable';
 import paper from 'paper';
+import { Observable, ReplaySubject, take } from 'rxjs';
 
 @Injectable()
 export class CanvasService {
-    private sheet!: Sheet;
+    private sheetSubject = new ReplaySubject<Sheet>(1);
     private scope!: paper.PaperScope;
     private container!: ViewContainerRef;
 
@@ -16,7 +17,9 @@ export class CanvasService {
         this.scope = new paper.PaperScope();
         this.scope.settings.insertItems = false;
 
-        this.sheet = new Sheet(new paper.Project(canvasElement), this);
+        this.sheetSubject.next(
+            new Sheet(new paper.Project(canvasElement), this)
+        );
     }
 
     public setTextElementsContainer(container: ViewContainerRef): void {
@@ -24,8 +27,12 @@ export class CanvasService {
         this.container = container;
     }
 
-    public getSheet(): Sheet {
-        return this.sheet;
+    get sheet$(): Observable<Sheet> {
+        return this.sheetSubject;
+    }
+
+    public execute(action: (sheet: Sheet) => void): void {
+        this.sheet$.pipe(take(1)).subscribe(sheet => action(sheet));
     }
 
     public createTextElement(

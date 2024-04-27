@@ -1,7 +1,7 @@
-import paper from 'paper';
-import { ControlPoint } from '../control-points/control-point';
-import { SizeControlPoint } from '../control-points/size.control-point';
-import { TextFigure } from './text.figure';
+import * as paper from 'paper';
+import { ControlPoint } from '../../../figures/control-points/control-point';
+import { SizeControlPoint } from '../../../figures/control-points/size.control-point';
+import { TextFigure } from '../../../figures/text-figures/text.figure';
 
 export class RectangleFigure extends TextFigure<paper.Path.Rectangle> {
     constructor() {

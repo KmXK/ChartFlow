@@ -17,11 +17,12 @@ export class CanvasSidebarElementComponent {
     private readonly canvasService = inject(CanvasService);
 
     public createElement(): void {
-        const placeController = this.canvasService
-            .getSheet()
-            .getService(PlaceController);
+        this.canvasService.execute(sheet => {
+            const placeController = sheet.getService(PlaceController);
 
-        placeController.placeFigure(this.figureCreator());
+            console.log('place');
+            placeController.placeFigure(this.figureCreator());
+        });
 
         // placeController.placeSquare({
         //     position: [0, 0],
