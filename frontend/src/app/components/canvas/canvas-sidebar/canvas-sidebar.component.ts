@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TerminatorFigure } from '@core/figures/gost/terminator.figure';
 import { CanvasSidebarElementComponent } from './canvas-sidebar-element/canvas-sidebar-element.component';
 
 @Component({
@@ -9,5 +10,14 @@ import { CanvasSidebarElementComponent } from './canvas-sidebar-element/canvas-s
     styleUrl: './canvas-sidebar.component.scss'
 })
 export class CanvasSidebarComponent {
-    public elements = ['Прямоугольник', 'Терминатор'];
+    public elements = [
+        {
+            name: 'Terminator',
+            creator: () => new TerminatorFigure(),
+            defaultOptions: {
+                size: [100, 40],
+                text: 'Terminator'
+            }
+        }
+    ];
 }

@@ -1,5 +1,8 @@
 <div class="container">
     @for (element of elements; track $index) {
-        <app-canvas-sidebar-element [text]="element" />
+        <app-canvas-sidebar-element
+            [text]="element.name"
+            [figureCreator]="element.creator"
+        />
     }
 </div>

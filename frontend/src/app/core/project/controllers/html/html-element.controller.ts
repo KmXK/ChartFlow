@@ -20,13 +20,6 @@ export class HtmlElementController extends Controller {
 
         const center = this.view.projectToView(figure.item.position);
 
-        console.log(
-            figure.item.position,
-            center,
-            this.offsetController,
-            this.zoomController
-        );
-
         const element = this.canvasService.createTextElement({
             fontFamily: figure.fontFamily,
             fontSize: figure.fontSize * zoom,

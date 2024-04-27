@@ -1,5 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { CanvasService } from '@components/canvas/services/canvas.service';
+import { Figure } from '@core/figures/base/figure';
 import { PlaceController } from '@core/project/controllers';
 
 @Component({
@@ -10,19 +11,22 @@ import { PlaceController } from '@core/project/controllers';
     styleUrl: './canvas-sidebar-element.component.scss'
 })
 export class CanvasSidebarElementComponent {
-    @Input() public text: string = '';
+    @Input({ required: true }) public text!: string;
+    @Input({ required: true }) public figureCreator!: () => Figure;
 
     private readonly canvasService = inject(CanvasService);
 
-    public createElement(text: string): void {
+    public createElement(): void {
         const placeController = this.canvasService
             .getSheet()
             .getService(PlaceController);
 
-        placeController.placeSquare({
-            position: [0, 0],
-            text,
-            size: [100, 100]
-        });
+        placeController.placeFigure(this.figureCreator());
+
+        // placeController.placeSquare({
+        //     position: [0, 0],
+        //     text,
+        //     size: [100, 100]
+        // });
     }
 }

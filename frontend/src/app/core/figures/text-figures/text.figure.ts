@@ -1,6 +1,5 @@
 import paper from 'paper';
 import { Figure } from '../base/figure';
-import { SizeControlPoint } from '../control-points/size.control-point';
 
 export interface ITextContainer {
     setText(text: string): void;
@@ -20,8 +19,8 @@ export class TextFigure<TItem extends paper.Item>
         super(item);
 
         const text = new paper.PointText([0, 0]);
-        text.strokeColor = new paper.Color('white');
-        text.fillColor = new paper.Color('white');
+        text.strokeColor = new paper.Color('black');
+        text.fillColor = new paper.Color('black');
         text.strokeWidth = 0;
         text.fontSize = 12;
         text.fontFamily = 'Times New Roman';
@@ -73,14 +72,5 @@ export class TextFigure<TItem extends paper.Item>
 
         this._baseItem.bounds.size = sizeObj;
         this._text.position = this._baseItem.position;
-        // this._text.bounds.size = sizeObj.subtract(this._text.strokeWidth);
-
-        this.controlPoints.forEach(cp => {
-            if (cp instanceof SizeControlPoint) {
-                cp.item.position = this._baseItem.bounds.topLeft.add(
-                    this._baseItem.bounds.size.multiply(cp.delta)
-                );
-            }
-        });
     }
 }

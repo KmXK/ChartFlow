@@ -95,59 +95,112 @@ export class SizeControlPointEventHandler extends EventHandler {
     }
 
     public onDrag(event: MouseEvent, options: EventHandlerOptions): void {
-        if (this.data) {
-            const item = this.data.controlPoint.target.item;
+        if (!this.data) return;
 
-            const topLeft = new paper.Point(this.data.startTopLeft);
-            const size = new paper.Size(this.data.startSize);
+        const target = this.data.controlPoint.target;
 
-            const right = this.data.startTopLeft.x + this.data.startSize.width;
-            const bottom =
-                this.data.startTopLeft.y + this.data.startSize.height;
+        const topLeft = new paper.Point(this.data.startTopLeft);
+        const size = new paper.Size(this.data.startSize);
 
-            // TODO: Change cursor type on inversing on size changing
-            if (this.data.type.left) {
-                if (event.point.x >= right) {
-                    size.width = event.point.x - right;
+        const right = this.data.startTopLeft.x + this.data.startSize.width;
+        const bottom = this.data.startTopLeft.y + this.data.startSize.height;
+
+        const overlapping = {
+            horizontal: false,
+            vertical: false
+        };
+
+        // TODO: BUG
+        // Небольшая багуля: я хочу сделать так, чтобы блоки могли ограничивать диапазон размеров.
+        // Для этого используем validateSize(). Вопрос: что будет, если на данный момент сайз не валидный? А если мы переходим в состояние другой точки, т.е.
+        // вышли за границу левой стенки при перетягивании правой, например.
+
+        // TODO: Change cursor type on inversing on size changing
+        if (this.data.type.left) {
+            if (event.point.x >= right) {
+                size.width = event.point.x - right;
+                topLeft.x = right;
+
+                this.view.element.style.cursor = 'nesw-resize';
+
+                overlapping.horizontal = true;
+            } else {
+                size.width = right - event.point.x;
+                topLeft.x = event.point.x;
+            }
+        } else {
+            if (event.point.x <= topLeft.x) {
+                size.width = topLeft.x - event.point.x;
+                topLeft.x = event.point.x;
+
+                overlapping.horizontal = true;
+            } else {
+                size.width = event.point.x - topLeft.x;
+            }
+        }
+
+        if (this.data.type.top) {
+            if (event.point.y >= bottom) {
+                size.height = event.point.y - bottom;
+                topLeft.y = bottom;
+
+                overlapping.vertical = true;
+            } else {
+                size.height = bottom - event.point.y;
+                topLeft.y = event.point.y;
+            }
+        } else {
+            if (event.point.y <= this.data.startTopLeft.y) {
+                topLeft.y = event.point.y;
+                size.height = this.data.startTopLeft.y - event.point.y;
+
+                overlapping.vertical = true;
+            } else {
+                size.height = event.point.y - topLeft.y;
+            }
+        }
+
+        const validSize = target.validateSize(size);
+
+        console.log(overlapping.horizontal);
+
+        if (validSize.width > size.width) {
+            if (overlapping.horizontal) {
+                if (this.data.type.left) {
+                    // left border is right now
                     topLeft.x = right;
-
-                    this.view.element.style.cursor = 'nesw-resize';
                 } else {
-                    size.width = right - event.point.x;
-                    topLeft.x = event.point.x;
+                    // right border is left now
+                    topLeft.x = this.data.startTopLeft.x - validSize.width;
                 }
             } else {
-                if (event.point.x <= topLeft.x) {
-                    size.width = topLeft.x - event.point.x;
-                    topLeft.x = event.point.x;
+                if (this.data.type.left) {
+                    topLeft.x = right - validSize.width;
                 } else {
-                    size.width = event.point.x - topLeft.x;
+                    topLeft.x = this.data.startTopLeft.x;
                 }
             }
+        }
 
-            if (this.data.type.top) {
-                if (event.point.y >= bottom) {
-                    size.height = event.point.y - bottom;
+        if (validSize.height > size.height) {
+            if (overlapping.vertical) {
+                if (this.data.type.top) {
+                    // left border is right now
                     topLeft.y = bottom;
                 } else {
-                    size.height = bottom - event.point.y;
-                    topLeft.y = event.point.y;
+                    // bottom border is top now
+                    topLeft.y = this.data.startTopLeft.y - validSize.height;
                 }
             } else {
-                if (event.point.y <= this.data.startTopLeft.y) {
-                    topLeft.y = event.point.y;
-                    size.height = this.data.startTopLeft.y - event.point.y;
+                if (this.data.type.top) {
+                    topLeft.y = bottom - validSize.height;
                 } else {
-                    size.height = event.point.y - topLeft.y;
+                    topLeft.y = this.data.startTopLeft.y;
                 }
             }
-
-            if (size.width === 0) size.width = 1;
-            if (size.height === 0) size.height = 1;
-
-            this.data.controlPoint.target.setSize(size);
-
-            item.position = topLeft.add(size.divide(2));
         }
+
+        target.setSize(validSize);
+        target.setPosition(topLeft.add(validSize.divide(2)));
     }
 }

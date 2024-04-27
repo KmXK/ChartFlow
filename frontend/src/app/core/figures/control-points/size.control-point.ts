@@ -26,15 +26,10 @@ export class SizeControlPoint extends ControlPoint {
 
     public override updatePosition(): void {
         const size = this.target.item.bounds.size;
-        const delta: paper.SizeLike = [
-            size.width * this._delta.x,
-            size.height * this._delta.y
-        ];
+        const delta = size.multiply(this.delta);
 
-        const point = new paper.Point(this._target.item.bounds.topLeft).add(
-            delta
-        );
+        const point = this._target.item.bounds.topLeft.add(delta);
 
-        this.item.position = point;
+        this.item.position = point.multiply(100).round().divide(100);
     }
 }
