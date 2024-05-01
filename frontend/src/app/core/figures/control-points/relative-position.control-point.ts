@@ -20,11 +20,17 @@ export class RelativePositionControlPoint extends ControlPoint {
     }
 
     public override updatePosition(): void {
+        this.setPosition(this.getRelativePosition());
+    }
+
+    public getRelativePosition(): paper.Point {
         const size = this.target.item.bounds.size;
         const delta = size.multiply(this.delta);
 
-        const point = this._target.item.bounds.topLeft.add(delta);
-
-        this.item.position = point.multiply(100).round().divide(100);
+        return this.target.item.bounds.topLeft
+            .add(delta)
+            .multiply(100)
+            .round()
+            .divide(100);
     }
 }

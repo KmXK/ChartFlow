@@ -17,20 +17,20 @@ export default class SelectionController extends Controller {
 
     private readonly selectedFigures = new Set<Figure>();
 
-    public readonly selection = event<[Figure[]]>();
+    public readonly selection = event<[FigureTreeNode[]]>();
 
     public selectFigure(figure: Figure): void {
         this.deselectAll();
 
         this.addToSelection(figure);
-        this.selection.fire([figure]);
+        this.selection.fire(this.getSelection());
     }
 
     public selectFigures(figures: Figure[]): void {
         this.deselectAll();
 
         figures.forEach(figure => this.addToSelection(figure));
-        this.selection.fire([...this.selectedFigures.values()]);
+        this.selection.fire(this.getSelection());
     }
 
     public freeSelect(hit: FigureTreeNode): void {
@@ -91,7 +91,7 @@ export default class SelectionController extends Controller {
             this.selectedFigures.add(figure);
 
             if (figure instanceof GroupFigure) {
-                // this.addToSelection(...figure.getFigures());
+                this.addToSelection(...figure.getFigures());
             }
 
             // For Debug

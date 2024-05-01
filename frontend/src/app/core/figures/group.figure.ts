@@ -24,6 +24,12 @@ export class GroupFigure extends Figure {
         this._solid = !!('solid' in options && options.solid);
     }
 
+    public setPosition(point: paper.PointLike): void {
+        super.setPosition(point);
+
+        this._plainFigures.forEach(x => x.positionChanged.fire(x.position));
+    }
+
     public getFigures(): Figure[] {
         return [...this._plainFigures];
     }

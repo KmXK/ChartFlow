@@ -69,7 +69,7 @@ export class MoveEventHandler extends EventHandler {
 
             for (const figure of this.figures) {
                 const item = figure.figure.item;
-                item.position = item.position.add(event.delta);
+                figure.figure.setPosition(item.position.add(event.delta));
             }
 
             options.stopPropagation();

@@ -1,7 +1,6 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
 import { TextFigure } from '@core/figures/text-figures/text.figure';
-import paper from 'paper';
 import Controller from './base';
 import FigureController from './figure.controller';
 
@@ -25,12 +24,12 @@ export default class PlaceController extends Controller {
         }
 
         if (options?.position) {
-            figure.item.position = new paper.Point(options.position); // TODO: make setPosition method
+            figure.setPosition(options.position);
         }
 
         this.registerFigure(figure);
 
-        figure.setSize([100, 40]); // TODO: remove
+        figure.setSize([300, 140]); // TODO: remove
 
         return figure;
     }

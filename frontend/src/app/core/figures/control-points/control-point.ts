@@ -2,7 +2,7 @@ import { Figure } from '../base/figure';
 
 export abstract class ControlPoint extends Figure {
     constructor(
-        protected readonly _target: Figure,
+        private readonly _target: Figure,
         item: paper.Item
     ) {
         super(item);

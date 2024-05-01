@@ -42,9 +42,10 @@ export default class FigureController extends Controller {
         this.figures.delete(figure);
         this.removed.fire(figure);
 
-        this.project.activeLayer.removeChildren(
-            this.project.activeLayer.children.findIndex(x => x === figure.item)
+        const index = this.project.activeLayer.children.findIndex(
+            x => x === figure.item
         );
+        this.project.activeLayer.removeChildren(index, index + 1);
     }
 
     public getParent(figure: Figure): Figure | undefined {
@@ -87,55 +88,21 @@ export default class FigureController extends Controller {
         return this.figureByItem.get(item);
     }
 
-    // public foldPlainFigures(figures: Figure[]): FigureTreeNode[] {
-    //     const groups = new Map<
-    //         Figure,
-    //         { figure: GroupFigure; figures: Figure[] }
-    //     >();
+    // TODO: Move to coord controller
+    public getGlobalCoordFromFigureCoordSystem(
+        figure: Figure,
+        figureCoordSystemCoord: paper.PointLike
+    ): paper.Point {
+        let point = new paper.Point(figureCoordSystemCoord);
+        let parent: paper.Item | undefined = figure.item;
+        console.log(point);
+        while ((parent = parent.parent)) {
+            point = point.add(parent.bounds.center);
+            console.log(point);
+        }
 
-    //     const set = new Set<FigureTreeNode>();
-
-    //     figures.forEach(figure => {
-    //         const topParent = this.getTopParent(figure);
-    //         if (topParent !== figure) {
-    //             if (!(topParent instanceof GroupFigure)) {
-    //                 // Для предупреждения будущих ошибок, если будем тут расширяться
-    //                 throw new Error('Top parent is not a group figure');
-    //             }
-
-    //             if (groups.has(topParent)) {
-    //                 groups.get(topParent)!.figures.push(figure);
-    //             } else {
-    //                 groups.set(topParent, {
-    //                     figure: topParent,
-    //                     figures: [figure]
-    //                 });
-
-    //                 set.add({
-    //                     type: FigureTreeNodeType.Group,
-    //                     ...groups.get(topParent)!
-    //                 });
-    //             }
-    //         } else {
-    //             set.add({
-    //                 type: FigureTreeNodeType.Figure,
-    //                 figure
-    //             });
-    //         }
-    //     });
-
-    //     if (set.size > 0)
-    //         console.log(
-    //             [...set.values()].filter(
-    //                 x => x.type === FigureTreeNodeType.Group
-    //             ),
-    //             set
-    //         );
-
-    //     return [...set.values()].filter(
-    //         x => x.type === FigureTreeNodeType.Group
-    //     );
-    // }
+        return point;
+    }
 
     public makeFigureForest(
         figures: Figure[],
@@ -268,21 +235,23 @@ export default class FigureController extends Controller {
 
         const points = figure.controlPoints;
 
+        if (!(figure instanceof GroupFigure)) {
+            if (
+                figure.item instanceof paper.Group ||
+                figure.item instanceof paper.CompoundPath
+            ) {
+                figure.item.children.forEach(c =>
+                    this.figureByItem.set(c, figure)
+                );
+            }
+        }
+
         if (points.length) {
             // Было бы лучше объединить это с кодом ниже.
             // Просто тут сложновато)
             this.figures.add(figure);
             this.created.fire(figure);
             this.figureByItem.set(figure.item, figure);
-
-            if (
-                !(figure instanceof GroupFigure) &&
-                figure.item instanceof paper.Group
-            ) {
-                figure.item.children.forEach(c =>
-                    this.figureByItem.set(c, figure)
-                );
-            }
 
             const pointsFigure = points.map(x => {
                 x.updatePosition();

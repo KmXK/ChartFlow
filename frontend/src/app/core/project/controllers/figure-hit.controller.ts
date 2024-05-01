@@ -30,7 +30,7 @@ export default class FigureHitController extends Controller {
         const hitFigures = hitResults
             .map(x => this.figureController.getFigure(x.item))
             .filter(function (x): x is Figure {
-                return x !== undefined;
+                return x !== undefined && !x.transparent;
             });
 
         this.cachedResults = hitFigures;

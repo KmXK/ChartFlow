@@ -7,6 +7,7 @@ import MouseEventCounter from './mouse-event-counter.controller';
 import OffsetController from './offset.controller';
 import PlaceController from './place.controller';
 import PluginController from './plugin.controller';
+import PositionController from './position.controller';
 import SelectionController from './selection.controller';
 import ZoomController from './zoom.controller';
 
@@ -20,6 +21,7 @@ export {
     OffsetController,
     PlaceController,
     PluginController,
+    PositionController,
     SelectionController,
     ZoomController
 };

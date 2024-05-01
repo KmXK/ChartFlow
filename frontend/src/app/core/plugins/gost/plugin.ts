@@ -1,5 +1,7 @@
 import { IPluginCreator } from '../plugin';
+import { ConnectionHintController } from './controllers/connection-hint.controller';
 import { LineStartController } from './controllers/line-start.controller';
+import { LineController } from './controllers/line.controller';
 import { LineStartEventHandler } from './event-handlers/line-start.event-handler';
 import {
     ConditionFigure,
@@ -13,10 +15,17 @@ export const GostPluginCreator: IPluginCreator = {
     create: () => ({
         name: 'Gost',
         controllers: [
-            // TODO: При комменте этих строк всё норм, почему???!?!?!?!?!?!?!?!
             {
                 token: LineStartController,
                 factory: () => new LineStartController()
+            },
+            {
+                token: ConnectionHintController,
+                factory: () => new ConnectionHintController()
+            },
+            {
+                token: LineController,
+                factory: () => new LineController()
             }
         ],
         eventHandlers: [

@@ -4,8 +4,10 @@ import { ControlPoint } from '../control-points/control-point';
 
 export abstract class Figure<TItem extends paper.Item = paper.Item> {
     private _controlPoints: ControlPoint[] | undefined;
+    private _transparent = false;
 
-    public readonly sizeChanged = event<[Figure<paper.Item>]>();
+    public readonly sizeChanged = event<[Figure]>();
+    public readonly positionChanged = event<[paper.Point]>();
 
     constructor(private readonly _item: TItem) {}
 
@@ -32,9 +34,19 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
         this.sizeChanged.fire(this);
     }
 
+    get size(): paper.Size {
+        return this._item.bounds.size;
+    }
+
     public setPosition(point: paper.PointLike): void {
         this._item.position = new paper.Point(point);
         this.updateControlPoints();
+
+        this.positionChanged.fire(new paper.Point(point));
+    }
+
+    get position(): paper.Point {
+        return this._item.position;
     }
 
     protected setSizeImpl(size: paper.SizeLike): void {
@@ -55,7 +67,7 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
     }
 
     protected updateControlPoints(): void {
-        this.controlPoints.forEach(x => x.updatePosition());
+        this._controlPoints?.forEach(x => x.updatePosition());
     }
 
     public hide(): void {
@@ -64,5 +76,13 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
 
     public show(): void {
         this.item.visible = true;
+    }
+
+    get transparent(): boolean {
+        return this._transparent;
+    }
+
+    set transparent(value: boolean) {
+        this._transparent = value;
     }
 }

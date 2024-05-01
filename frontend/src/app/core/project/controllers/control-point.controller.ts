@@ -1,8 +1,8 @@
 import { inject } from '@core/di';
 import { Figure } from '@core/figures/base/figure';
 import { ControlPoint } from '@core/figures/control-points/control-point';
-import { GroupFigure } from '@core/figures/group.figure';
 import { FigureController, SelectionController } from '.';
+import { FigureTreeNodeType } from '../shared/types/figure-hit-result';
 import Controller from './base';
 
 export default class ControlPointController extends Controller {
@@ -28,20 +28,20 @@ export default class ControlPointController extends Controller {
                 // TODO: Move to 'visibility' controller
                 // Нужно вообще как-то убрать доступ к item из фигур
                 p.forEach(x => {
-                    x.item.visible = false;
+                    x.hide();
                 });
             });
 
             figures
                 .flatMap(x => {
-                    if (x instanceof GroupFigure) {
-                        return x.getFigures();
+                    if (x.type === FigureTreeNodeType.Group) {
+                        return x.figure.getFigures();
                     }
-                    return x;
+                    return x.figure;
                 })
                 .forEach(x => {
                     this.targetPoints.get(x)?.forEach(x => {
-                        x.item.visible = true;
+                        x.show();
                     });
                 });
         });
