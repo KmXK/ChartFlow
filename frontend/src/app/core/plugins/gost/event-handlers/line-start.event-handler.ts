@@ -5,7 +5,6 @@ import { MouseEvent } from '@core/project/shared/events/mouse.event';
 import { StateMachine } from '@core/state/state-machine';
 import { ConnectionHintController } from '../controllers/connection-hint.controller';
 import { LineStartController } from '../controllers/line-start.controller';
-import { BaseGostFigure } from '../figures/base.figure';
 import { LineStartControlPoint } from '../figures/control-points/line-start.control-point';
 
 enum LineStartState {
@@ -39,13 +38,9 @@ export class LineStartEventHandler extends EventHandler {
         if (this.state.in(LineStartState.Line)) {
             this.controller.moveLine(event.point);
 
-            if (options.plainFigures?.[0] instanceof BaseGostFigure) {
-                this.connectionHintController.hintConnection(
-                    options.plainFigures?.[0] as BaseGostFigure
-                );
-            } else {
-                this.connectionHintController.removeHintConnection();
-            }
+            this.connectionHintController.hintConnection(
+                options.plainFigures?.[0]
+            );
         }
     }
 
@@ -73,11 +68,7 @@ export class LineStartEventHandler extends EventHandler {
 
             this.connectionHintController.removeHintConnection();
 
-            if (options.plainFigures?.[0] instanceof BaseGostFigure) {
-                this.controller.stopLine(options.plainFigures?.[0]);
-            } else {
-                this.controller.stopLine();
-            }
+            this.controller.stopLine();
         }
     }
 }

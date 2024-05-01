@@ -1,6 +1,7 @@
 import { Figure } from '@core/figures/base/figure';
 import { RelativePositionControlPoint } from '@core/figures/control-points/relative-position.control-point';
 import paper from 'paper';
+import { AnchorControlPoint } from './anchor.control-point';
 
 export enum LineStartDirection {
     Right = 0,
@@ -15,7 +16,8 @@ export class LineStartControlPoint extends RelativePositionControlPoint {
     constructor(
         _target: Figure,
         delta: paper.PointLike,
-        private readonly direction: LineStartDirection
+        private readonly direction: LineStartDirection,
+        public readonly anchorControlPoint: AnchorControlPoint
     ) {
         const width = 5;
         const height = 30;

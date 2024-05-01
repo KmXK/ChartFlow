@@ -8,7 +8,7 @@ import {
 import Controller from '@core/project/controllers/base';
 import { FigureTreeNodeType } from '@core/project/shared/types/figure-hit-result';
 import paper from 'paper';
-import { BaseGostFigure } from '../figures/base.figure';
+import { AnchorControlPoint } from '../figures/control-points/anchor.control-point';
 import { LineStartControlPoint } from '../figures/control-points/line-start.control-point';
 import { ConnectionLineFigure } from '../figures/lines/connection-line.figure';
 import { LineFigure } from '../figures/lines/line.figure';
@@ -26,6 +26,7 @@ export class LineStartController extends Controller {
     private lineCreationData?: {
         figure: Figure;
         line: LineFigure;
+        preview?: AnchorControlPoint;
     };
 
     public init(): void {
@@ -76,24 +77,22 @@ export class LineStartController extends Controller {
 
         this.lineCreationData = {
             line,
-            figure
+            figure: this.targetHint.anchorControlPoint
         };
 
         this.figureController.addFigure(line);
     }
 
-    public stopLine(figure?: BaseGostFigure): void {
+    public stopLine(): void {
         if (!this.lineCreationData) return;
 
         this.points.forEach(x => x.show());
 
-        if (figure) {
+        if (this.lineCreationData.preview) {
             const connectionLine = new ConnectionLineFigure([
                 this.lineCreationData.figure,
-                figure
+                this.lineCreationData.preview
             ]);
-
-            console.log(connectionLine);
 
             this.figureController.addFigure(connectionLine);
         }
@@ -110,5 +109,18 @@ export class LineStartController extends Controller {
 
     get line(): LineFigure | undefined {
         return this.lineCreationData?.line;
+    }
+
+    public makeLinePreview(point: AnchorControlPoint): void {
+        if (!this.lineCreationData) return;
+
+        this.lineCreationData.preview = point;
+        this.lineCreationData.line.setEndTo(point.position);
+    }
+
+    public removePreview(): void {
+        if (!this.lineCreationData?.preview) return;
+
+        this.lineCreationData.preview = undefined;
     }
 }

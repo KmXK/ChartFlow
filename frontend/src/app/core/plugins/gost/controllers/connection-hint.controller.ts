@@ -1,7 +1,8 @@
 import { inject } from '@core/di';
+import { Figure } from '@core/figures/base/figure';
 import Controller from '@core/project/controllers/base';
-import paper from 'paper';
 import { BaseGostFigure } from '../figures/base.figure';
+import { AnchorControlPoint } from '../figures/control-points/anchor.control-point';
 import { LineFigure } from '../figures/lines/line.figure';
 import { LineStartController } from './line-start.controller';
 
@@ -13,24 +14,42 @@ export class ConnectionHintController extends Controller {
         line: LineFigure;
     };
 
-    public hintConnection(figure: BaseGostFigure): void {
+    public hintConnection(figure?: Figure): void {
+        if (figure instanceof AnchorControlPoint) {
+            this.lineStartController.makeLinePreview(figure);
+            return;
+        }
+
+        this.lineStartController.removePreview();
         this.removeHintConnection();
 
-        const line = this.lineStartController.line;
-        if (!line) return;
+        if (figure instanceof BaseGostFigure) {
+            const line = this.lineStartController.line;
+            if (!line) return;
 
-        this.target = {
-            line: this.lineStartController.line,
-            figure
-        };
+            this.target = {
+                line: this.lineStartController.line,
+                figure
+            };
 
-        this.target.figure.item.strokeColor = new paper.Color('red');
+            figure.controlPoints.forEach(x => {
+                if (x instanceof AnchorControlPoint) {
+                    x.show();
+                }
+            });
+        }
     }
 
     public removeHintConnection(): void {
         if (!this.target) return;
 
-        this.target.figure.item.strokeColor = new paper.Color('black');
+        this.target.figure.controlPoints.forEach(x => {
+            if (x instanceof AnchorControlPoint) {
+                x.hide();
+            }
+        });
+
+        // this.target.figure.item.strokeColor = new paper.Color('black');
         this.target = undefined;
     }
 }

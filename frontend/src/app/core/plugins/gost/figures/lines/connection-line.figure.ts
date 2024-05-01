@@ -14,6 +14,7 @@ export class ConnectionLineFigure extends Figure<paper.Path> {
     }
 
     public update(): void {
+        this.item.bringToFront();
         this.item.segments[0].point = this._figures[0].item.position;
         this.item.segments[1].point = this._figures[1].item.position;
     }

@@ -28,7 +28,9 @@ export default class ControlPointController extends Controller {
                 // TODO: Move to 'visibility' controller
                 // Нужно вообще как-то убрать доступ к item из фигур
                 p.forEach(x => {
-                    x.hide();
+                    if (x.defaultVisibility) {
+                        x.hide();
+                    }
                 });
             });
 
@@ -41,7 +43,9 @@ export default class ControlPointController extends Controller {
                 })
                 .forEach(x => {
                     this.targetPoints.get(x)?.forEach(x => {
-                        x.show();
+                        if (x.defaultVisibility) {
+                            x.show();
+                        }
                     });
                 });
         });
