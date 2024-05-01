@@ -1,4 +1,4 @@
-import { GostPlugin } from '@core/plugins';
-import { IPlugin } from '@core/plugins/plugin';
+import { GostPluginCreator } from '@core/plugins/gost/plugin';
+import { IPluginCreator } from '@core/plugins/plugin';
 
-export const plugins: IPlugin[] = [GostPlugin];
+export const pluginsCreators: IPluginCreator[] = [GostPluginCreator];

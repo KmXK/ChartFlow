@@ -1,3 +1,3 @@
-import { GostPlugin } from './gost/plugin';
+import { GostPluginCreator } from './gost/plugin';
 
-export { GostPlugin };
+export { GostPluginCreator as GostPlugin };

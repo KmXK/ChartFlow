@@ -284,7 +284,10 @@ export default class FigureController extends Controller {
                 );
             }
 
-            const pointsFigure = points.map(x => this.addFigureAndNested(x));
+            const pointsFigure = points.map(x => {
+                x.updatePosition();
+                return this.addFigureAndNested(x);
+            });
 
             // points.forEach(x => x.item.bringToFront());?????
 

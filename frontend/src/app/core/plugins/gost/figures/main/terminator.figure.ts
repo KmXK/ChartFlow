@@ -1,17 +1,14 @@
 import * as paper from 'paper';
-import { ControlPoint } from '../../../figures/control-points/control-point';
-import { SizeControlPoint } from '../../../figures/control-points/size.control-point';
-import { TextFigure } from '../../../figures/text-figures/text.figure';
+import { BaseGostFigure } from '../base.figure';
 
-export class TerminatorFigure extends TextFigure<paper.Path> {
+export class TerminatorFigure extends BaseGostFigure<paper.Path> {
     constructor() {
         const rect = new paper.Path();
 
+        // TODO: Move color to options
         rect.strokeColor = new paper.Color('black');
         rect.fillColor = new paper.Color('white');
         super(rect);
-
-        this.setSize([100, 40]);
     }
 
     // TODO: Add setFigureSizeImpl and call it from TextFigure.setSizeImpl and make it sealed to skip .bounds.size = size call
@@ -19,7 +16,6 @@ export class TerminatorFigure extends TextFigure<paper.Path> {
         const sizeObj = new paper.Size(size);
 
         super.setSizeImpl(sizeObj);
-        // this.baseItem.size = sizeObj;
 
         const rect = this.baseItem;
 
@@ -58,14 +54,5 @@ export class TerminatorFigure extends TextFigure<paper.Path> {
         }
 
         return sizeObj;
-    }
-
-    protected override createControlPoints(): ControlPoint[] {
-        return [
-            new SizeControlPoint(this, [0, 0]),
-            new SizeControlPoint(this, [1, 0]),
-            new SizeControlPoint(this, [0, 1]),
-            new SizeControlPoint(this, [1, 1])
-        ];
     }
 }

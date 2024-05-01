@@ -2,21 +2,9 @@ import { inject } from '@core/di';
 import { SizeControlPoint } from '@core/figures/control-points/size.control-point';
 import { MouseEvent } from '@core/project/shared/events/mouse.event';
 import paper from 'paper';
-import { FigureController, SelectionController } from '../controllers';
-import { ControlPointController } from '../controllers/control-point.controller';
 import { EventHandler, EventHandlerOptions } from './event-handler';
 
-enum SizeControlPointType {
-    RightTop = 0,
-    RightBottom = 1,
-    LeftTop = 2,
-    LeftBottom = 3
-}
-
 export class SizeControlPointEventHandler extends EventHandler {
-    private readonly selectionController = inject(SelectionController);
-    private readonly figureController = inject(FigureController);
-    private readonly controlPointController = inject(ControlPointController);
     private readonly view = inject(paper.View);
 
     private data:

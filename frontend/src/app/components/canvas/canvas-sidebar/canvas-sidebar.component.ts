@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import {
-    PluginController,
+import PluginController, {
     PluginFigures
 } from '@core/project/controllers/plugin.controller';
 import { CanvasService } from '../services/canvas.service';

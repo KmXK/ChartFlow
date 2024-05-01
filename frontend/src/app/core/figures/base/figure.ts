@@ -58,7 +58,11 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
         this.controlPoints.forEach(x => x.updatePosition());
     }
 
-    public hide(): void {}
+    public hide(): void {
+        this.item.visible = false;
+    }
 
-    public show(): void {}
+    public show(): void {
+        this.item.visible = true;
+    }
 }

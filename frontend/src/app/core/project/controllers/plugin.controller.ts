@@ -1,5 +1,5 @@
 import { Figure } from '@core/figures/base/figure';
-import { plugins } from '../plugins';
+import { IPluginInfo } from '@core/plugins/plugin';
 import Controller from './base';
 
 export interface PluginFigures {
@@ -10,10 +10,14 @@ export interface PluginFigures {
     }[];
 }
 
-export class PluginController extends Controller {
+export default class PluginController extends Controller {
+    constructor(private readonly plugins: IPluginInfo[]) {
+        super();
+    }
+
     public getPluginFigures(): PluginFigures[] {
         // TODO: Make some plugin container
-        return plugins.map(x => ({
+        return this.plugins.map(x => ({
             pluginName: x.name,
             figures: x.figures.map(x => ({
                 name: x.name,

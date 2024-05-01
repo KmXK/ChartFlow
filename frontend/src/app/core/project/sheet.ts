@@ -2,11 +2,12 @@ import { CanvasService } from '@components/canvas/services/canvas.service';
 import { ServiceContainer, ServiceContainerBuilder } from '@core/di';
 import { ServiceType } from '@core/di/types/type';
 import { loadPlugins } from '@core/plugins/plugin-injector';
+import { PluginController } from '@core/project/controllers';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import Controller from './controllers/base';
 import { EventLoop } from './event-loop';
-import { plugins } from './plugins';
+import { pluginsCreators } from './plugins';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
 
 export class Sheet {
@@ -32,7 +33,10 @@ export class Sheet {
 
         builder.add(EventLoop);
 
-        loadPlugins(builder, plugins);
+        builder.register(
+            PluginController,
+            new PluginController(loadPlugins(builder, pluginsCreators))
+        );
 
         this.container = builder.build();
 

@@ -7,10 +7,10 @@ import {
     MouseEventCounter,
     OffsetController,
     PlaceController,
+    PluginController,
     SelectionController,
     ZoomController
 } from './controllers';
-import { PluginController } from './controllers/plugin.controller';
 import {
     MoveEventHandler,
     OffsetEventHandler,
@@ -31,8 +31,7 @@ export const controllersClasses = [
     EventMapperController,
     MouseEventCounter,
     ControlPointController,
-    HtmlElementController,
-    PluginController
+    HtmlElementController
 ];
 
 export const eventHandlers = [

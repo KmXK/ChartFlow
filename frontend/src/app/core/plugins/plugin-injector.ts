@@ -1,9 +1,9 @@
 import { ServiceContainerBuilder } from '@core/di';
-import { IPlugin } from './plugin';
+import { IPluginCreator, IPluginInfo } from './plugin';
 
 export function loadPluginControllers(
     builder: ServiceContainerBuilder,
-    plugin: IPlugin
+    plugin: IPluginInfo
 ): ServiceContainerBuilder {
     plugin.controllers.forEach(x => {
         builder.register(x.token, x.factory());
@@ -14,7 +14,7 @@ export function loadPluginControllers(
 
 export function loadPluginEventHandlers(
     builder: ServiceContainerBuilder,
-    plugin: IPlugin
+    plugin: IPluginInfo
 ): ServiceContainerBuilder {
     plugin.eventHandlers.forEach(x => {
         builder.register(x.token, x.factory());
@@ -25,7 +25,7 @@ export function loadPluginEventHandlers(
 
 export function loadPlugin(
     builder: ServiceContainerBuilder,
-    plugin: IPlugin
+    plugin: IPluginInfo
 ): ServiceContainerBuilder {
     loadPluginControllers(builder, plugin);
     loadPluginEventHandlers(builder, plugin);
@@ -34,8 +34,15 @@ export function loadPlugin(
 
 export function loadPlugins(
     builder: ServiceContainerBuilder,
-    plugins: IPlugin[]
-): ServiceContainerBuilder {
-    plugins.forEach(p => loadPlugin(builder, p));
-    return builder;
+    pluginsOrCreators: (IPluginInfo | IPluginCreator)[]
+): IPluginInfo[] {
+    const plugins: IPluginInfo[] = [];
+
+    pluginsOrCreators.forEach(p => {
+        const plugin = 'create' in p ? p.create() : p;
+        loadPlugin(builder, plugin);
+        plugins.push(plugin);
+    });
+
+    return plugins;
 }

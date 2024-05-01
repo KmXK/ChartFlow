@@ -10,7 +10,6 @@ export interface IFigurePluginInfo {
 
 // TODO: может заюзать конструкторы, тогда можно будет метод add заюзать и не передавать токен отдельно
 export interface IEventHandlerPluginInfo {
-    name: string;
     token: InjectToken;
     factory: () => EventHandler;
 }
@@ -20,9 +19,13 @@ export interface IControllerPluginInfo {
     factory: () => Controller;
 }
 
-export interface IPlugin {
+export interface IPluginInfo {
     name: string;
     figures: IFigurePluginInfo[];
     eventHandlers: IEventHandlerPluginInfo[];
     controllers: IControllerPluginInfo[];
+}
+
+export interface IPluginCreator {
+    create: () => IPluginInfo;
 }

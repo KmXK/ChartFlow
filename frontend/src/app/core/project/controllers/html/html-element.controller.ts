@@ -7,7 +7,7 @@ import OffsetController from '../offset.controller';
 import ZoomController from '../zoom.controller';
 import { TextInputElement } from './elements/text-input.element';
 
-export class HtmlElementController extends Controller {
+export default class HtmlElementController extends Controller {
     private readonly canvasService = inject(CanvasService);
     private readonly offsetController = inject(OffsetController);
     private readonly zoomController = inject(ZoomController);

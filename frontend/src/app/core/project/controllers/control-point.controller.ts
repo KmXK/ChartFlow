@@ -5,7 +5,7 @@ import { GroupFigure } from '@core/figures/group.figure';
 import { FigureController, SelectionController } from '.';
 import Controller from './base';
 
-export class ControlPointController extends Controller {
+export default class ControlPointController extends Controller {
     private readonly figureController = inject(FigureController);
     private readonly selectionController = inject(SelectionController);
 
