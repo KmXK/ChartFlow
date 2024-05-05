@@ -1,6 +1,7 @@
 import { inject } from '@core/di';
 import { FrameEvent } from '@core/project/shared/events/frame.event';
 import paper from 'paper';
+import { BehaviorSubject } from 'rxjs';
 import Controller from './base';
 
 export default class OffsetController extends Controller {
@@ -8,6 +9,11 @@ export default class OffsetController extends Controller {
     private requiredOffset = new paper.Point(0, 0);
     private currentOffset = new paper.Point(0, 0);
     private smoothTime = 1;
+
+    private readonly offsetChangedSubject = new BehaviorSubject<paper.Point>(
+        new paper.Point(0, 0)
+    );
+    public readonly offsetChanged = this.offsetChangedSubject.asObservable();
 
     public onFrame(event: FrameEvent): void {
         this.updateOffset(event.delta);
@@ -29,6 +35,8 @@ export default class OffsetController extends Controller {
         this.currentOffset = this.currentOffset.add(offset);
         this.requiredOffset = new paper.Point(0, 0);
         this.smoothTime = 1;
+
+        this.offsetChangedSubject.next(this.currentOffset.clone());
     }
 
     get offset(): paper.Point {
@@ -55,5 +63,7 @@ export default class OffsetController extends Controller {
 
         this.currentOffset = this.currentOffset.add(distance);
         this.view.center = this.view.center.add(distance);
+
+        this.offsetChangedSubject.next(this.currentOffset.clone());
     }
 }

@@ -16,7 +16,7 @@ export class LineStartControlPoint extends RelativePositionControlPoint {
     constructor(
         _target: Figure,
         delta: paper.PointLike,
-        private readonly direction: LineStartDirection,
+        public readonly direction: LineStartDirection,
         public readonly anchorControlPoint: AnchorControlPoint
     ) {
         const width = 5;

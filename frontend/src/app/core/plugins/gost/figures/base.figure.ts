@@ -30,7 +30,10 @@ export class BaseGostFigure<
             delta: paper.PointLike,
             direction: LineStartDirection
         ): void => {
-            const anchor = new AnchorControlPoint(this, delta);
+            const vector = new paper.Point(1, 0).rotate(direction, [0, 0]);
+            console.log(direction, vector);
+
+            const anchor = new AnchorControlPoint(this, delta, vector);
             result.push(anchor);
             result.push(
                 new LineStartControlPoint(this, delta, direction, anchor)

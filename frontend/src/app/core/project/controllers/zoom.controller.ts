@@ -1,11 +1,15 @@
 import { inject } from '@core/di';
 import paper from 'paper';
+import { BehaviorSubject } from 'rxjs';
 import Controller from './base';
 
 export default class ZoomController extends Controller {
     private readonly view = inject(paper.View);
     private prevZoom = 85;
     private currentZoom = 100;
+
+    private readonly zoomChangedSubject = new BehaviorSubject<number>(1);
+    public readonly zoomChanged = this.zoomChangedSubject.asObservable();
 
     public setZoom(zoomSign: number, viewMousePosition: paper.PointLike): void {
         const currentZoom = this.view.zoom;
@@ -22,6 +26,8 @@ export default class ZoomController extends Controller {
         this.view.center = projectMousePosition.subtract(newDistance);
 
         this.view.zoom = newZoom;
+
+        this.zoomChangedSubject.next(newZoom);
     }
 
     // Returns in number format where 1 = 100% zoom

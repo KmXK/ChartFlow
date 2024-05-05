@@ -1,4 +1,4 @@
-import { FrameEvent } from '../../shared/events/frame.event';
+import { FrameEvent } from '@core/project/shared/events/frame.event';
 
 export interface ControllerCreator {
     new (): Controller;
@@ -11,7 +11,7 @@ export type ControllerEventRecords<TData> = {
 };
 
 export class ControllerEventMediator<TArgs extends unknown[]> {
-    private readonly subscribers = new Set<(...data: TArgs) => void>();
+    protected readonly subscribers = new Set<(...data: TArgs) => void>();
 
     public fire(...data: TArgs): void {
         this.subscribers.forEach(s => s(...data));

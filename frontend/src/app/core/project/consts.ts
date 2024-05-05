@@ -1,8 +1,10 @@
 import {
+    CanvasController,
     ControlPointController,
     EventMapperController,
     FigureController,
     FigureHitController,
+    GridController,
     HtmlElementController,
     MouseEventCounter,
     OffsetController,
@@ -32,7 +34,9 @@ export const controllersClasses = [
     MouseEventCounter,
     ControlPointController,
     HtmlElementController,
-    PositionController
+    PositionController,
+    GridController,
+    CanvasController
 ];
 
 export const eventHandlers = [

@@ -24,7 +24,7 @@ export class LineStartController extends Controller {
     private targetHint?: LineStartControlPoint;
 
     private lineCreationData?: {
-        figure: Figure;
+        startAnchor: AnchorControlPoint;
         line: LineFigure;
         preview?: AnchorControlPoint;
     };
@@ -72,25 +72,25 @@ export class LineStartController extends Controller {
 
         this.points.forEach(x => x.hide());
 
-        const line = new LineFigure();
+        const line = new LineFigure(this.targetHint.anchorControlPoint.vector);
         line.setStartTo(this.targetHint.anchorPosition);
 
         this.lineCreationData = {
             line,
-            figure: this.targetHint.anchorControlPoint
+            startAnchor: this.targetHint.anchorControlPoint
         };
 
         this.figureController.addFigure(line);
     }
 
     public stopLine(): void {
-        if (!this.lineCreationData) return;
+        if (!this.lineCreationData || !this.targetHint) return;
 
         this.points.forEach(x => x.show());
 
         if (this.lineCreationData.preview) {
             const connectionLine = new ConnectionLineFigure([
-                this.lineCreationData.figure,
+                this.lineCreationData.startAnchor,
                 this.lineCreationData.preview
             ]);
 
@@ -115,7 +115,7 @@ export class LineStartController extends Controller {
         if (!this.lineCreationData) return;
 
         this.lineCreationData.preview = point;
-        this.lineCreationData.line.setEndTo(point.position);
+        this.lineCreationData.line.setEndTo(point.position, point.vector);
     }
 
     public removePreview(): void {

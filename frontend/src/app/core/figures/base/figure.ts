@@ -4,10 +4,11 @@ import { ControlPoint } from '../control-points/control-point';
 
 export abstract class Figure<TItem extends paper.Item = paper.Item> {
     private _controlPoints: ControlPoint[] | undefined;
-    private _transparent = false;
 
     public readonly sizeChanged = event<[Figure]>();
     public readonly positionChanged = event<[paper.Point]>();
+
+    public readonly transparent: boolean = false;
 
     constructor(private readonly _item: TItem) {}
 
@@ -76,13 +77,5 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
 
     public show(): void {
         this.item.visible = true;
-    }
-
-    get transparent(): boolean {
-        return this._transparent;
-    }
-
-    set transparent(value: boolean) {
-        this._transparent = value;
     }
 }

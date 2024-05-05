@@ -2,6 +2,8 @@ import ControlPointController from './control-point.controller';
 import EventMapperController from './event-mapper.controller';
 import FigureHitController from './figure-hit.controller';
 import FigureController from './figure.controller';
+import GridController from './grid.controller';
+import CanvasController from './html/canvas.controller';
 import HtmlElementController from './html/html-element.controller';
 import MouseEventCounter from './mouse-event-counter.controller';
 import OffsetController from './offset.controller';
@@ -12,10 +14,12 @@ import SelectionController from './selection.controller';
 import ZoomController from './zoom.controller';
 
 export {
+    CanvasController,
     ControlPointController,
     EventMapperController,
     FigureController,
     FigureHitController,
+    GridController,
     HtmlElementController,
     MouseEventCounter,
     OffsetController,

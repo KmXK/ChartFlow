@@ -1,25 +1,20 @@
-import { Figure } from '@core/figures/base/figure';
-import paper from 'paper';
+import { AnchorControlPoint } from '../control-points/anchor.control-point';
+import { LineFigure } from './line.figure';
 
-export class ConnectionLineFigure extends Figure<paper.Path> {
-    constructor(private readonly _figures: [Figure, Figure]) {
-        const line = new paper.Path();
-        line.moveTo([0, 0]);
-        line.lineBy([0, 0]);
-
-        line.strokeColor = new paper.Color('black');
-        line.strokeWidth = 1;
-
-        super(line);
+export class ConnectionLineFigure extends LineFigure {
+    constructor(
+        private readonly _data: [AnchorControlPoint, AnchorControlPoint]
+    ) {
+        super(_data[0].vector, _data[1].vector);
     }
 
     public update(): void {
         this.item.bringToFront();
-        this.item.segments[0].point = this._figures[0].item.position;
-        this.item.segments[1].point = this._figures[1].item.position;
+        this.setStartTo(this._data[0].position);
+        this.setEndTo(this._data[1].position, this._data[1].vector);
     }
 
-    get figures(): [Figure, Figure] {
-        return [...this._figures];
+    get figures(): [AnchorControlPoint, AnchorControlPoint] {
+        return [...this._data];
     }
 }
