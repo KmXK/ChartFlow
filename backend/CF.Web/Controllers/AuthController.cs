@@ -50,9 +50,9 @@ public class AuthController(
         var jwtToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefreshToken(user);
 
-        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
+        // Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
 
-        return Ok(new { token = jwtToken });
+        return Ok(new { access = jwtToken, refresh = refreshToken });
     }
 
     [HttpPost("register")]
@@ -99,16 +99,16 @@ public class AuthController(
         var jwtToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefreshToken(user);
 
-        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
+        // Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true });
 
-        return Ok(new { id = user.Id, token = jwtToken });
+        return Ok(new { id = user.Id, access = jwtToken, refresh = refreshToken });
     }
 
     [Authorize]
     [HttpPost("refresh")]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshToken(string refreshToken)
     {
-        if (!ValidateRefreshToken(Request.Cookies["RefreshToken"] ?? ""))
+        if (!ValidateRefreshToken(refreshToken ?? ""))
         {
             return Unauthorized("Invalid refresh token. Relogin required");
         }
@@ -127,7 +127,7 @@ public class AuthController(
 
         var newJwtToken = GenerateAccessToken(user);
 
-        return Ok(new { new_token = newJwtToken });
+        return Ok(new { access = newJwtToken });
     }
 
     private string GenerateJwtToken(string secretString, List<Claim> claims)
