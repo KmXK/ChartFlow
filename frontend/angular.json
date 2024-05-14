@@ -69,6 +69,14 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "local": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -77,10 +85,16 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "cf:build:production"
+              "buildTarget": "cf:build:production",
+              "proxyConfig": "src/proxy.conf.production.json"
             },
             "development": {
-              "buildTarget": "cf:build:development"
+              "buildTarget": "cf:build:development",
+              "proxyConfig": "src/proxy.conf.development.json"
+            },
+            "local": {
+              "buildTarget": "cf:build:local",
+              "proxyConfig": "src/proxy.conf.local.json"
             }
           },
           "defaultConfiguration": "development"

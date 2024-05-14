@@ -1,3 +1,7 @@
 <div class="container">
-    <button mat-button mat-raised-button>Sign In</button>
+    @if (currentUser()) {
+        <h2>{{ currentUser()!.login }}</h2>
+    } @else {
+        <button mat-button mat-raised-button (click)="signIn()">Sign In</button>
+    }
 </div>
