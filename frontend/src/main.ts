@@ -3,6 +3,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { TokenInterceptor } from '@interceptors/token.interceptor';
+import { MaterialModule } from '@material/material.module';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 
@@ -19,6 +20,7 @@ bootstrapApplication(AppComponent, {
         { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] },
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
         importProvidersFrom(HttpClientModule),
+        importProvidersFrom(MaterialModule),
         provideAnimationsAsync()
     ]
 }).catch(e => console.error(e));

@@ -1,5 +1,8 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginDialogComponent } from '@components/dialogs/login-dialog/login-dialog.component';
+import { ProfileDialogComponent } from '@components/dialogs/profile-dialog/profile-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { UserInfo } from './../../services/auth.service';
 
@@ -12,6 +15,7 @@ import { UserInfo } from './../../services/auth.service';
 })
 export class HeaderComponent implements OnInit {
     private readonly authService = inject(AuthService);
+    private readonly matDialog = inject(MatDialog);
 
     public readonly currentUser = signal<UserInfo | null>(null);
 
@@ -23,11 +27,20 @@ export class HeaderComponent implements OnInit {
     }
 
     public signIn(): void {
-        this.authService
-            .login({
-                login: 'KmX',
-                password: '1'
-            })
+        this.matDialog
+            .open(LoginDialogComponent)
+            .afterClosed()
+            .subscribe(result => {});
+    }
+
+    public openProfile(): void {
+        this.matDialog
+            .open(ProfileDialogComponent)
+            .afterClosed()
             .subscribe(() => {});
+    }
+
+    public logout(): void {
+        this.authService.logout();
     }
 }

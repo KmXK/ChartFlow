@@ -1,6 +1,8 @@
 <div class="container">
     @if (currentUser()) {
-        <h2>{{ currentUser()!.login }}</h2>
+        <button class="profile" (click)="openProfile()">
+            {{ currentUser()!.login }}
+        </button>
     } @else {
         <button mat-button mat-raised-button (click)="signIn()">Sign In</button>
     }

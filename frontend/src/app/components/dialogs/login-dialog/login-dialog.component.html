@@ -1,0 +1,52 @@
+<div class="container">
+    <h1>{{ isLogin ? "Login" : "Register" }}</h1>
+    <form (submit)="onSubmit()" #loginForm="ngForm" (change)="error = ''">
+        <mat-form-field appearance="fill">
+            <mat-label>Login</mat-label>
+            <input
+                matInput
+                [(ngModel)]="loginData.login"
+                name="login"
+                required
+            />
+        </mat-form-field>
+        @if (!isLogin) {
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input
+                    matInput
+                    [(ngModel)]="loginData.email"
+                    name="email"
+                    type="email"
+                    required
+                />
+            </mat-form-field>
+        }
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+                matInput
+                type="password"
+                [(ngModel)]="loginData.password"
+                name="password"
+                required
+            />
+        </mat-form-field>
+        <p class="error">{{ error }}</p>
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!loginForm.valid"
+        >
+            {{ isLogin ? "Sign Up" : "Sign In" }}
+        </button>
+        <a routerLink="" class="changeTypeButton" (click)="init(!isLogin)">
+            {{
+                isLogin
+                    ? "No account? Sign In"
+                    : "Already have account? Sign Up"
+            }}
+        </a>
+    </form>
+</div>

@@ -1,0 +1,8 @@
+<div class="container">
+    <h1>Your Profile</h1>
+    <p>Current subscription: {{ subscriptionStatus }}</p>
+    <button mat-raised-button color="primary" (click)="purchaseSubscription()">
+        Purchase Subscription
+    </button>
+    <button mat-raised-button color="warn" (click)="logout()">Log Out</button>
+</div>
