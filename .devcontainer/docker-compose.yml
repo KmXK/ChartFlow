@@ -26,7 +26,7 @@ services:
     image: mcr.microsoft.com/mssql/server:latest
     environment:
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD_FILE: /run/secrets/db_password
+      MSSQL_SA_PASSWORD_FILE: 12345678Sa
     secrets:
       - db_password
     ports:
@@ -36,14 +36,10 @@ services:
     networks:
       - backend
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -U sa -P $(tr -d '\r' < /run/secrets/db_password) -H localhost -Q "select 1" -b -o /dev/null
+      test: /opt/mssql-tools/bin/sqlcmd -U sa -P 12345678Sa -H localhost -Q "select 1" -b -o /dev/null
       interval: 10s
       timeout: 2s
       retries: 10
-
-secrets:
-  db_password:
-    file: ./db_password.txt
 
 networks:
   backend:
