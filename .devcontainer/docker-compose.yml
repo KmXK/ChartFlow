@@ -26,7 +26,7 @@ services:
     image: mcr.microsoft.com/mssql/server:latest
     environment:
       ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD_FILE: 12345678Sa
+      SA_PASSWORD: 12345678Sa
     ports:
       - "5001:1433"
     volumes:
