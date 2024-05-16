@@ -27,8 +27,6 @@ services:
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD_FILE: 12345678Sa
-    secrets:
-      - db_password
     ports:
       - "5001:1433"
     volumes:
