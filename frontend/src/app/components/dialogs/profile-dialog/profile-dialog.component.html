@@ -1,8 +1,32 @@
 <div class="container">
     <h1>Your Profile</h1>
-    <p>Current subscription: {{ subscriptionStatus }}</p>
-    <button mat-raised-button color="primary" (click)="purchaseSubscription()">
-        Purchase Subscription
+    @if ((subscription | async) !== undefined) {
+        <p>
+            Current subscription:
+            {{ (subscription | async)?.plan?.name ?? "None" }}
+        </p>
+        @if ((subscription | async) === null) {
+            <p>Subscription plans</p>
+            <div class="button-container">
+                @for (plan of plans(); track plan.id) {
+                    <button
+                        [disabled]="isLoading()"
+                        mat-button
+                        mat-raised-button
+                        (click)="purchaseSubscription(plan.id)"
+                    >
+                        {{ plan.name }}
+                    </button>
+                }
+            </div>
+        }
+    }
+    <button
+        [disabled]="isLoading()"
+        mat-raised-button
+        color="warn"
+        (click)="logout()"
+    >
+        Log Out
     </button>
-    <button mat-raised-button color="warn" (click)="logout()">Log Out</button>
 </div>

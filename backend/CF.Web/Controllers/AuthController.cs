@@ -104,11 +104,11 @@ public class AuthController(
         return Ok(new { id = user.Id, access = jwtToken, refresh = refreshToken });
     }
 
-    [Authorize]
+    [AllowAnonymous]
     [HttpPost("refresh")]
-    public async Task<IActionResult> RefreshToken(string refreshToken)
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshModel refreshModel)
     {
-        if (!ValidateRefreshToken(refreshToken ?? ""))
+        if (!ValidateRefreshToken(refreshModel.RefreshToken ?? ""))
         {
             return Unauthorized("Invalid refresh token. Relogin required");
         }
@@ -130,12 +130,12 @@ public class AuthController(
         return Ok(new { access = newJwtToken });
     }
 
-    private string GenerateJwtToken(string secretString, List<Claim> claims)
+    private string GenerateJwtToken(string secretString, List<Claim> claims, int expiryMinutes)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
         var secret = Encoding.UTF8.GetBytes(secretString);
         var creds = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
-        var expiry = DateTime.UtcNow.AddMinutes(30);
+        var expiry = DateTime.UtcNow.AddMinutes(expiryMinutes);
 
         var token = new SecurityTokenDescriptor
         {
@@ -158,7 +158,8 @@ public class AuthController(
                 new Claim("Id", user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Login),
-            ]
+            ],
+            30
         );
     }
 
@@ -170,7 +171,8 @@ public class AuthController(
                 new Claim("Id", user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Login),
-            ]
+            ],
+            10000
         );
     }
 

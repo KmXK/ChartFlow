@@ -4,6 +4,7 @@ using CF.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CF.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240519134852_Subscription")]
+    partial class Subscription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,26 +81,6 @@ namespace CF.Web.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SubscriptionPlans", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Cost = 9.99m,
-                            EndTime = new DateTime(2030, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Ежемесячная",
-                            PeriodInDays = (short)30,
-                            StartTime = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Cost = 99.9m,
-                            EndTime = new DateTime(2030, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Ежегодная",
-                            PeriodInDays = (short)365,
-                            StartTime = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("CF.Web.Data.Models.User", b =>

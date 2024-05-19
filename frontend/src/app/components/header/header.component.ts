@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
     public readonly currentUser = signal<UserInfo | null>(null);
 
     public ngOnInit(): void {
-        this.authService.user.subscribe(user => {
+        this.authService.user$.subscribe(user => {
             this.currentUser.set(user);
             console.log(user);
         });

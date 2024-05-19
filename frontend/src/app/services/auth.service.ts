@@ -32,7 +32,7 @@ export class AuthService {
         this.getUserInfo()
     );
 
-    public readonly user = this.userSubject.asObservable();
+    public readonly user$ = this.userSubject.asObservable();
 
     constructor(private http: HttpClient) {}
 
@@ -99,6 +99,7 @@ export class AuthService {
             }>(`/api/refresh`, { refreshToken })
             .pipe(
                 map(data => {
+                    console.log('refreshed');
                     this.storeTokens(data.access, refreshToken!);
                     return { access: data.access };
                 })
