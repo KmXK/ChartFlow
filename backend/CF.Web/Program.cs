@@ -1,5 +1,6 @@
 using System.Text;
 using CF.Web.Data;
+using CF.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,6 +29,8 @@ builder.Services
 
         options.UseSecurityTokenValidators = true;
     });
+
+builder.Services.AddSingleton<PasswordService>();
 
 var app = builder.Build();
 

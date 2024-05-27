@@ -1,4 +1,5 @@
 using CF.Web.Data.Models;
+using CF.Web.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,7 +25,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.PasswordSaltedHash)
             .IsRequired()
-            .HasColumnName("binary(16)");
+            .HasColumnType("binary(32)");
 
         builder.Property(u => u.PasswordSalt)
             .IsRequired()

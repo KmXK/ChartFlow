@@ -1,12 +1,19 @@
-import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import {
+    ComponentRef,
+    Injectable,
+    ViewContainerRef,
+    inject
+} from '@angular/core';
 import { CanvasTextInputComponent } from '@components/shared/canvas-text-input/canvas-text-input.component';
 import { TextFigure } from '@core/figures/text-figures/text.figure';
+import { pluginsCreators } from '@core/project/plugins';
 import { Sheet } from '@core/project/sheet';
+import { ExtensionService } from '@services/extension.service';
 import { ICanvasTextInputComponent } from '@shared/components/interfaces/text-input.interface';
 import { TextInputOptions } from '@shared/components/options';
 import { Destroyable } from '@shared/types/destroyable';
 import paper from 'paper';
-import { Observable, ReplaySubject, take } from 'rxjs';
+import { Observable, ReplaySubject, Subject, combineLatest, take } from 'rxjs';
 
 @Injectable()
 export class CanvasService {
@@ -14,13 +21,30 @@ export class CanvasService {
     private scope!: paper.PaperScope;
     private container!: ViewContainerRef;
 
+    private readonly extensionService = inject(ExtensionService);
+
+    private readonly canvasSubject = new Subject<HTMLCanvasElement>();
+
+    constructor() {
+        combineLatest([
+            this.extensionService.extensions$,
+            this.canvasSubject
+        ]).subscribe(([extensions, canvasElement]) => {
+            const plugins = extensions
+                .map(x => pluginsCreators[x.name])
+                .filter(x => x);
+
+            this.sheetSubject.next(
+                new Sheet(new paper.Project(canvasElement), this, plugins)
+            );
+        });
+    }
+
     public setCanvas(canvasElement: HTMLCanvasElement): void {
         this.scope = new paper.PaperScope();
         this.scope.settings.insertItems = false;
 
-        this.sheetSubject.next(
-            new Sheet(new paper.Project(canvasElement), this)
-        );
+        this.canvasSubject.next(canvasElement);
     }
 
     public setTextElementsContainer(container: ViewContainerRef): void {

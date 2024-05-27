@@ -1,19 +1,23 @@
 import { CanvasService } from '@components/canvas/services/canvas.service';
 import { ServiceContainer, ServiceContainerBuilder } from '@core/di';
 import { ServiceType } from '@core/di/types/type';
+import { IPluginCreator } from '@core/plugins/plugin';
 import { loadPlugins } from '@core/plugins/plugin-injector';
 import { PluginController } from '@core/project/controllers';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import Controller from './controllers/base';
 import { EventLoop } from './event-loop';
-import { pluginsCreators } from './plugins';
 import { EventHandlerPipe } from './shared/event-handler-pipe';
 
 export class Sheet {
     private readonly container: ServiceContainer;
 
-    constructor(project: paper.Project, canvasService: CanvasService) {
+    constructor(
+        project: paper.Project,
+        canvasService: CanvasService,
+        pluginsCreators: IPluginCreator[]
+    ) {
         const builder = new ServiceContainerBuilder();
         builder.register(paper.Project, project);
         builder.register(paper.View, project.view);

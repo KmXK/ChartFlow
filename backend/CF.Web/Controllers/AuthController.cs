@@ -108,12 +108,15 @@ public class AuthController(
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshModel refreshModel)
     {
-        if (!ValidateRefreshToken(refreshModel.RefreshToken ?? ""))
+        Console.WriteLine(refreshModel.RefreshToken);
+        var claims = ValidateRefreshToken(refreshModel.RefreshToken ?? "");
+
+        if (claims is null)
         {
             return Unauthorized("Invalid refresh token. Relogin required");
         }
 
-        if (!Guid.TryParse(User.Claims.FirstOrDefault(x => x.Type == "Id")?.Value ?? string.Empty, out var userId))
+        if (!Guid.TryParse(claims.Claims.FirstOrDefault(x => x.Type == "Id")?.Value ?? string.Empty, out var userId))
         {
             return Unauthorized("Invalid user id");
         }
@@ -176,7 +179,7 @@ public class AuthController(
         );
     }
 
-    private bool ValidateRefreshToken(string refreshToken)
+    private ClaimsPrincipal? ValidateRefreshToken(string refreshToken)
     {
         var validationParameters = new TokenValidationParameters
         {
@@ -192,18 +195,16 @@ public class AuthController(
 
         try
         {
-            new JwtSecurityTokenHandler()
+            return new JwtSecurityTokenHandler()
                 .ValidateToken(
                     refreshToken,
                     validationParameters,
                     out SecurityToken validatedToken
                 );
-
-            return true;
         }
         catch
         {
-            return false;
+            return null;
         }
     }
 }

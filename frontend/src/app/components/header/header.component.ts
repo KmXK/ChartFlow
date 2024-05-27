@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { ExtensionsDialogComponent } from '@components/dialogs/extensions-dialog/extensions-dialog.component';
 import { LoginDialogComponent } from '@components/dialogs/login-dialog/login-dialog.component';
 import { ProfileDialogComponent } from '@components/dialogs/profile-dialog/profile-dialog.component';
 import { AuthService } from '@services/auth.service';
@@ -36,6 +37,13 @@ export class HeaderComponent implements OnInit {
     public openProfile(): void {
         this.matDialog
             .open(ProfileDialogComponent)
+            .afterClosed()
+            .subscribe(() => {});
+    }
+
+    public manageExtensions(): void {
+        this.matDialog
+            .open(ExtensionsDialogComponent)
             .afterClosed()
             .subscribe(() => {});
     }

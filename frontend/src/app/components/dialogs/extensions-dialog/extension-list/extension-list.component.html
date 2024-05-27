@@ -1,0 +1,14 @@
+<div class="container">
+    @for (extension of extensions; track extension.id) {
+        <button class="element" (click)="selectExtension.emit(extension)">
+            <p class="name">
+                {{ extension.name }}
+                {{ extension.installed ? "(Installed)" : "" }}
+            </p>
+
+            <p class="description">
+                {{ extension.description }}
+            </p>
+        </button>
+    }
+</div>

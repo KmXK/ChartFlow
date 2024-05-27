@@ -1,0 +1,38 @@
+<div class="container">
+    @if (!extensions()) {
+        <div class="center">
+            <h2>Loading...</h2>
+        </div>
+    } @else {
+        @if (!selectedExtension()) {
+            <h2>Extension List</h2>
+            @if (confirmationRequested()) {
+                <button
+                    mat-button
+                    mat-raised-button
+                    class="confirm-button"
+                    (click)="confirm()"
+                >
+                    Confirm
+                </button>
+            }
+            <app-extension-list
+                [extensions]="extensions()"
+                (selectExtension)="selectExtension($event)"
+            ></app-extension-list>
+        } @else {
+            <h2>{{ selectedExtension()!.name }}</h2>
+            <button
+                mat-button
+                mat-raised-button
+                class="back-button"
+                (click)="selectExtension()"
+            >
+                Back to List
+            </button>
+            <app-extension-page
+                [extension]="selectedExtension()!"
+            ></app-extension-page>
+        }
+    }
+</div>

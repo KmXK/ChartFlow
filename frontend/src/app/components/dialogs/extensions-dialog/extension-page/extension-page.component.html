@@ -1,0 +1,66 @@
+<div class="container">
+    <p class="description">Description: {{ extension.description }}</p>
+
+    <button
+        mat-button
+        mat-raised-button
+        (click)="toggleInstallation()"
+        class="install-button"
+    >
+        {{ extension.installed ? "Uninstall" : "Install" }}
+    </button>
+
+    <div class="comments">
+        <form
+            class="comment-form"
+            [formGroup]="commentForm"
+            (ngSubmit)="onSubmitComment()"
+        >
+            <mat-form-field class="form-element" appearance="outline">
+                <mat-label>Comment</mat-label>
+                <input matInput formControlName="comment" />
+            </mat-form-field>
+
+            <mat-form-field class="form-element rating" appearance="outline">
+                <mat-label>Rating</mat-label>
+                <mat-select formControlName="rating">
+                    @for (rating of ratings; track rating) {
+                        <mat-option [value]="rating">
+                            {{ rating }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!commentForm.valid"
+            >
+                Comment
+            </button>
+        </form>
+
+        @for (comment of comments(); track comment.id) {
+            <mat-card class="comment-card">
+                <div class="comment-body">
+                    <div class="comment-content">
+                        <div class="comment-text">{{ comment.text }}</div>
+                        <div class="comment-footer">
+                            <div class="comment-author">
+                                {{ comment.user.login }}
+                            </div>
+                            <div class="comment-date">
+                                {{ comment.modifiedTime | date: "short" }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment-rating">
+                        <span>{{ comment.rating }}</span>
+                    </div>
+                </div>
+            </mat-card>
+        }
+    </div>
+</div>

@@ -1,5 +1,8 @@
 <div class="container">
     @if (currentUser()) {
+        <button mat-button mat-raised-button (click)="manageExtensions()">
+            Manage Extensions
+        </button>
         <button class="profile" (click)="openProfile()">
             {{ currentUser()!.login }}
         </button>
