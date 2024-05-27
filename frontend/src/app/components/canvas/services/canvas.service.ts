@@ -1,5 +1,6 @@
 import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { CanvasTextInputComponent } from '@components/shared/canvas-text-input/canvas-text-input.component';
+import { TextFigure } from '@core/figures/text-figures/text.figure';
 import { Sheet } from '@core/project/sheet';
 import { ICanvasTextInputComponent } from '@shared/components/interfaces/text-input.interface';
 import { TextInputOptions } from '@shared/components/options';
@@ -36,6 +37,7 @@ export class CanvasService {
     }
 
     public createTextElement(
+        figure: TextFigure<paper.Item>,
         options: TextInputOptions
     ): Destroyable<ICanvasTextInputComponent> {
         const component = this.container.createComponent(
@@ -44,12 +46,26 @@ export class CanvasService {
 
         component.instance.setOptions(options);
 
-        return this.makeDestroyable(component);
+        const fontSizeHandler = (value: number) => {
+            component.instance.setOptions({ ...options, fontSize: value });
+        };
+
+        figure.fontSizeChanged.on(fontSizeHandler);
+
+        return this.makeDestroyable(component, () => {
+            figure.fontSizeChanged.off(fontSizeHandler);
+        });
     }
 
-    private makeDestroyable<T>(component: ComponentRef<T>): Destroyable<T> {
+    private makeDestroyable<T>(
+        component: ComponentRef<T>,
+        action?: () => void
+    ): Destroyable<T> {
         const element = component.instance as unknown as Destroyable<T>;
-        element.destroy = () => component.destroy();
+        element.destroy = () => {
+            component.destroy();
+            action?.();
+        };
 
         return element;
     }

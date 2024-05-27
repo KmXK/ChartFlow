@@ -1,0 +1,31 @@
+<div class="container">
+    <mat-form-field class="form-field">
+        <mat-label>{{ setting.name }}</mat-label>
+        @switch (setting.type) {
+            @case (Type.Text) {
+                <input matInput [value]="setting.name" type="text" />
+            }
+            @case (Type.Number) {
+                <input
+                    matInput
+                    [ngModel]="setting.value | async"
+                    (ngModelChange)="setting.value.next($event)"
+                    type="number"
+                    [min]="setting.min"
+                    [max]="setting.max"
+                    [step]="setting.step"
+                />
+            }
+            @case (Type.List) {
+                <mat-select
+                    (selectionChange)="setting.selected.next($event.value)"
+                    [value]="setting.selected | async"
+                >
+                    @for (item of setting.items; track item) {
+                        <mat-option [value]="item">{{ item }}</mat-option>
+                    }
+                </mat-select>
+            }
+        }
+    </mat-form-field>
+</div>

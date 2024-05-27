@@ -11,4 +11,4 @@ RUN ng analytics off -g
 
 COPY . /app
 
-CMD ng serve --host 0.0.0.0 --disable-host-check --poll=100
+CMD ng serve -c production --host 0.0.0.0 --disable-host-check --poll=100

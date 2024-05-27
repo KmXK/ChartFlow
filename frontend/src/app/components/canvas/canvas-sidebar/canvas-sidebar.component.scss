@@ -1,8 +1,25 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: stretch;
+    // gap: 10px;
 
     padding: 15px;
     width: 200px;
+    height: calc(100% - 30px);
+
+    .elements {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 100%;
+
+        &.with-ads {
+            height: 50%;
+        }
+    }
+
+    .ads {
+        height: 50%;
+    }
 }

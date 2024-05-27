@@ -1,3 +1,5 @@
+import { FigureSettings } from '@core/figure-settings';
+import { strokeWidthSetting } from '@core/figure-settings/settings';
 import { ControlPoint } from '@core/figures/control-points/control-point';
 import { SizeControlPoint } from '@core/figures/control-points/size.control-point';
 import { TextFigure } from '@core/figures/text-figures/text.figure';
@@ -46,5 +48,14 @@ export class BaseGostFigure<
         addPair([0, 0.5], LineStartDirection.Left);
 
         return result;
+    }
+
+    public createSettings(): FigureSettings[] {
+        return [
+            ...super.createSettings(),
+            strokeWidthSetting(this.baseItem.strokeWidth, value => {
+                this.baseItem.strokeWidth = value;
+            })
+        ];
     }
 }

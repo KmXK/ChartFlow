@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 // Material Navigation
 // Импорт дополнительных модулей, если необходимо
@@ -27,14 +28,16 @@ import { MatIconModule } from '@angular/material/icon';
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        MatSelectModule
     ],
     exports: [
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        MatSelectModule
     ]
 })
 export class MaterialModule {}

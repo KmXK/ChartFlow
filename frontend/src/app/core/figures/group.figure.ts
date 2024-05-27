@@ -1,3 +1,4 @@
+import { FigureSettings } from '@core/figure-settings';
 import { Figure } from '@core/figures/base/figure';
 import paper from 'paper';
 
@@ -44,6 +45,16 @@ export class GroupFigure extends Figure {
 
     get solid(): boolean {
         return this._solid;
+    }
+
+    public override createSettings(): FigureSettings[] {
+        if (this.solid) {
+            return [...this._plainFigures.values()].flatMap(x =>
+                x.createSettings()
+            );
+        }
+
+        return [];
     }
 
     private containsFigure(figure: Figure): boolean {

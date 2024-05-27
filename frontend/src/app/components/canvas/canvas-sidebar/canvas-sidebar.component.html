@@ -1,11 +1,19 @@
 <div class="container">
-    @for (element of elements(); track $index) {
-        <h2>{{ element.pluginName }}</h2>
-        @for (figure of element.figures; track $index) {
-            <app-canvas-sidebar-element
-                [text]="figure.name"
-                [figureCreator]="figure.factory"
-            />
+    <div class="elements" [class.with-ads]="showAds()">
+        @for (element of elements(); track $index) {
+            <h2>{{ element.pluginName }}</h2>
+            @for (figure of element.figures; track $index) {
+                <app-canvas-sidebar-element
+                    [text]="figure.name"
+                    [figureCreator]="figure.factory"
+                />
+            }
         }
+    </div>
+
+    @if (showAds()) {
+        <div class="ads">
+            <app-ads></app-ads>
+        </div>
     }
 </div>

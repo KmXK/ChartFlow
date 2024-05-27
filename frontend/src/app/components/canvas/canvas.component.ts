@@ -7,6 +7,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { CanvasSidebarComponent } from './canvas-sidebar/canvas-sidebar.component';
+import { CanvasToolbarComponent } from './canvas-toolbar/canvas-toolbar.component';
 import { CanvasService } from './services/canvas.service';
 
 @Component({
@@ -14,7 +15,7 @@ import { CanvasService } from './services/canvas.service';
     templateUrl: './canvas.component.html',
     styleUrl: './canvas.component.scss',
     standalone: true,
-    imports: [CanvasSidebarComponent],
+    imports: [CanvasSidebarComponent, CanvasToolbarComponent],
     providers: [CanvasService]
 })
 export class CanvasComponent implements AfterViewInit {

@@ -1,0 +1,8 @@
+<div class="container">
+    <h2>Settings</h2>
+    <div class="settings">
+        @for (setting of settings(); track setting) {
+            <app-canvas-toolbar-element [setting]="setting" />
+        }
+    </div>
+</div>

@@ -20,7 +20,7 @@ export default class HtmlElementController extends Controller {
 
         const center = this.view.projectToView(figure.item.position);
 
-        const element = this.canvasService.createTextElement({
+        const element = this.canvasService.createTextElement(figure, {
             fontFamily: figure.fontFamily,
             fontSize: figure.fontSize * zoom,
             textColor: figure.textColor,

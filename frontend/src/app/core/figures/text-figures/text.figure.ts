@@ -1,3 +1,6 @@
+import { FigureSettings } from '@core/figure-settings/figure-settings';
+import { fontSizeSetting } from '@core/figure-settings/settings';
+import { event } from '@core/project/controllers/base/controller';
 import paper from 'paper';
 import { Figure } from '../base/figure';
 
@@ -10,6 +13,8 @@ export class TextFigure<TItem extends paper.Item>
     implements ITextContainer
 {
     private readonly _text: paper.PointText;
+
+    public readonly fontSizeChanged = event<[number]>();
 
     constructor(private readonly _baseItem: TItem) {
         const item = new paper.Group();
@@ -49,6 +54,7 @@ export class TextFigure<TItem extends paper.Item>
 
     set fontSize(value: number) {
         this._text.fontSize = value;
+        this.fontSizeChanged.fire(value);
     }
 
     get fontFamily(): string {
@@ -72,5 +78,14 @@ export class TextFigure<TItem extends paper.Item>
 
         this._baseItem.bounds.size = sizeObj;
         this._text.position = this._baseItem.position;
+    }
+
+    public override createSettings(): FigureSettings[] {
+        return [
+            ...super.createSettings(),
+            fontSizeSetting(this.fontSize, value => {
+                this.fontSize = value;
+            })
+        ];
     }
 }

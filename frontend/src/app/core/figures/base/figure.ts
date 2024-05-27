@@ -1,4 +1,5 @@
-﻿import { event } from '@core/project/controllers/base/controller';
+﻿import { FigureSettings } from '@core/figure-settings/figure-settings';
+import { event } from '@core/project/controllers/base/controller';
 import * as paper from 'paper';
 import { ControlPoint } from '../control-points/control-point';
 
@@ -77,5 +78,9 @@ export abstract class Figure<TItem extends paper.Item = paper.Item> {
 
     public show(): void {
         this.item.visible = true;
+    }
+
+    public createSettings(): FigureSettings[] {
+        return [];
     }
 }
