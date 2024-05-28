@@ -15,6 +15,7 @@ import {
     SelectionController,
     ZoomController
 } from './controllers';
+import { EditActionController } from './controllers/action-registration-controllers/edit.action-controller copy';
 import { HelpActionController } from './controllers/action-registration-controllers/help.action-controller';
 import {
     MoveEventHandler,
@@ -41,6 +42,7 @@ export const controllersClasses = [
     GridController,
     CanvasController,
     ActionController,
+    EditActionController,
     ExportActionController,
     HelpActionController
 ];

@@ -24,6 +24,7 @@ export class ActionController extends Controller {
                 actions.forEach(actionClass => {
                     const action = new actionClass();
                     container.resolveInjection(actionClass, action);
+                    action.init();
                     this.groups[key] = [...(this.groups[key] || []), action];
 
                     action.canExecute$.subscribe(() =>

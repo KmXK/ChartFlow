@@ -15,14 +15,21 @@ import { MaterialModule } from '@material/material.module';
 export class HeaderMenuComponent implements OnInit {
     private readonly canvasService = inject(CanvasService);
 
-    public readonly groups = signal<Record<string, Action[]>>({});
+    public readonly groups = signal<{ name: string; actions: Action[] }[]>([]);
 
     private readonly actionController = signal<ActionController>(undefined!);
 
     public ngOnInit(): void {
         this.canvasService.sheet$.subscribe(sheet => {
             this.actionController.set(sheet.getService(ActionController));
-            this.groups.set(this.actionController().groups);
+            const groups = Object.entries(this.actionController().groups)
+                .map(x => ({ name: x[0], actions: x[1] }))
+                .sort((a, b) => {
+                    if (a.name === 'File') return -1;
+                    if (b.name === 'File') return 1;
+                    return a.name.localeCompare(b.name);
+                });
+            this.groups.set(groups);
         });
     }
 }

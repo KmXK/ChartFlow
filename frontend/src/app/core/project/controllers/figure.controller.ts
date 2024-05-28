@@ -45,7 +45,9 @@ export default class FigureController extends Controller {
         const index = this.project.activeLayer.children.findIndex(
             x => x === figure.item
         );
-        this.project.activeLayer.removeChildren(index, index + 1);
+
+        if (index !== -1)
+            this.project.activeLayer.removeChildren(index, index + 1);
     }
 
     public getParent(figure: Figure): Figure | undefined {

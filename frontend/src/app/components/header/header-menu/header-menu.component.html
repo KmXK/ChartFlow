@@ -1,16 +1,16 @@
 <div class="menu-container">
-    @for (menuItem of groups() | keyvalue; track menuItem) {
+    @for (menuItem of groups(); track menuItem) {
         <button mat-button [matMenuTriggerFor]="menuRef">
-            {{ menuItem.key }}
+            {{ menuItem.name }}
         </button>
         <mat-menu #menuRef="matMenu">
-            @for (subItem of menuItem.value; track subItem) {
+            @for (action of menuItem.actions; track action) {
                 <button
                     mat-menu-item
-                    (click)="subItem.execute()"
-                    [disabled]="!(subItem.canExecute$ | async)"
+                    (click)="action.execute()"
+                    [disabled]="(action.canExecute$ | async) === false"
                 >
-                    <span>{{ subItem.name }}</span>
+                    <span>{{ action.name }}</span>
                 </button>
             }
         </mat-menu>
