@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CanvasService } from '@components/canvas/services/canvas.service';
 import { HeaderComponent } from '@components/header/header.component';
 import { CanvasComponent } from './components/canvas/canvas.component';
 
@@ -7,6 +8,7 @@ import { CanvasComponent } from './components/canvas/canvas.component';
     templateUrl: './app.component.html',
     standalone: true,
     imports: [CanvasComponent, HeaderComponent],
-    styleUrl: './app.component.scss'
+    styleUrl: './app.component.scss',
+    providers: [CanvasService]
 })
 export class AppComponent {}

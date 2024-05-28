@@ -1,0 +1,18 @@
+<div class="menu-container">
+    @for (menuItem of groups() | keyvalue; track menuItem) {
+        <button mat-button [matMenuTriggerFor]="menuRef">
+            {{ menuItem.key }}
+        </button>
+        <mat-menu #menuRef="matMenu">
+            @for (subItem of menuItem.value; track subItem) {
+                <button
+                    mat-menu-item
+                    (click)="subItem.execute()"
+                    [disabled]="!(subItem.canExecute$ | async)"
+                >
+                    <span>{{ subItem.name }}</span>
+                </button>
+            }
+        </mat-menu>
+    }
+</div>

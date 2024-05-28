@@ -30,4 +30,12 @@ export default class GridController extends Controller {
             this.gridFigure.redraw(this.view.bounds.topLeft, zoom, size);
         });
     }
+
+    public setGridVisibility(visible: boolean): void {
+        if (visible) {
+            this.gridFigure.show();
+        } else {
+            this.gridFigure.hide();
+        }
+    }
 }

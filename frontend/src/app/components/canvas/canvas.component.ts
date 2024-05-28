@@ -15,8 +15,7 @@ import { CanvasService } from './services/canvas.service';
     templateUrl: './canvas.component.html',
     styleUrl: './canvas.component.scss',
     standalone: true,
-    imports: [CanvasSidebarComponent, CanvasToolbarComponent],
-    providers: [CanvasService]
+    imports: [CanvasSidebarComponent, CanvasToolbarComponent]
 })
 export class CanvasComponent implements AfterViewInit {
     @ViewChild('canvas') private canvas!: ElementRef<HTMLCanvasElement>;

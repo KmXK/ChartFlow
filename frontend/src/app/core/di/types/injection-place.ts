@@ -1,4 +1,4 @@
-import { InjectToken } from './type';
+import { InjectToken, ServiceType } from './type';
 
 export class InjectionPlace<T = unknown> {
     constructor(
@@ -7,6 +7,8 @@ export class InjectionPlace<T = unknown> {
     ) {}
 }
 
-export class InjectionPredicate {
-    constructor(public readonly predicate: (type: InjectToken) => boolean) {}
+export class InjectionPredicate<T extends object> {
+    constructor(
+        public readonly predicate: (service: ServiceType<T>) => boolean
+    ) {}
 }

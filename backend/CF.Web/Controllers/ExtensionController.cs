@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CF.Web.Data;
+using CF.Web.Data.Models;
 using CF.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,15 @@ namespace CF.Web.Services;
 [ApiController]
 public class ExtensionController(ApplicationDbContext context) : ControllerBase
 {
-    [Authorize]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> List([FromQuery] bool installed)
     {
+        if (User == null || !User.Claims.Any())
+        {
+            return Ok(Array.Empty<Extension>());
+        }
+
         var id = Guid.Parse(User.Claims.Single(x => x.Type == "Id").Value);
 
         return Ok(

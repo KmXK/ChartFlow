@@ -6,11 +6,12 @@ import { LoginDialogComponent } from '@components/dialogs/login-dialog/login-dia
 import { ProfileDialogComponent } from '@components/dialogs/profile-dialog/profile-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { UserInfo } from './../../services/auth.service';
+import { HeaderMenuComponent } from './header-menu/header-menu.component';
 
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [MatButtonModule],
+    imports: [MatButtonModule, HeaderMenuComponent],
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
 })

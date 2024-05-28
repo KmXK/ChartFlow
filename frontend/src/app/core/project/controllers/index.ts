@@ -1,3 +1,5 @@
+import { ExportActionController } from './action-registration-controllers/export.action-controller';
+import { ActionController } from './action.controller';
 import ControlPointController from './control-point.controller';
 import EventMapperController from './event-mapper.controller';
 import FigureHitController from './figure-hit.controller';
@@ -14,9 +16,11 @@ import SelectionController from './selection.controller';
 import ZoomController from './zoom.controller';
 
 export {
+    ActionController,
     CanvasController,
     ControlPointController,
     EventMapperController,
+    ExportActionController,
     FigureController,
     FigureHitController,
     GridController,

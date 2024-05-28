@@ -3,7 +3,7 @@ import { ServiceContainer, ServiceContainerBuilder } from '@core/di';
 import { ServiceType } from '@core/di/types/type';
 import { IPluginCreator } from '@core/plugins/plugin';
 import { loadPlugins } from '@core/plugins/plugin-injector';
-import { PluginController } from '@core/project/controllers';
+import { ActionController, PluginController } from '@core/project/controllers';
 import paper from 'paper';
 import { controllersClasses, eventHandlers } from './consts';
 import Controller from './controllers/base';
@@ -48,20 +48,9 @@ export class Sheet {
             c.init?.();
         });
 
+        this.container.get(ActionController).createActions(builder);
+
         this.container.get(EventLoop).start();
-
-        // for (let i = 0; i < 10; i++) {
-        //     for (let j = 0; j < 10; j++) {
-        //         container
-        //             .get(PlaceController)
-        //             .placeSquare([i * 50, j * 50], [40, 40]);
-        //     }
-        // }
-
-        // this.container
-        //     .get(HtmlElementController)
-        //     .createTextInput()
-        //     .setPosition({ x: 120, y: 50 });
     }
 
     public getService<TService>(controller: ServiceType<TService>): TService {

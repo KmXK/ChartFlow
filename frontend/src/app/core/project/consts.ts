@@ -1,7 +1,9 @@
 import {
+    ActionController,
     CanvasController,
     ControlPointController,
     EventMapperController,
+    ExportActionController,
     FigureController,
     FigureHitController,
     GridController,
@@ -13,6 +15,7 @@ import {
     SelectionController,
     ZoomController
 } from './controllers';
+import { HelpActionController } from './controllers/action-registration-controllers/help.action-controller';
 import {
     MoveEventHandler,
     OffsetEventHandler,
@@ -36,7 +39,10 @@ export const controllersClasses = [
     HtmlElementController,
     PositionController,
     GridController,
-    CanvasController
+    CanvasController,
+    ActionController,
+    ExportActionController,
+    HelpActionController
 ];
 
 export const eventHandlers = [

@@ -1,4 +1,4 @@
-import { InjectToken } from './types/type';
+import { InjectToken, ServiceType } from './types/type';
 
 export class ServiceStorage {
     private readonly map: Map<InjectToken, unknown> = new Map();
@@ -34,6 +34,14 @@ export class ServiceStorage {
             .map(([key, value]) => value as T);
 
         return services;
+    }
+
+    public getByPredicate<T extends object>(
+        predicate: (service: ServiceType<T>) => boolean
+    ): T[] | undefined {
+        return [...this.map.entries()]
+            .filter(([key, value]) => predicate(value as ServiceType<T>))
+            .map(([key, value]) => value as T);
     }
 
     // implement iterator

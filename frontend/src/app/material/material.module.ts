@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 
 // Material Navigation
@@ -31,7 +32,8 @@ import { MatIconModule } from '@angular/material/icon';
         MatInputModule,
         MatIconModule,
         MatSelectModule,
-        MatCardModule
+        MatCardModule,
+        MatMenuModule
     ],
     exports: [
         MatButtonModule,
@@ -40,7 +42,8 @@ import { MatIconModule } from '@angular/material/icon';
         MatInputModule,
         MatIconModule,
         MatSelectModule,
-        MatCardModule
+        MatCardModule,
+        MatMenuModule
     ]
 })
 export class MaterialModule {}

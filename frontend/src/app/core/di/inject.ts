@@ -26,7 +26,9 @@ export function inject<T>(type: InjectToken<T> | InjectToken[]): T | unknown[] {
     return new InjectionPlace(type) as T;
 }
 
-export function injectIf<T>(predicate: (type: InjectToken) => boolean): T[] {
+export function injectIf<T extends object>(
+    predicate: (service: ServiceType<T>) => boolean
+): T[] {
     return new InjectionPredicate(predicate) as unknown as T[];
 }
 

@@ -49,8 +49,6 @@ export class AuthService {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const decodedValue = jwtDecode<any>(token);
 
-            console.log(decodedValue);
-
             return {
                 id: decodedValue.Id,
                 login: decodedValue.unique_name,
@@ -114,6 +112,7 @@ export class AuthService {
         localStorage.setItem(this.accessTokenKey, accessToken);
         localStorage.setItem(this.refreshTokenKey, refreshToken);
 
+        window.location.reload();
         this.userSubject.next(this.getUserInfo());
     }
 
@@ -121,6 +120,7 @@ export class AuthService {
         localStorage.removeItem(this.accessTokenKey);
         localStorage.removeItem(this.refreshTokenKey);
 
+        window.location.reload();
         this.userSubject.next(null);
     }
 }

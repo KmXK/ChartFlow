@@ -4,6 +4,8 @@ import {
     ViewContainerRef,
     inject
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { HelpDialogComponent } from '@components/dialogs/help-dialog/help-dialog.component';
 import { CanvasTextInputComponent } from '@components/shared/canvas-text-input/canvas-text-input.component';
 import { TextFigure } from '@core/figures/text-figures/text.figure';
 import { pluginsCreators } from '@core/project/plugins';
@@ -22,6 +24,7 @@ export class CanvasService {
     private container!: ViewContainerRef;
 
     private readonly extensionService = inject(ExtensionService);
+    private readonly matDialog = inject(MatDialog);
 
     private readonly canvasSubject = new Subject<HTMLCanvasElement>();
 
@@ -70,7 +73,7 @@ export class CanvasService {
 
         component.instance.setOptions(options);
 
-        const fontSizeHandler = (value: number) => {
+        const fontSizeHandler = (value: number): void => {
             component.instance.setOptions({ ...options, fontSize: value });
         };
 
@@ -79,6 +82,13 @@ export class CanvasService {
         return this.makeDestroyable(component, () => {
             figure.fontSizeChanged.off(fontSizeHandler);
         });
+    }
+
+    public showHelpDialog(): void {
+        this.matDialog
+            .open(HelpDialogComponent)
+            .afterClosed()
+            .subscribe(() => {});
     }
 
     private makeDestroyable<T>(

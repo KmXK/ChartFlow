@@ -1,11 +1,16 @@
 <div class="container">
     @if (currentUser()) {
-        <button mat-button mat-raised-button (click)="manageExtensions()">
-            Manage Extensions
-        </button>
-        <button class="profile" (click)="openProfile()">
-            {{ currentUser()!.login }}
-        </button>
+        <div class="left">
+            <app-header-menu />
+        </div>
+        <div class="right">
+            <button mat-button mat-raised-button (click)="manageExtensions()">
+                Manage Extensions
+            </button>
+            <button class="profile" (click)="openProfile()">
+                {{ currentUser()!.login }}
+            </button>
+        </div>
     } @else {
         <button mat-button mat-raised-button (click)="signIn()">Sign In</button>
     }
