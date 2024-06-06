@@ -29,7 +29,7 @@ export default class PlaceController extends Controller {
 
         this.registerFigure(figure);
 
-        figure.setSize([300, 140]); // TODO: remove
+        // figure.setSize([300, 140]); // TODO: remove
 
         return figure;
     }

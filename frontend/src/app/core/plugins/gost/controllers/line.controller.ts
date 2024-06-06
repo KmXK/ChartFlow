@@ -5,6 +5,7 @@ import {
     PositionController
 } from '@core/project/controllers';
 import Controller from '@core/project/controllers/base';
+import { BaseGostFigure } from '../figures/base.figure';
 import { ConnectionLineFigure } from '../figures/lines/connection-line.figure';
 
 export class LineController extends Controller {
@@ -15,6 +16,10 @@ export class LineController extends Controller {
 
     public init(): void {
         this.figureController.created.on(figure => {
+            if (figure instanceof BaseGostFigure) {
+                figure.setSize([300, 140]);
+            }
+
             if (!(figure instanceof ConnectionLineFigure)) return;
 
             console.log(figure, 'created');

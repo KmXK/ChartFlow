@@ -10,6 +10,8 @@ import {
     SpecificProcessFigure,
     TerminatorFigure
 } from './figures';
+import { LoopEndFigure } from './figures/main/loop-end.figure';
+import { LoopStartFigure } from './figures/main/loop-start.figure';
 
 export const GostPluginCreator: IPluginCreator = {
     create: () => ({
@@ -54,6 +56,14 @@ export const GostPluginCreator: IPluginCreator = {
             {
                 name: 'Data',
                 factory: () => new DataFigure()
+            },
+            {
+                name: 'Loop Start',
+                factory: () => new LoopStartFigure()
+            },
+            {
+                name: 'Loop End',
+                factory: () => new LoopEndFigure()
             }
         ]
     })

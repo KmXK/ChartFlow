@@ -238,15 +238,28 @@ export default class FigureController extends Controller {
         const points = figure.controlPoints;
 
         if (!(figure instanceof GroupFigure)) {
+            const addChildren = (group: paper.Group | paper.CompoundPath) => {
+                group.children.forEach(c => {
+                    this.figureByItem.set(c, figure);
+
+                    if (
+                        c instanceof paper.Group ||
+                        c instanceof paper.CompoundPath
+                    ) {
+                        addChildren(c);
+                    }
+                });
+            };
+
             if (
                 figure.item instanceof paper.Group ||
                 figure.item instanceof paper.CompoundPath
             ) {
-                figure.item.children.forEach(c =>
-                    this.figureByItem.set(c, figure)
-                );
+                addChildren(figure.item);
             }
         }
+
+        console.log(figure, points);
 
         if (points.length) {
             // Было бы лучше объединить это с кодом ниже.

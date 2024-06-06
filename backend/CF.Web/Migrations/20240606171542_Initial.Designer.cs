@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CF.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240527173818_Initial")]
+    [Migration("20240606171542_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -60,21 +60,21 @@ namespace CF.Web.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2d71f88c-e8ec-4c2d-9b7c-9a9bade489b9"),
+                            Id = new Guid("6bdf8ce8-0761-4553-8a6e-0e24779ae097"),
                             AuthorId = new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"),
-                            CreationTime = new DateTime(2024, 5, 27, 17, 38, 17, 188, DateTimeKind.Utc).AddTicks(7998),
+                            CreationTime = new DateTime(2024, 6, 6, 17, 15, 41, 40, DateTimeKind.Utc).AddTicks(8966),
                             Description = "Gost is a simple, fast and reliable charting library.",
                             IsRemoved = false,
                             Name = "Gost"
                         },
                         new
                         {
-                            Id = new Guid("ee769dbc-df94-414e-9da3-620bced768fb"),
+                            Id = new Guid("a9345d74-67f1-4a29-afc8-6950cd28b9d5"),
                             AuthorId = new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"),
-                            CreationTime = new DateTime(2024, 5, 27, 17, 38, 17, 188, DateTimeKind.Utc).AddTicks(8019),
-                            Description = "Helper for grid movement.",
+                            CreationTime = new DateTime(2024, 6, 6, 17, 15, 41, 40, DateTimeKind.Utc).AddTicks(8972),
+                            Description = "Use case diagram with actor and actions.",
                             IsRemoved = false,
-                            Name = "Grid movement helper"
+                            Name = "Use Case"
                         });
                 });
 
@@ -267,10 +267,10 @@ namespace CF.Web.Migrations
                         {
                             Id = new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"),
                             Email = "chartflow@yandex.by",
-                            LastOnlineTime = new DateTime(2024, 5, 27, 17, 38, 17, 259, DateTimeKind.Utc).AddTicks(7958),
+                            LastOnlineTime = new DateTime(2024, 6, 6, 17, 15, 41, 126, DateTimeKind.Utc).AddTicks(1797),
                             Login = "chartflow",
-                            PasswordSalt = new byte[] { 189, 86, 206, 210, 121, 138, 27, 48, 98, 255, 195, 191, 138, 215, 98, 71 },
-                            PasswordSaltedHash = new byte[] { 218, 27, 125, 229, 89, 36, 119, 213, 218, 176, 137, 30, 176, 216, 184, 81, 177, 22, 106, 107, 83, 154, 46, 139, 190, 139, 190, 162, 198, 33, 197, 211 }
+                            PasswordSalt = new byte[] { 243, 26, 189, 39, 251, 178, 246, 149, 214, 83, 121, 42, 235, 71, 130, 158 },
+                            PasswordSaltedHash = new byte[] { 66, 136, 181, 162, 70, 68, 2, 124, 32, 239, 172, 229, 110, 235, 58, 155, 75, 235, 56, 103, 169, 36, 225, 192, 31, 157, 74, 91, 47, 126, 213, 143 }
                         });
                 });
 

@@ -161,15 +161,15 @@ namespace CF.Web.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "LastOnlineTime", "Login", "PasswordSalt", "PasswordSaltedHash", "RefreshToken", "RefreshTokenExpiryTime" },
-                values: new object[] { new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), "chartflow@yandex.by", new DateTime(2024, 5, 27, 17, 38, 17, 259, DateTimeKind.Utc).AddTicks(7958), "chartflow", new byte[] { 189, 86, 206, 210, 121, 138, 27, 48, 98, 255, 195, 191, 138, 215, 98, 71 }, new byte[] { 218, 27, 125, 229, 89, 36, 119, 213, 218, 176, 137, 30, 176, 216, 184, 81, 177, 22, 106, 107, 83, 154, 46, 139, 190, 139, 190, 162, 198, 33, 197, 211 }, null, null });
+                values: new object[] { new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), "chartflow@yandex.by", new DateTime(2024, 6, 6, 17, 15, 41, 126, DateTimeKind.Utc).AddTicks(1797), "chartflow", new byte[] { 243, 26, 189, 39, 251, 178, 246, 149, 214, 83, 121, 42, 235, 71, 130, 158 }, new byte[] { 66, 136, 181, 162, 70, 68, 2, 124, 32, 239, 172, 229, 110, 235, 58, 155, 75, 235, 56, 103, 169, 36, 225, 192, 31, 157, 74, 91, 47, 126, 213, 143 }, null, null });
 
             migrationBuilder.InsertData(
                 table: "Extensions",
                 columns: new[] { "Id", "AuthorId", "CreationTime", "Description", "IsRemoved", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("2d71f88c-e8ec-4c2d-9b7c-9a9bade489b9"), new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), new DateTime(2024, 5, 27, 17, 38, 17, 188, DateTimeKind.Utc).AddTicks(7998), "Gost is a simple, fast and reliable charting library.", false, "Gost" },
-                    { new Guid("ee769dbc-df94-414e-9da3-620bced768fb"), new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), new DateTime(2024, 5, 27, 17, 38, 17, 188, DateTimeKind.Utc).AddTicks(8019), "Helper for grid movement.", false, "Grid movement helper" }
+                    { new Guid("6bdf8ce8-0761-4553-8a6e-0e24779ae097"), new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), new DateTime(2024, 6, 6, 17, 15, 41, 40, DateTimeKind.Utc).AddTicks(8966), "Gost is a simple, fast and reliable charting library.", false, "Gost" },
+                    { new Guid("a9345d74-67f1-4a29-afc8-6950cd28b9d5"), new Guid("396f400a-2c1a-4cd0-9323-df2d02770833"), new DateTime(2024, 6, 6, 17, 15, 41, 40, DateTimeKind.Utc).AddTicks(8972), "Use case diagram with actor and actions.", false, "Use Case" }
                 });
 
             migrationBuilder.CreateIndex(

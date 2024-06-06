@@ -56,8 +56,8 @@ public class ExtensionConfiguration : IEntityTypeConfiguration<Extension>
             {
                 Id = Guid.NewGuid(),
                 AuthorId = Guid.Parse("396f400a-2c1a-4cd0-9323-df2d02770833"),
-                Name = "Grid movement helper",
-                Description = "Helper for grid movement.",
+                Name = "Use Case",
+                Description = "Use case diagram with actor and actions.",
                 CreationTime = DateTime.UtcNow,
                 IsRemoved = false
             }

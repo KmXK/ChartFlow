@@ -12,7 +12,7 @@ export class TextFigure<TItem extends paper.Item>
     extends Figure<paper.Group>
     implements ITextContainer
 {
-    private readonly _text: paper.PointText;
+    protected readonly _text: paper.PointText;
 
     public readonly fontSizeChanged = event<[number]>();
 
@@ -27,7 +27,7 @@ export class TextFigure<TItem extends paper.Item>
         text.strokeColor = new paper.Color('black');
         text.fillColor = new paper.Color('black');
         text.strokeWidth = 0;
-        text.fontSize = 12;
+        text.fontSize = 20;
         text.fontFamily = 'Times New Roman';
         text.justification = 'center';
 
